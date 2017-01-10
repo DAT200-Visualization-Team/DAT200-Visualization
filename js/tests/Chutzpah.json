@@ -1,0 +1,16 @@
+{
+  "Framework": "qunit",
+  "References": [
+    {
+      "Path": "../datastructures",
+      "Include": "*.js",
+      "IsTestFrameworkFile": true
+    }
+  ],
+  "Tests": [
+    {
+      "Path": ".",
+      "Include": "*.js"
+    }
+  ]
+}
