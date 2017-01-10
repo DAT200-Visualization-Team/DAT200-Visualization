@@ -1,234 +1,205 @@
 // Linkedlist class
 var head;
 var tail;
-var size;
+var theSize;
 var modCount;
 
 function LinkedList() {
     head = new Node(null, null, null);
-    tail = new Node(null, null, head);
+    tail = new Node(null, head, null);
     head.next = tail;
-    size = 0;
+    theSize = 0;
 }
 
 LinkedList.prototype.clear = function() {
     head = new Node(null, null, null);
-    tail = new Node(null, null, head);
+    tail = new Node(null, head, null);
     head.next = tail;
-    size = 0;
-    modCount++
+    theSize = 0;
+    modCount++;
 };
 
-LinkedList.prototype.getSize = function() {
-    return size;
+LinkedList.prototype.size = function() {
+    return theSize;
 };
 
 LinkedList.prototype.isEmpty = function() {
-    return size === 0;
+    return theSize === 0;
 };
 
-LinkedList.prototype.insertAfter = function(newNode, node) {
-    newNode.prev = node;
-    if (node.next == null) {
-        tail = newNode;
-    } else {
-        newNode.next = node.next;
-        node.next.prev = newNode;
-    }
-    node.next = newNode;
-    size++;
+LinkedList.prototype.add = function(idx, data) {
+    var p = this.getNode(idx);
+    var newNode = new Node(data, p.prev, p);
+    newNode.prev.next = newNode;
+    p.prev = newNode;
+    theSize++;
     modCount++;
-};
+}
 
-LinkedList.prototype.insertBefore = function(newNode, node) {
-    newNode.next = node;
-    if (node.prev == null) {
-        head = newNode;
-    } else {
-        newNode.prev = node.prev;
-        node.prev.next = newNode;
-    }
-    node.prev = newNode;
-    size++;
-    modCount++;
-};
+LinkedList.prototype.addFirst = function(data) {
+    this.add(0, data);
+}
 
-LinkedList.prototype.insertBeginning = function(newNode) {
-    if (head == null) {
-        head = newNode;
-        tail = newNode;
-        newNode.prev = null;
-        newNode.next = null;
-    } else {
-        this.insertBefore(newNode, head);
-    }
-    size++;
-    modCount++;
-};
+LinkedList.prototype.addLast = function(data) {
+    this.add(this.size(), data);
+}
 
-LinkedList.prototype.insertEnd = function(newNode) {
-    if (tail == null) {
-        this.insertBeginning(newNode);
-    } else {
-        this.insertAfter(tail, newNode);
-    }
-    size++;
+LinkedList.prototype.removeNode = function(p) {
+    p.next.prev = p.prev;
+    p.prev.next = p.next;
+    theSize--;
     modCount++;
+    return p.data;
 };
-
-LinkedList.prototype.remove = function(node) {
-    if (node.prev == null) {
-        head = node.next;
-    } else {
-        node.prev.next = node.next;
-    }
-    if (node.next == null) {
-        tail = node.prev;
-    } else {
-        node.next.prev = node.prev;
-    }
-    size--;
-    modCount++;
- };
 
 LinkedList.prototype.removeFirst = function() {
-    this.remove(head);
-    size--;
-    modCount++;
+    if (this.isEmpty()) {
+        throw {name: "NoSuchElementException", message: "List is empty."};
+    }
+    return this.removeByIdx(0);
+
 };
 
 LinkedList.prototype.removeLast = function() {
-    this.remove(tail);
-    size--;
-    modCount++;
+    if (this.isEmpty()) {
+        throw {name: "NoSuchElementException", message: "List is empty."};
+    }
+    return this.removeByIdx(this.size() - 1);
 };
 
-LinkedList.prototype.get = function(idx) {
-    if (idx < this.getSize() / 2) {
+LinkedList.prototype.removeByIdx = function(idx) {
+    return this.removeNode(this.getNode(idx));
+};
+
+LinkedList.prototype.removeByData = function(data) {
+    var idx = this.findPos(data);
+    if (idx == -1) {
+        return false;
+    }
+    else {
+        this.removeByIdx(idx);
+        return true;
+    }
+};
+
+LinkedList.prototype.getNode = function(idx) {
+    if (idx < this.size() / 2) {
         p = head.next;
         for (var i = 0; i < idx; i++) {
             p = p.next;
         }
     } else {
         p = tail;
-        for (var i = this.getSize(); i > idx; i--) {
+        for (var i = this.size(); i > idx; i--) {
             p = p.prev;
         }
     }
     return p;
 };
 
-LinkedList.prototype.setAt = function(idx, newNode) {
-    var node = this.get(idx);
+/*LinkedList.prototype.setAt = function(idx, newNode) {
+    var node = this.getNode(idx);
     newNode.next = node;
     node.prev.next = newNode;
-    size++;
+    theSize++;
     modCount++;
+};*/
+
+LinkedList.prototype.set = function(idx, newVal) {
+    var p = this.getNode(idx);
+    var oldVal = p.data;
+    p.data = newVal;
+    return oldVal;
 };
 
-LinkedList.prototype.set = function(idx, data) {
-    var node = this.get(idx);
-    node.data = data;
-    modCount++;
-};
-
-LinkedList.prototype.findPos = function(d) {
-    var index = 0;
-    var current = head;
-
-    while (current !== null) {
-        if (current.data == d) {
-            return index;
+LinkedList.prototype.findPos = function(x) {
+    for(var p = head.next; p !== tail; p = p.next) {
+        if (x === null) {
+            if(p.data === null) {
+                return p;
+            }
         }
-        index++;
-        current = current.next;
+        else if(x == p.data) { //must really use x.equals(p.data)
+            return p;
+        }
+        return -1;
     }
-    return -1;
-};
-
-LinkedList.prototype.removeByIdx = function(idx) {
-    tmp = this.get(idx);
-    this.remove(tmp);
-};
-
-LinkedList.prototype.removeByData = function(data) {
-    var idx = this.findPos(data);
-    this.removeByIdx(idx);
 };
 
 LinkedList.prototype.toArray = function() {
     var list = [];
     var p = head;
-    while (p !== tail) {
-        console.log(9);
+    while (p.next !== tail) {
         p = p.next;
         list.push(p);
-        console.log(p);
     }
-    return p;
-}
+    console.log(list);
+    return list;
+};
 
-
-
-LinkedList.prototype.iterator = function() {
-    var current = head.next;
-    var lastAccessed = null;
-    var index = 0;
-    var isEmpty = this;
+LinkedList.prototype.iterator = function(idx) {
+    var current = this.getNode(idx);
+    var lastVisited = null;
+    var lastMoveWasPrev = false;
+    var expectedModCount = modCount;
 
     return {
-        hasNext: function() {return index < size && current != tail;},
-        hasPrev: function() {return index > size && current != head;},
-        previousIdx: function() {return index - 1;},
-        nextIdx: function() {return index},
+        hasNext: function() {
+            if (expectedModCount !== modCount) {
+                throw {name: "ConcurrentModificationException", message: "Expected modification count was not equal to actual modcount"};
+            }
+            return current != tail;
+        },
+
+        hasPrev: function() {
+            if (expectedModCount !== modCount) {
+                throw {name: "ConcurrentModificationException", message: "Expected modification count was not equal to actual modcount"};
+            }
+            return current !== head.next;
+        },
 
         next: function() {
             if (!this.hasNext()) {
-                /*console.log(index);
-                console.log(size);*/
-                throw {name: "IndexOutOfBoundsException", message: "Index was out of bounds"};
+                throw {name: "NoSuchElementException", message: "There is no next element"};
             }
-            lastAccessed = current;
-            data = current.data;
+            var nextItem = current.data;
+            lastVisited = current;
             current = current.next;
-            index++;
-            return data;
+            lastMoveWasPrev = false;
+            return nextItem;
         },
 
-        prev: function() {
+        previous: function() {
             if (!this.hasPrev()) {
-                throw{name: "IndexOutOfBoundsException", message: "Index was out of bounds"};
+                throw {name: "NoSuchElementException", message: "There is no previous element"};
             }
             current = current.prev;
-            index--;
-            lastAccessed = current;
+            lastVisited = current;
+            lastMoveWasPrev = true;
             return current.data;
         },
 
-        set: function(data) {
-            if (lastAccessed == null) throw {name: "IllegalStateException", message: "No last accessed item"};
-            lastAccessed.data = data;
-        },
-
         remove: function() {
-            if (lastAccessed == null) throw {name: "IllegalStateException", message: "No last accessed item"};
-            var prevNode = lastAccessed.prev;
-            var nextNode = lastAccessed.next;
-            prevNode.next = nextNode;
-            nextNode.prev = prevNode;
-            size--;
-            if(current === lastAccessed) {
-                current == nextNode;
-            } else {
-                index--;
+            if (expectedModCount !== modCount) {
+                throw {
+                    name: "ConcurrentModificationException",
+                    message: "Expected modification count was not equal to actual modcount"
+                };
             }
-            lastAccessed = null;
-        },
+            if(lastVisited === null) {
+                throw {name: "IllegalStateException"}
+            }
+            this.removeNode(lastVisited);
+            lastVisited = null;
+            if(lastMoveWasPrev) {
+                current = current.next;
+            }
+            expectedModCount++;
+        }
 
 
     }
 };
-
 
 
 
@@ -238,30 +209,23 @@ LinkedList.prototype.iterator = function() {
 
 
 var lista = new LinkedList();
-/*
-lista.insertEnd("Hei");
-lista.insertEnd(", du!")
-console.log(lista);
 
-lista.insertBefore(new Node("PREHEI"), lista.get("Hei"));
-console.log(lista);
-console.log(lista.get("PREHEI"));
-*/
 
-lista.insertBeginning(1);
-lista.insertBeginning(2);
-lista.insertBeginning(3);
-lista.insertBeginning(4);
-lista.insertBeginning(5);
-lista.insertBeginning(6);
-lista.insertBeginning(7);
-console.log(lista.isEmpty());
-console.log(lista.getSize());
-lista.toArray();
-/*lista.iterator().next();
-lista.iterator().next();
-lista.iterator().next();
-lista.iterator().next();
-lista.iterator().next();*/
+console.log("begin");
+/*lista.addLast(1);
+console.log("started");
+lista.addLast(2);
+lista.addLast(3);
+lista.addLast(4);
+lista.addLast(5);
+lista.addLast(6);
+lista.addLast(7);*/
 
+lista.addFirst(1);
+console.log("started");
+lista.addFirst(2);
+lista.addFirst(3);
+lista.addFirst(4);
+lista.addFirst(5);
+lista.addFirst(6);
 
