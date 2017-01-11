@@ -2,7 +2,7 @@ QUnit.module("Linked List tests");
 
 QUnit.test("Initialize without data", function (assert) {
     var linkedList = new LinkedList();
-    assert.equal(0, linkedList.size(), "Passed!");
+    assert.equal(linkedList.size(), 0, "Passed!");
 });
 
 QUnit.test("Add", function(assert) {
