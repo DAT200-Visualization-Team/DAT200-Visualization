@@ -52,6 +52,10 @@ LinkedList.prototype.removeNode = function(p) {
     return p.data;
 };
 
+LinkedList.prototype.removeByIdx = function(idx) {
+    return this.removeNode(this.getNode(idx));
+};
+
 LinkedList.prototype.removeFirst = function() {
     if (this.isEmpty()) {
         throw {name: "NoSuchElementException", message: "List is empty."};
@@ -65,10 +69,6 @@ LinkedList.prototype.removeLast = function() {
         throw {name: "NoSuchElementException", message: "List is empty."};
     }
     return this.removeByIdx(this.size() - 1);
-};
-
-LinkedList.prototype.removeByIdx = function(idx) {
-    return this.removeNode(this.getNode(idx));
 };
 
 LinkedList.prototype.removeByData = function(data) {
@@ -119,11 +119,11 @@ LinkedList.prototype.findPos = function(x) {
                 return p;
             }
         }
-        else if(x == p.data) { //must really use x.equals(p.data)
+        else if(x === p.data) { //must really use x.equals(p.data)
             return p;
         }
-        return -1;
     }
+    return -1;
 };
 
 LinkedList.prototype.toArray = function() {
@@ -131,7 +131,7 @@ LinkedList.prototype.toArray = function() {
     var p = head;
     while (p.next !== tail) {
         p = p.next;
-        list.push(p);
+        list.push(p.data);
     }
     console.log(list);
     return list;
@@ -201,31 +201,4 @@ LinkedList.prototype.iterator = function(idx) {
     }
 };
 
-
-
-
-
-
-
-
-var lista = new LinkedList();
-
-
-console.log("begin");
-/*lista.addLast(1);
-console.log("started");
-lista.addLast(2);
-lista.addLast(3);
-lista.addLast(4);
-lista.addLast(5);
-lista.addLast(6);
-lista.addLast(7);*/
-
-lista.addFirst(1);
-console.log("started");
-lista.addFirst(2);
-lista.addFirst(3);
-lista.addFirst(4);
-lista.addFirst(5);
-lista.addFirst(6);
-
+var list = new LinkedList();
