@@ -5,7 +5,7 @@ function Stack() {
 }
 
 Stack.prototype.isEmpty = function () {
-    return arrayList.length == 0;
+    return arrayList.size() === 0;
 }
 
 Stack.prototype.makeEmpty = function () {
@@ -25,5 +25,5 @@ Stack.prototype.top = function () {
 Stack.prototype.pop = function () {
     if(this.isEmpty())
         throw { name: "UnderflowException", message: "ArrayList is empty" };
-    return arrayList.remove(arrayList.size() - 1);
+    return arrayList.removeAtPos(arrayList.size() - 1);
 }
