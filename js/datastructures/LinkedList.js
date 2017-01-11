@@ -1,30 +1,26 @@
 // Linkedlist class
-var head;
-var tail;
-var theSize;
-var modCount;
-
 function LinkedList() {
-    head = new Node(null, null, null);
-    tail = new Node(null, head, null);
-    head.next = tail;
-    theSize = 0;
+    this.head = new Node(null, null, null);
+    this.tail = new Node(null, this.head, null);
+    this.head.next = this.tail;
+    this.theSize = 0;
+    this.modCount = 0;
 }
 
 LinkedList.prototype.clear = function() {
-    head = new Node(null, null, null);
-    tail = new Node(null, head, null);
-    head.next = tail;
-    theSize = 0;
-    modCount++;
+    this.head = new Node(null, null, null);
+    this.tail = new Node(null, this.head, null);
+    this.head.next = this.tail;
+    this.theSize = 0;
+    this.modCount++;
 };
 
 LinkedList.prototype.size = function() {
-    return theSize;
+    return this.theSize;
 };
 
 LinkedList.prototype.isEmpty = function() {
-    return theSize === 0;
+    return this.theSize === 0;
 };
 
 LinkedList.prototype.add = function(idx, data) {
@@ -32,23 +28,23 @@ LinkedList.prototype.add = function(idx, data) {
     var newNode = new Node(data, p.prev, p);
     newNode.prev.next = newNode;
     p.prev = newNode;
-    theSize++;
-    modCount++;
-}
+    this.theSize++;
+    this.modCount++;
+};
 
 LinkedList.prototype.addFirst = function(data) {
     this.add(0, data);
-}
+};
 
 LinkedList.prototype.addLast = function(data) {
     this.add(this.size(), data);
-}
+};
 
 LinkedList.prototype.removeNode = function(p) {
     p.next.prev = p.prev;
     p.prev.next = p.next;
-    theSize--;
-    modCount++;
+    this.theSize--;
+    this.modCount++;
     return p.data;
 };
 
@@ -72,38 +68,31 @@ LinkedList.prototype.removeLast = function() {
 };
 
 LinkedList.prototype.removeByData = function(data) {
-    var idx = this.findPos(data);
-    if (idx == -1) {
+    var pos = this.findPos(data);
+    if (pos == -1) {
         return false;
     }
     else {
-        this.removeByIdx(idx);
+        this.removeNode(pos);
         return true;
     }
 };
 
 LinkedList.prototype.getNode = function(idx) {
+    var p;
     if (idx < this.size() / 2) {
-        p = head.next;
+        p = this.head.next;
         for (var i = 0; i < idx; i++) {
             p = p.next;
         }
     } else {
-        p = tail;
+        p = this.tail;
         for (var i = this.size(); i > idx; i--) {
             p = p.prev;
         }
     }
     return p;
 };
-
-/*LinkedList.prototype.setAt = function(idx, newNode) {
-    var node = this.getNode(idx);
-    newNode.next = node;
-    node.prev.next = newNode;
-    theSize++;
-    modCount++;
-};*/
 
 LinkedList.prototype.set = function(idx, newVal) {
     var p = this.getNode(idx);
@@ -113,7 +102,7 @@ LinkedList.prototype.set = function(idx, newVal) {
 };
 
 LinkedList.prototype.findPos = function(x) {
-    for(var p = head.next; p !== tail; p = p.next) {
+    for(var p = this.head.next; p !== this.tail; p = p.next) {
         if (x === null) {
             if(p.data === null) {
                 return p;
@@ -128,12 +117,11 @@ LinkedList.prototype.findPos = function(x) {
 
 LinkedList.prototype.toArray = function() {
     var list = [];
-    var p = head;
-    while (p.next !== tail) {
+    var p = this.head;
+    while (p.next !== this.tail) {
         p = p.next;
         list.push(p.data);
     }
-    console.log(list);
     return list;
 };
 
@@ -141,21 +129,26 @@ LinkedList.prototype.iterator = function(idx) {
     var current = this.getNode(idx);
     var lastVisited = null;
     var lastMoveWasPrev = false;
-    var expectedModCount = modCount;
+    var expectedModCount = this.modCount;
+    var linkedList = this;
 
     return {
         hasNext: function() {
-            if (expectedModCount !== modCount) {
-                throw {name: "ConcurrentModificationException", message: "Expected modification count was not equal to actual modcount"};
+            if (expectedModCount !== linkedList.modCount) {
+                throw {
+                    name: "ConcurrentModificationException",
+                    message: "Expected modification count was not equal to actual modcount"};
             }
-            return current != tail;
+            return current != linkedList.tail;
         },
 
         hasPrev: function() {
-            if (expectedModCount !== modCount) {
-                throw {name: "ConcurrentModificationException", message: "Expected modification count was not equal to actual modcount"};
+            if (expectedModCount !== linkedList.modCount) {
+                throw {
+                    name: "ConcurrentModificationException",
+                    message: "Expected modification count was not equal to actual modcount"};
             }
-            return current !== head.next;
+            return current !== linkedList.head.next;
         },
 
         next: function() {
@@ -180,7 +173,7 @@ LinkedList.prototype.iterator = function(idx) {
         },
 
         remove: function() {
-            if (expectedModCount !== modCount) {
+            if (expectedModCount !== linkedList.modCount) {
                 throw {
                     name: "ConcurrentModificationException",
                     message: "Expected modification count was not equal to actual modcount"
@@ -189,16 +182,12 @@ LinkedList.prototype.iterator = function(idx) {
             if(lastVisited === null) {
                 throw {name: "IllegalStateException"}
             }
-            this.removeNode(lastVisited);
+            linkedList.removeNode(lastVisited);
             lastVisited = null;
             if(lastMoveWasPrev) {
                 current = current.next;
             }
             expectedModCount++;
         }
-
-
     }
 };
-
-var list = new LinkedList();
