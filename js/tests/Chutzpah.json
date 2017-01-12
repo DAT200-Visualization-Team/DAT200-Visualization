@@ -5,6 +5,11 @@
       "Path": "../datastructures",
       "Include": "*.js",
       "IsTestFrameworkFile": true
+    },
+    {
+      "Path": "../algorithms",
+      "Include": "*.js",
+      "IsTestFrameworkFile": true
     }
   ],
   "Tests": [
