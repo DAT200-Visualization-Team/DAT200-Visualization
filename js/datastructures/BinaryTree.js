@@ -17,6 +17,21 @@ BinaryTree.prototype.height = function () {
     return binaryTreeHeight(this.root);
 };
 
+BinaryTree.prototype.printPreOrder = function () {
+    if (this.root != null)
+        this.root.printPreOrder();
+};
+
+BinaryTree.prototype.printPostOrder = function () {
+    if (this.root != null)
+        this.root.printPostOrder();
+};
+
+BinaryTree.prototype.printInOrder = function () {
+    if (this.root != null)
+        this.root.printInOrder();
+};
+
 BinaryTree.prototype.makeEmpty = function () {
     this.root = null;
 };

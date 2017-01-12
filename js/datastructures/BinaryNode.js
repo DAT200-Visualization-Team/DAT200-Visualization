@@ -45,6 +45,30 @@ BinaryNode.prototype.duplicate = function () {
     return root;
 };
 
+BinaryNode.prototype.printPreOrder = function () {
+    console.log(this.element);
+    if (this.left != null)
+        this.left.printPreOrder()
+    if (this.right != null)
+        this.right.printPreOrder();
+};
+
+BinaryNode.prototype.printPostOrder = function () {
+    if (this.left != null)
+        this.left.printPostOrder()
+    if (this.right != null)
+        this.right.printPostOrder();
+    console.log(this.element);
+};
+
+BinaryNode.prototype.printInOrder = function () {
+    if (this.left != null)
+        this.left.printInOrder()
+    console.log(this.element);
+    if (this.right != null)
+        this.right.printInOrder();
+};
+
 function binaryTreeSize(t) {
     if (t == null)
         return 0;
