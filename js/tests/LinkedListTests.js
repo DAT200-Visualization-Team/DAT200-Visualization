@@ -2,7 +2,7 @@ QUnit.module("Linked List tests");
 
 QUnit.test("Initialize without data", function (assert) {
     var linkedList = new LinkedList();
-    assert.equal(0, linkedList.size(), "Passed!");
+    assert.equal(linkedList.size(), 0, "Passed!");
 });
 
 QUnit.test("Add", function(assert) {
@@ -61,7 +61,7 @@ QUnit.test("Remove by data", function(assert) {
     linkedList.addLast(1);
     linkedList.addLast(2);
     linkedList.addLast(3);
-    assert.ok(linkedList.removeByData(1), true, "Passed!");
+    assert.deepEqual(linkedList.removeByData(1), true, "Passed!");
 });
 
 QUnit.test("Remove by invalid data", function(assert) {
@@ -106,5 +106,101 @@ QUnit.test("To array", function(assert) {
     linkedList.addLast(3);
     assert.deepEqual(linkedList.toArray(), array, "Passed!");
 });
+
+
+QUnit.module("Linked List iterator tests");
+
+QUnit.test("Iterator: has next", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(0);
+    assert.deepEqual(it.hasNext(), true, "Passed!");
+});
+
+QUnit.test("Iterator: has no next", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(6);
+    assert.deepEqual(it.hasNext(), false, "Passed!");
+});
+
+QUnit.test("Iterator: next", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(0);
+    it.next();
+    it.next();
+    assert.equal(it.next(), 3, "Passed!");
+});
+
+QUnit.test("Iterator: has previous", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(3);
+    assert.deepEqual(it.hasPrev(), true, "Passed!");
+});
+
+QUnit.test("Iterator: has no previous", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(0);
+    assert.deepEqual(it.hasPrev(), false, "Passed!");
+});
+
+QUnit.test("Iterator: previous", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(3);
+    assert.deepEqual(it.previous(), 3, "Passed!");
+});
+
+
+QUnit.test("Iterator: previous", function(assert) {
+    var list = new LinkedList();
+    list.addFirst(6);
+    list.addFirst(5);
+    list.addFirst(4);
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    var it = list.iterator(2);
+    it.next();
+    it.remove()
+    assert.deepEqual(it.previous(), 2, "Passed!");
+});
+
+
+
+
 
 

@@ -4,12 +4,16 @@ const NOT_FOUND = -1;
 function ArrayList(other) {
     this.theItems;
     this.theSize;
-    this.modCount;
+    this.modCount = 0;
 
     this.clear();
-    if(other)
+    if (!other)
+        return;
+
+    if (other.constructor === Array) {
         for (var i = 0; i < other.length; i++)
             this.add(other[i]);
+    }
 }
 
 ArrayList.prototype.size = function () {
@@ -107,11 +111,11 @@ ArrayList.prototype.iterator = function (startIndex) {
             nextCompleted = false;
             prevCompleted = true;
 
-            return nextIndex >= 0 ? { value: arrayList.theItems[nextIndex--], done: false } : { done: true };
+            return nextIndex >= 0 ? { value: arrayList.theItems[--nextIndex], done: false } : { done: true };
         },
 
         remove: function () {
-            if (expectedModCount != arrayList.modCount)
+            if (expectedModCount !== arrayList.modCount)
                 throw { name: "ConcurrentModificationException", message: "The collection was modified concurrently" };
 
             if (nextCompleted)
