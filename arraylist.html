@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/arraylist.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body>
@@ -46,28 +48,48 @@
 <ul id="tre" class="dropdown-content">
     <li><a href="avltre.html">AVL-tre</a></li>
 </ul>
-<nav>
+<nav class="red">
     <div class="nav-wrapper">
         <a href="index.html" class="brand-logo">Algoritmer og Datastrukturer</a>
         <ul style="float: right">
             <!-- Dropdown Trigger -->
-            <li><a class="dropdown-button" href="#!" data-activates="lister">Lister<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-button" href="#!" data-activates="sortering">Sortering<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-button" href="#!" data-activates="grafer">Grafer<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-button" href="#!" data-activates="tre">Trær<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="lister" data-beloworigin="true">Lister<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="sortering" data-beloworigin="true">Sortering<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="grafer" data-beloworigin="true">Grafer<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="tre" data-beloworigin="true">Trær<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a href="#modal1"><i class="material-icons">settings</i></a></li>
         </ul>
     </div>
 </nav>
 
-
-<div id="graphics" style="float: left; width: 50%; resize: both; overflow: auto">Test</div>
-<div id="code" style="float: right; width: 50%; resize: both"></div>
+<div id="view" style="position: absolute; height: calc(100% - 64px); width: 100%; padding: 0; margin: 0; overflow: hidden">
+    <div id="graphics" style="float: left; width: 50%; height: 100%; border-right: solid; border-color: #F44336">
+        <div id="drawingArea" style="width:50%; margin: 0 auto; position: relative; top:50%">
+            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">5</p></div>
+            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">1</p></div>
+            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">5</p></div>
+            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">7</p></div>
+            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">9</p></div>
+        </div>
+    </div>
+    <div id="code" style="float: right; width: 50%; height: 100%">
+        <div style="margin: 0 auto; position: relative; top:50%;">
+            <p style="margin: 10px">Lorem ipsum dolor sit amet, cu nec error graecis. Pro ne soluta definiebas definitiones, ad per regione iuvaret eloquentiam, feugait reprimique dissentias pro ei. Malis commune ne sea, nam et tale solet scriptorem. Hinc veritus eam an. Id ius saepe mentitum fabellas, vel te accumsan vulputate.</p>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
 <script src="js/materialize.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="js/resize.js"></script>
+<script src="js/visualization.js"></script>
+<script src="js/datastructures/ArrayList.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
