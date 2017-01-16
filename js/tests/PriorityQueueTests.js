@@ -14,7 +14,7 @@ QUnit.test("Enqueue", function (assert) {
 });
 
 QUnit.test("Enqueue and get front", function (assert) {
-    pq.makeEmpty();
+    var pq = new PriorityQueue();
     pq.enqueue("3", 3);
     pq.enqueue("2", 2);
     pq.enqueue("1", 1);
@@ -25,7 +25,7 @@ QUnit.test("Enqueue and get front", function (assert) {
 });
 
 QUnit.test("Dequeue", function (assert) {
-    pq.makeEmpty();
+    var pq = new PriorityQueue();
     pq.enqueue(3, 3);
     pq.enqueue(2, 2);
     pq.enqueue(1, 1);
@@ -36,7 +36,7 @@ QUnit.test("Dequeue", function (assert) {
 });
 
 QUnit.test("Multiple dequeue", function (assert) {
-    pq.makeEmpty();
+    var pq = new PriorityQueue();
     pq.enqueue(3, 3);
     pq.enqueue(2, 2);
     pq.enqueue(1, 1);
