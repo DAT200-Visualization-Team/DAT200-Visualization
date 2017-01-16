@@ -41,7 +41,7 @@ GUIArray.prototype.addGUICell = function (pos) {
     this.guiElements[pos] = document.createElement("div");
     this.guiElements[pos].className = "element red lighten-3 z-depth-3";
     var value = document.createElement("p");
-    value.className = "arrayVal";
+    value.className = "arrayVal noselect";
     this.guiElements[pos].appendChild(value);
     this.canvas.appendChild(this.guiElements[pos]);
     return value;
