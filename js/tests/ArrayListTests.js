@@ -5,7 +5,7 @@ QUnit.test("Initialize without data", function (assert) {
 });
 
 QUnit.test("Initialize with array", function (assert) {
-    var arrayList = new ArrayList([5, 1, 6, 3, 7, 5]); // Length of 6
+    var arrayList = new ArrayList([5, 1, 6, 3, 7, 5]);
     assert.deepEqual(arrayList.size(), 6, "Passed!");
 });
 

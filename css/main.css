@@ -95,6 +95,33 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.element{
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    margin: 5px;
+    vertical-align: middle;
+    line-height: 50px;
+    will-change: scale, opacity;
+    position: relative;
+    z-index: 5;
+}
+
+.arrayVal{
+    margin: 0;
+    text-align: center;
+    font-size: 5ch;
+    will-change: scale, opacity;
+    z-index: 10;
+}
+
+.drawingArea {
+    width:50%;
+    margin: 0 auto;
+    position: relative;
+    top:50%;
+    padding-bottom: 2em;
+}
 
 
 
