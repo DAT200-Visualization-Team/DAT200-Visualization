@@ -8,13 +8,14 @@ var array;
 //var array2;
 
 //Create new array in gui - PH event
-graphics.click(function() {
+
+$( document ).ready(function() {
     graphics.empty();
     array = new GUIArray(5);
     array.createArray();
     //array2 = new GUIArray(5);
     //array2.createArray();
-
+    $( "#draggable" ).draggable();
 });
 
 function GUIArray(capacity) {
@@ -41,7 +42,7 @@ GUIArray.prototype.addGUICell = function (pos) {
     this.guiElements[pos] = document.createElement("div");
     this.guiElements[pos].className = "element red lighten-3 z-depth-3";
     var value = document.createElement("p");
-    value.className = "arrayVal";
+    value.className = "arrayVal noselect";
     this.guiElements[pos].appendChild(value);
     this.canvas.appendChild(this.guiElements[pos]);
     return value;
@@ -74,11 +75,11 @@ GUIArray.prototype.replaceArrElement = function (pos, newValue) {
 
 GUIArray.prototype.moveElement = function(toArray, fromPos, toPos) {
     var copy = this.guiElements[fromPos].firstChild.cloneNode(true);
-    this.guiElements[fromPos].appendChild(copy);
+    this.canvas.appendChild(copy);
     //this.canvas.appendChild(copy);
     //Animate move to toElement
     copy.style.color = "red";
-    var animation = moveAndReplaceAnimation(toArray.guiElements[fromPos].firstChild, toArray.guiElements[toPos].firstChild, copy);
+    var animation = moveAndReplaceAnimation(toArray.guiElements[fromPos], toArray.guiElements[toPos], copy);
     animation.onfinish = function() {
         toArray.guiElements[toPos].replaceChild(copy, toArray.guiElements[toPos].firstChild);
         copy.style.color = "black";
@@ -115,18 +116,21 @@ function moveAndReplaceAnimation(fromNode, toNode, element) {
     var destinationY = toNode.offsetTop - parent.offsetTop;
     var fromX = fromNode.offsetLeft - parent.offsetLeft;
     var fromY = fromNode.offsetTop - parent.offsetTop;
-    //console.log("Destination: " + destinationX + ", " + destinationY);
-    //console.log("source: " + fromX + ", " + fromY);
-    //var deltaX = destinationX - fromX;
-    var deltaX = 100;
-    var deltaY = 0;
-    //var deltaY = destinationY - fromY;
+    var deltaX = destinationX - fromX;
+    var deltaY = destinationY - fromY;
+    var x = fromNode.offsetLeft + 13;
+    var y = fromNode.offsetTop - 5;
+    console.log("Delta X: " + deltaX);
+    console.log("Delta Y: " + deltaY);
     element.style.position = "absolute";
-    element.style.left = fromNode.offsetLeft + "px";
-    element.style.top = fromNode.offsetTop + "px";
+    element.style.left = x + "px";
+    element.style.top = y + "px";
     element.style.zIndex = "1000";
     var frames = [
         {transform: "translateX(" + 0 + "px) translateY(" + 0 + "px)"},
+        {transform: "translateX(" + (deltaX/4) + "px) translateY(" + (deltaY-60) + "px)"},
+        {transform: "translateX(" + ((2*deltaX)/4) + "px) translateY(" + (deltaY-80) + "px)"},
+        {transform: "translateX(" + ((3*deltaX)/4) + "px) translateY(" + (deltaY-60) + "px)"},
         {transform: "translateX(" + deltaX + "px) translateY(" + deltaY + "px)"}
         ];
     var timing = {
