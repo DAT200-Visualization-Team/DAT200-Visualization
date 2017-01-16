@@ -10,7 +10,7 @@ TreeIterator.prototype.isValid = function () {
 TreeIterator.prototype.retrieve = function () {
     if (this.current == null)
         throw { name: "NoSuchElementException", message: "The element does not exist" };
-    return current.getElement();
+    return this.current.getElement();
 };
 
 TreeIterator.prototype.postOrderIterator = function () {
@@ -64,7 +64,13 @@ TreeIterator.prototype.inOrderIterator = function () {
     s.push(this.t.root);
 
     return {
-        first: treeIterator.postOrderIterator().first, // Steal from postOrderIterator
+        first: function () {
+            s.makeEmpty();
+            if (treeIterator.t.getRoot() != null) {
+                s.push(new StNode(treeIterator.t.getRoot()));
+                this.advance();
+            }
+        },
 
         advance: function () {
             if (s.isEmpty()) {
@@ -86,8 +92,8 @@ TreeIterator.prototype.inOrderIterator = function () {
                 }
                 // First time through
                 s.push(cnode);
-                if (cnode.node.getLeft != null)
-                    s.push(cnode.node.getLeft());
+                if (cnode.node.getLeft() != null)
+                    s.push(new StNode(cnode.node.getLeft()));
             }
         }
     };
@@ -96,14 +102,14 @@ TreeIterator.prototype.inOrderIterator = function () {
 TreeIterator.prototype.preOrderIterator = function () {
     var treeIterator = this;
     var s = new Stack();
-    s.push(this.t.root);
+    s.push(new StNode(this.t.root));
 
     return {
         first: function() {
             s.makeEmpty();
             if (treeIterator.t.getRoot() != null) {
                 s.push(treeIterator.t.getRoot());
-                this.advance;
+                this.advance();
             }
         },
 
@@ -135,7 +141,7 @@ TreeIterator.prototype.levelOrderIterator = function () {
             q.makeEmpty();
             if (treeIterator.t.getRoot() != null) {
                 q.enqueue(treeIterator.t.getRoot());
-                this.advance;
+                this.advance();
             }
         },
 

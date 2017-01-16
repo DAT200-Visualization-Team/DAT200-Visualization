@@ -3,7 +3,7 @@ function BinaryNode(theElement, lt, rt) {
     this.left = null;
     this.right = null;
 
-    if (theElement !== undefined && left !== undefined && right !== undefined) {
+    if (theElement !== undefined && lt !== undefined && rt !== undefined) {
         this.element = theElement;
         this.left = lt;
         this.right = rt;
@@ -18,7 +18,7 @@ BinaryNode.prototype.getLeft = function () {
     return this.left;
 };
 
-BinaryNode.prototype.getRight = function(){
+BinaryNode.prototype.getRight = function() {
     return this.right;
 };
 
@@ -82,4 +82,3 @@ function binaryTreeHeight(t) {
     else
         return 1 + Math.max(binaryTreeHeight(t.left), binaryTreeHeight(t.right))
 }
-
