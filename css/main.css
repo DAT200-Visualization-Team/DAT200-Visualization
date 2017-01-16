@@ -116,11 +116,13 @@ textarea {
 }
 
 .drawingArea {
-    width:50%;
-    margin: 0 auto;
+    width:100%;
+    padding-left: 10px;
+    padding-right: 10px;
     position: relative;
     top:50%;
     padding-bottom: 2em;
+    text-align: center;
 }
 
 
