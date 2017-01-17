@@ -71,6 +71,20 @@ BinaryNode.prototype.printInOrder = function () {
         this.right.printInOrder();
 };
 
+function BinaryNodeWithSize(x) {
+    BinaryNode.call(this, x);
+    this.size = 0;
+}
+
+BinaryNodeWithSize.prototype = Object.create(BinaryNode.prototype, {
+    constructor: {
+        configurable: true,
+        enumerable: true,
+        value: BinaryNodeWithSize,
+        writable: true
+    }
+});
+
 function binaryTreeSize(t) {
     if (t == null)
         return 0;
