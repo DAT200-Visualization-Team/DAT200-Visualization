@@ -3,8 +3,10 @@ function BinaryNode(theElement, lt, rt) {
     this.left = null;
     this.right = null;
 
-    if (theElement !== undefined && lt !== undefined && rt !== undefined) {
+    if (theElement !== undefined)
         this.element = theElement;
+
+    if (lt !== undefined && rt !== undefined) {
         this.left = lt;
         this.right = rt;
     }
