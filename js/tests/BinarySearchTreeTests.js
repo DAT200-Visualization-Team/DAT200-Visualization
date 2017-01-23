@@ -108,17 +108,6 @@ QUnit.test("Make a tree with 6 nodes, check for correct root right", function (a
     assert.deepEqual(bst.root.getRight().getElement(), 9, "Passed!");
 });
 
-QUnit.test("Make a tree with 6 nodes, check for correct root right", function (assert) {
-    var bst = new BinarySearchTree();
-    bst.insert(7);
-    bst.insert(9);
-    bst.insert(2);
-    bst.insert(1);
-    bst.insert(5);
-    bst.insert(3);
-    assert.deepEqual(bst.root.getRight().getElement(), 9, "Passed!");
-});
-
 QUnit.test("Make a tree with 6 nodes, check for correct height", function (assert) {
     var bst = new BinarySearchTree();
     bst.insert(7);
