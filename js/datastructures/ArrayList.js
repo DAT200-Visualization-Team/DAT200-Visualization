@@ -1,8 +1,7 @@
 const DEFAULT_CAPACITY = 10;
 const NOT_FOUND = -1;
 
-function ArrayList(GUI, other) {
-    this.GUI = GUI;
+function ArrayList(other) {
     this.theItems;
     this.theSize;
     this.modCount = 0;
@@ -39,8 +38,8 @@ ArrayList.prototype.set = function (index, newVal) {
     old = this.theItems[index];
     this.theItems[index] = newVal;
 
-    //Animation
-    this.GUI.replaceArrElement(index, newVal);
+    //Send event to gui
+    $(document).trigger("replaceElement", [index, newVal]);
 
     return old;
 };
@@ -72,8 +71,10 @@ ArrayList.prototype.add = function (x) {
     this.theItems[this.theSize++] = x;
     this.modCount++;
 
-    //Animation
-    this.GUI.addToArray(x);
+    //Send event to GUI
+    $(document).trigger("addToArray", x);
+    //this.GUI.updateTheSize(this.theSize);
+    //this.GUI.updateModCount(this.modCount);
 
     return true;
 };
@@ -93,14 +94,16 @@ ArrayList.prototype.removeAtPos = function (index) {
     for (var i = index; i < this.size() - 1; i++) {
         this.theItems[i] = this.theItems[i + 1];
 
-        //Animation
-        this.GUI.moveElement(this.GUI, i+1, i);
+        //Send event to GUI
+        $(document).trigger("moveElement", [i + 1, i]);
     }
-    //Animation
-    if(this.GUI.guiElements.length == i) this.GUI.guiElements[i].firstChild.style.color = "grey";
 
     this.theSize--;
     this.modCount++;
+
+    //Update gui
+    //this.GUI.updateTheSize(this.theSize);
+    //this.GUI.updateModCount(this.modCount);
 
     return removedItem;
 };

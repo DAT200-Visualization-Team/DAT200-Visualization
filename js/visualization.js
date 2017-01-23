@@ -21,17 +21,41 @@ $( document ).ready(function() {
     $( "#draggable" ).draggable();
 });
 
+$(document).on("addToArray", {test: this},
+    function(event, newVal) {
+        array.addToArray(newVal);
+    });
+
+$(document).on("moveElement", {test: this},
+    function(event, e_fromPos, e_toPos) {
+        //Might be bad!
+        array.moveElement(array, e_fromPos, e_toPos);
+    });
+
+$(document).on("replaceElement", {test: this},
+    function(event, index, newVal) {
+        array.replaceArrElement(index, newVal);
+    });
+
 function GUIArray(capacity) {
     this.canvas;
     this.guiElements = new Array(capacity);
-    this.length = 0;
+    this.theSize;
+    this.modCount;
+
+    //Event test
+
 }
 
 GUIArray.prototype.createArray = function() {
+    this.theSize = document.createElement("p");
+    this.modCount = document.createElement("p");
     //Check if capacity is good enough. If it's not extend.
     this.canvas = document.createElement("div");
     this.canvas.className = "drawingArea";
     document.getElementById("graphics").appendChild(this.canvas);
+    this.canvas.appendChild(this.theSize);
+    this.canvas.appendChild(this.modCount);
     for(var i = 0; i < this.guiElements.length; i++) {
         var value = this.addGUICell(i);
         // Replace X with value from array code
@@ -77,6 +101,7 @@ GUIArray.prototype.replaceArrElement = function (pos, newValue) {
 };
 
 GUIArray.prototype.moveElement = function(toArray, fromPos, toPos) {
+    console.log("fromPos: " + fromPos + ", toPos: " + toPos);
     var copy = this.guiElements[fromPos].firstChild.cloneNode(true);
     this.canvas.appendChild(copy);
     //this.canvas.appendChild(copy);
@@ -96,6 +121,14 @@ GUIArray.prototype.extendCapacity = function () {
         var cell = this.addGUICell(i);
         popInAnimation(cell.parentNode);
     }
+};
+
+GUIArray.prototype.updateTheSize = function (newVal) {
+    this.theSize.innerHTML = newVal;
+};
+
+GUIArray.prototype.updateModCount = function (newVal) {
+    this.modCount.innerHTML = newVal;
 };
 
 function popInAnimation(node) {
