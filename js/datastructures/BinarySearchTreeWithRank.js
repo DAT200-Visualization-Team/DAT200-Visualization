@@ -1,18 +1,72 @@
 function BinarySearchTreeWithRank() {
-    BinarySearchTree.call(this);
+    this.root = null;
 }
 
-BinarySearchTreeWithRank.prototype = Object.create(BinarySearchTree, {
-    constructor: {
-        configurable: true,
-        enimerable: true,
-        value: BinarySearchTreeWithRank,
-        writable: true
-    }
-});
+BinarySearchTreeWithRank.prototype.insert = function (x) {
+    this.root = this.insertNode(x, this.root);
+};
+
+BinarySearchTreeWithRank.prototype.remove = function (x) {
+    this.root = this.removeNode(x, this.root);
+};
+
+BinarySearchTreeWithRank.prototype.removeMin = function () {
+    this.root = this.removeMinNode(this.root);
+};
+
+BinarySearchTreeWithRank.prototype.findMin = function () {
+    return this.elementAt(this.findMinNode(this.root));
+};
+
+BinarySearchTreeWithRank.prototype.findMax = function () {
+    return this.elementAt(this.findMaxNode(this.root));
+};
+
+BinarySearchTreeWithRank.prototype.find = function (x) {
+    return this.elementAt(this.findNode(x, this.root));
+};
 
 BinarySearchTreeWithRank.prototype.findKth = function (k) {
     return this.findKthNode(k, this.root).getElement();
+};
+
+BinarySearchTreeWithRank.prototype.makeEmpty = function () {
+    this.root = null;
+};
+
+BinarySearchTreeWithRank.prototype.isEmpty = function () {
+    return this.root == null;
+};
+
+BinarySearchTreeWithRank.prototype.elementAt = function (t) {
+    return t === null ? null : t.getElement();
+};
+
+BinarySearchTreeWithRank.prototype.findNode = function (x, t) {
+    while (t !== null) {
+        if (x - t.getElement() < 0)
+            t = t.getLeft();
+        else if (x - t.getElement() > 0)
+            t = t.getRight();
+        else
+            return t; // Match
+    }
+
+    return null; // Not Found
+};
+
+BinarySearchTreeWithRank.prototype.findMinNode = function (t) {
+    if (t !== null)
+        while (t.getLeft() !== null)
+            t = t.getLeft();
+    return t;
+};
+
+BinarySearchTreeWithRank.prototype.findMaxNode = function (t) {
+    if (t !== null)
+        while (t.getRight() !== null)
+            t = t.getRight();
+    return t;
 };
 
 BinarySearchTreeWithRank.prototype.findKthNode = function (k, t) {

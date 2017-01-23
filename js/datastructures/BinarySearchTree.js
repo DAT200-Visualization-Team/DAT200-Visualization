@@ -31,7 +31,7 @@ BinarySearchTree.prototype.makeEmpty = function () {
 };
 
 BinarySearchTree.prototype.isEmpty = function () {
-    return this.root === null;
+    return this.root == null;
 };
 
 BinarySearchTree.prototype.elementAt = function (t) {
