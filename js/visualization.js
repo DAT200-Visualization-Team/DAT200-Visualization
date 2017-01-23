@@ -2,9 +2,11 @@
  * Created by Simen on 10.01.2017.
  */
 var graphics = $("#graphics");
+var code = $("#code");
 
 //Test variabel
 var array;
+var arraylist;
 //var array2;
 
 //Create new array in gui - PH event
@@ -13,6 +15,7 @@ $( document ).ready(function() {
     graphics.empty();
     array = new GUIArray(5);
     array.createArray();
+    arraylist = new ArrayList(array);
     //array2 = new GUIArray(5);
     //array2.createArray();
     $( "#draggable" ).draggable();
@@ -140,4 +143,44 @@ function moveAndReplaceAnimation(fromNode, toNode, element) {
     };
     var animation = element.animate(frames, timing);
     return animation
+}
+
+// Code animations
+function highlightCode(line) {
+    var frames = [
+        {color: "black"},
+        {color: "red"}
+    ];
+    var timing = {
+        duration: 500,
+        direction: 'alternate',
+        easing: 'linear'
+    };
+    var animation = line.animate(frames, timing);
+    line.style.color = "red";
+    animation.onfinish = function() {
+        setTimeout(function(){
+            frames = [
+                {color: "red"},
+                {color: "black"}
+            ];
+            timing = {
+                duration: 500,
+                direction: 'alternate',
+                easing: 'linear'
+            };
+            animation = line.animate(frames, timing);
+            line.style.color = "black";
+        }, 1000);
+    };
+
+    return animation
+}
+
+function displayAddCode() {
+    //TODO parse JSON file and get current code from file
+    var txt3 = document.createElement("p");
+    txt3.innerHTML = "Code";
+    document.getElementById("codeTextField").appendChild(txt3);
+    highlightCode(txt3);
 }
