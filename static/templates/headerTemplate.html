@@ -6,6 +6,14 @@
     </ul>
 {{/each}}
 
+{{#each categories}}
+<ul id="mobile{{id}}" class="dropdown-content">
+    {{#each subCategories}}
+    <li><a href="/{{this.id}}.html">{{this.name}}</a></li>
+    {{/each}}
+</ul>
+{{/each}}
+
 <nav class="red">
     <div class="nav-wrapper">
         <a href="/index.html" class="brand-logo left">AlgDat</a>
@@ -19,7 +27,7 @@
 
         <ul class="side-nav" id="mobilemenu">
             {{#each categories}}
-                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="mobile{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
             {{/each}}
             <li><a href="#modal1"><i class="material-icons">settings</i></a></li>
         </ul>
