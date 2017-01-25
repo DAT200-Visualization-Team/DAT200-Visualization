@@ -38,6 +38,9 @@ ArrayList.prototype.set = function (index, newVal) {
     old = this.theItems[index];
     this.theItems[index] = newVal;
 
+    //Send event to gui
+    $(document).trigger("replaceElement", [index, newVal]);
+
     return old;
 };
 
@@ -67,6 +70,12 @@ ArrayList.prototype.add = function (x) {
     }
     this.theItems[this.theSize++] = x;
     this.modCount++;
+
+    //Send event to GUI
+    $(document).trigger("addToArray", x);
+    //this.GUI.updateTheSize(this.theSize);
+    //this.GUI.updateModCount(this.modCount);
+
     return true;
 };
 
@@ -82,10 +91,20 @@ ArrayList.prototype.remove = function (x) {
 
 ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
-    for (var i = index; i < this.size() - 1; i++)
+    for (var i = index; i < this.size() - 1; i++) {
         this.theItems[i] = this.theItems[i + 1];
+
+        //Send event to GUI
+        $(document).trigger("moveElement", [i + 1, i]);
+    }
+
     this.theSize--;
     this.modCount++;
+
+    //Update gui
+    //this.GUI.updateTheSize(this.theSize);
+    //this.GUI.updateModCount(this.modCount);
+
     return removedItem;
 };
 

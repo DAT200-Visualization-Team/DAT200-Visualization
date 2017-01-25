@@ -2,9 +2,11 @@
  * Created by Simen on 10.01.2017.
  */
 var graphics = $("#graphics");
+var code = $("#code");
 
 //Test variabel
 var array;
+var arraylist;
 //var array2;
 
 //Create new array in gui - PH event
@@ -13,22 +15,47 @@ $( document ).ready(function() {
     graphics.empty();
     array = new GUIArray(5);
     array.createArray();
+    arraylist = new ArrayList(array);
     //array2 = new GUIArray(5);
     //array2.createArray();
     $( "#draggable" ).draggable();
 });
 
+$(document).on("addToArray", {test: this},
+    function(event, newVal) {
+        array.addToArray(newVal);
+    });
+
+$(document).on("moveElement", {test: this},
+    function(event, e_fromPos, e_toPos) {
+        //Might be bad!
+        array.moveElement(array, e_fromPos, e_toPos);
+    });
+
+$(document).on("replaceElement", {test: this},
+    function(event, index, newVal) {
+        array.replaceArrElement(index, newVal);
+    });
+
 function GUIArray(capacity) {
     this.canvas;
     this.guiElements = new Array(capacity);
-    this.length = 0;
+    this.theSize;
+    this.modCount;
+
+    //Event test
+
 }
 
 GUIArray.prototype.createArray = function() {
+    this.theSize = document.createElement("p");
+    this.modCount = document.createElement("p");
     //Check if capacity is good enough. If it's not extend.
     this.canvas = document.createElement("div");
     this.canvas.className = "drawingArea";
     document.getElementById("graphics").appendChild(this.canvas);
+    this.canvas.appendChild(this.theSize);
+    this.canvas.appendChild(this.modCount);
     for(var i = 0; i < this.guiElements.length; i++) {
         var value = this.addGUICell(i);
         // Replace X with value from array code
@@ -74,6 +101,7 @@ GUIArray.prototype.replaceArrElement = function (pos, newValue) {
 };
 
 GUIArray.prototype.moveElement = function(toArray, fromPos, toPos) {
+    console.log("fromPos: " + fromPos + ", toPos: " + toPos);
     var copy = this.guiElements[fromPos].firstChild.cloneNode(true);
     this.canvas.appendChild(copy);
     //this.canvas.appendChild(copy);
@@ -93,6 +121,14 @@ GUIArray.prototype.extendCapacity = function () {
         var cell = this.addGUICell(i);
         popInAnimation(cell.parentNode);
     }
+};
+
+GUIArray.prototype.updateTheSize = function (newVal) {
+    this.theSize.innerHTML = newVal;
+};
+
+GUIArray.prototype.updateModCount = function (newVal) {
+    this.modCount.innerHTML = newVal;
 };
 
 function popInAnimation(node) {
@@ -140,4 +176,44 @@ function moveAndReplaceAnimation(fromNode, toNode, element) {
     };
     var animation = element.animate(frames, timing);
     return animation
+}
+
+// Code animations
+function highlightCode(line) {
+    var frames = [
+        {color: "black"},
+        {color: "red"}
+    ];
+    var timing = {
+        duration: 500,
+        direction: 'alternate',
+        easing: 'linear'
+    };
+    var animation = line.animate(frames, timing);
+    line.style.color = "red";
+    animation.onfinish = function() {
+        setTimeout(function(){
+            frames = [
+                {color: "red"},
+                {color: "black"}
+            ];
+            timing = {
+                duration: 500,
+                direction: 'alternate',
+                easing: 'linear'
+            };
+            animation = line.animate(frames, timing);
+            line.style.color = "black";
+        }, 1000);
+    };
+
+    return animation
+}
+
+function displayAddCode() {
+    //TODO parse JSON file and get current code from file
+    var txt3 = document.createElement("p");
+    txt3.innerHTML = "Code";
+    document.getElementById("codeTextField").appendChild(txt3);
+    highlightCode(txt3);
 }

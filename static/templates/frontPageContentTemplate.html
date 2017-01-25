@@ -1,0 +1,24 @@
+<div class="container">
+    {{#each categories}}
+        <div class="row" style="margin-bottom: 0">
+            <div class="col l12">
+                <div class="card horizontal red lighten-4 hoverable">
+                    <div class="card-image">
+                        <img src="http://kriblikrably.com/wp-content/themes/shopperpress/thumbs/list.png"/>
+                    </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <h5 class="card-title header">{{name}}</h5>
+                            <p>Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.</p>
+                        </div>
+                        <div class="card-action" style="padding-bottom: 2em">
+                            {{#each subCategories}}
+                                <a class="col l5 text-darken-3 red-text" href="/{{this.id}}.html">{{this.name}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>

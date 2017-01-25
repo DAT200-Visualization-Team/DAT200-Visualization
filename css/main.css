@@ -135,7 +135,11 @@ textarea {
                           not supported by any browser */
 }
 
-
+.codeTextField {
+    margin-left: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 
 

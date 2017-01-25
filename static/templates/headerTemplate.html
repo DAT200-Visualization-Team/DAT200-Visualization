@@ -1,0 +1,58 @@
+{{#each categories}}
+    <ul id="{{id}}" class="dropdown-content">
+        {{#each subCategories}}
+            <li><a href="/{{this.id}}.html">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{/each}}
+
+<nav class="red">
+    <div class="nav-wrapper">
+        <a href="/index.html" class="brand-logo left">AlgDat</a>
+        <a href="#" data-activates="mobilemenu" class="right button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-small-only">
+            {{#each categories}}
+                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+            {{/each}}
+            <li><a href="#modal1"><i class="material-icons">settings</i></a></li>
+        </ul>
+
+        <ul class="side-nav" id="mobilemenu">
+            {{#each categories}}
+                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+            {{/each}}
+            <li><a href="#modal1"><i class="material-icons">settings</i></a></li>
+        </ul>
+    </div>
+</nav>
+
+<div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4>Settings</h4>
+        <!-- Load file --->
+        <form action="#">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Load</span>
+                    <input type="file" multiple>
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                </div>
+            </div>
+            <!-- Set font size -->
+            <div class="input-field col s12">
+                <select>
+                    <option value="" disabled selected>Font størrelse</option>
+                    <option value="1">10</option>
+                    <option value="2">12</option>
+                    <option value="3">14</option>
+                </select>
+                <label>Font størrelse</label>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+</div>

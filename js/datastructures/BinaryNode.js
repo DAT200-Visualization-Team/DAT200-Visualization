@@ -3,8 +3,10 @@ function BinaryNode(theElement, lt, rt) {
     this.left = null;
     this.right = null;
 
-    if (theElement !== undefined && lt !== undefined && rt !== undefined) {
+    if (theElement !== undefined)
         this.element = theElement;
+
+    if (lt !== undefined && rt !== undefined) {
         this.left = lt;
         this.right = rt;
     }
@@ -81,4 +83,28 @@ function binaryTreeHeight(t) {
         return -1;
     else
         return 1 + Math.max(binaryTreeHeight(t.left), binaryTreeHeight(t.right))
+}
+
+function rotateWithLeftChild(k2) {
+    var k1 = k2.left;
+    k2.left = k1.right;
+    k1.right = k2;
+    return k1;
+}
+
+function rotateWithRightChild(k1) {
+    var k2 = k1.right;
+    k1.right = k2.left;
+    k2.left = k1;
+    return k2;
+}
+
+function doubleRotateWithLeftChild(k3) {
+    k3.left = rotateWithRightChild(k3.left);
+    return rotateWithLeftChild(k3);
+}
+
+function doubleRotateWithRightChild(k1) {
+    k1.right = rotateWithLeftChild(k1.right);
+    return rotateWithRightChild(k1);
 }
