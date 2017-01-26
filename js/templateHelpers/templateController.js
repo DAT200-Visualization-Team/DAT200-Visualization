@@ -35,11 +35,13 @@ var categoryData = {
     ]
 };
 
-var renderedHeaderHtml = render("headerTemplate", categoryData);
-$("body").prepend(renderedHeaderHtml);
+$(document).ready(function () {
+    var renderedHeaderHtml = render("headerTemplate", categoryData);
+    $("body").prepend(renderedHeaderHtml);
 
-var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
-if (currentFile == "index.html") {
-    var renderedIndexContent = render("frontPageContentTemplate", categoryData);
-    $("body").append(renderedIndexContent);
-}
+    var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+    if (currentFile == "index.html") {
+        var renderedIndexContent = render("frontPageContentTemplate", categoryData);
+        $("body").append(renderedIndexContent);
+    }
+});
