@@ -1,15 +1,12 @@
-/**
- * Created by Simen on 10.01.2017.
- */
-var graphicsWindow = $("#graphics");
-var codeWindow = $("#code");
-var view = $("#view");
-
-graphicsWindow.resizable();
-graphicsWindow.resize(function(){
-    codeWindow.width(view.width()-graphicsWindow.width()-3);
+$(document).ready(function () {
+    $("#graphics").resizable();
 });
+
+$("#graphics").resize(function () {
+    $("#code").width($("#view").width() - $("#graphics").width() - 3);
+});
+
 $(window).resize(function(){
-    codeWindow.width(view.width()-graphicsWindow.width()-3);
-    graphicsWindow.height(view.height());
+    $("#code").width($("#view").width() - $("#graphics").width() - 3);
+    $("#graphics").height($("#view").height());
 });

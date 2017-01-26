@@ -141,9 +141,44 @@ textarea {
     margin-bottom: 0;
 }
 
+#view {
+    position: absolute;
+    height: calc(100% - 64px);
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
 
+#graphics {
+    width: 50%;
+    height: 100%;
+    border-right: solid;
+    border-color: #F44336;
+    overflow: hidden;
+}
 
+#drawingarea {
+    width: 50%;
+    margin: 0 auto;
+    position: relative; 
+    top:50%;
+}
 
+#code {
+    width: 50%;
+    height: 100%;
+}
+
+#code div {
+    margin: 0 auto;
+    position: relative;
+    top:35%;
+}
+
+#code div p {
+    margin: 10px;
+}
 
 
 

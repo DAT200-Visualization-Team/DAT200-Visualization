@@ -25,19 +25,16 @@
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<div id="view" style="position: absolute; height: calc(100% - 64px); width: 100%; padding: 0; margin: 0; overflow: hidden">
-    <div id="graphics" style="float: left; width: 50%; height: 100%; border-right: solid; border-color: #F44336; overflow: hidden">
-        <div id="drawingArea" style="width:50%; margin: 0 auto; position: relative; top:50%">
-            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">5</p></div>
-            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">1</p></div>
-            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">5</p></div>
-            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">7</p></div>
-            <div class="element red lighten-3 z-depth-3"><p class="arrayVal">9</p></div>
+<div id="view">
+    <div id="graphics" class="left">
+        <div id="drawingArea">
+            
         </div>
     </div>
-    <div id="code" style="float: right; width: 50%; height: 100%">
-        <div style="margin: 0 auto; position: relative; top:50%;">
-            <p style="margin: 10px">Lorem ipsum dolor sit amet, cu nec error graecis. Pro ne soluta definiebas definitiones, ad per regione iuvaret eloquentiam, feugait reprimique dissentias pro ei. Malis commune ne sea, nam et tale solet scriptorem. Hinc veritus eam an. Id ius saepe mentitum fabellas, vel te accumsan vulputate.</p>
+    <div id="code" class="right">
+        <h3 class="center-align">Array List</h3>
+        <div>
+            <p>Lorem ipsum dolor sit amet, cu nec error graecis. Pro ne soluta definiebas definitiones, ad per regione iuvaret eloquentiam, feugait reprimique dissentias pro ei. Malis commune ne sea, nam et tale solet scriptorem. Hinc veritus eam an. Id ius saepe mentitum fabellas, vel te accumsan vulputate.</p>
         </div>
     </div>
 </div>
@@ -48,7 +45,6 @@
 <script src="js/main.js"></script>
 <script src="js/materialize.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="js/resize.js"></script>
 <script src="js/visualization.js"></script>
 <script src="js/datastructures/ArrayList.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
@@ -56,6 +52,7 @@
 <script src="js/vendor/handlebars-v4.0.5.js"></script>
 <script src="js/templateHelpers/templateController.js"></script>
 <script src="js/settings.js"></script>
+<script src="js/resize.js"></script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
