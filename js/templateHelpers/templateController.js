@@ -6,7 +6,7 @@ function render(tmplName, tmplData) {
     }
 
     if (!render.tmplCache[tmplName]) {
-        var tmplDir = "/static/templates";
+        var tmplDir = "./static/templates";
         var tmplUrl = tmplDir + "/" + tmplName + ".html";
 
         var tmplString;
