@@ -111,7 +111,7 @@ textarea {
     margin: 0;
     text-align: center;
     font-size: 5ch;
-    will-change: scale, opacity;
+    will-change: scale, opacity, transform;
     z-index: 10;
 }
 
@@ -120,7 +120,7 @@ textarea {
     padding-left: 10px;
     padding-right: 10px;
     position: relative;
-    top:50%;
+    top:30%;
     padding-bottom: 2em;
     text-align: center;
 }
