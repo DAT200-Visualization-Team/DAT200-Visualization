@@ -1,4 +1,4 @@
-{{#each categories}}
+{{#each this.categories}}
     <ul id="{{id}}" class="dropdown-content">
         {{#each subCategories}}
             <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
@@ -6,7 +6,7 @@
     </ul>
 {{/each}}
 
-{{#each categories}}
+{{#each this.categories}}
 <ul id="mobile{{id}}" class="dropdown-content">
     {{#each subCategories}}
     <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
