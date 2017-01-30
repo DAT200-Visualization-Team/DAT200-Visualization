@@ -162,12 +162,11 @@ textarea {
     width: 50%;
     margin: 0 auto;
     position: relative; 
-    top:50%;
+    top: 50%;
 }
 
 #code {
     width: 50%;
-    overflow-y: auto;
 }
 
 #code div {
@@ -179,7 +178,14 @@ textarea {
     margin-left: 2vw;
 }
 
-
+pre {
+    height: auto;
+    max-height: 70vh;
+    overflow: auto;
+    word-break: normal !important;
+    word-wrap: normal !important;
+    white-space: pre !important;
+}
 
 
 
