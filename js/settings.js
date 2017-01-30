@@ -23,3 +23,11 @@ function loadFontSizeCookieValue() {
             $('#code-text').css({ 'font-size': savedValue + "px" });
     }
 }
+
+function downloadObjectJson(objectToDownload) {
+    var dataString = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(objectToDownload));
+    var dlAnchorElem = document.getElementById('downloadLink');
+    dlAnchorElem.setAttribute("href", dataString);
+    dlAnchorElem.setAttribute("download", (objectToDownload.constructor.name + ".json"));
+    dlAnchorElem.click();
+}
