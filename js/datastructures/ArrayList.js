@@ -1,10 +1,12 @@
-const DEFAULT_CAPACITY = 10;
+const DEFAULT_CAPACITY = 5;
 const NOT_FOUND = -1;
 
 function ArrayList(other) {
     this.theItems;
     this.theSize;
     this.modCount = 0;
+
+    this.capacity = DEFAULT_CAPACITY;
 
     this.clear();
     if (!other)
@@ -24,6 +26,8 @@ ArrayList.prototype.clear = function () {
     this.theSize = 0;
     this.theItems = [];
     this.modCount++;
+
+    this.capacity = DEFAULT_CAPACITY;
 };
 
 ArrayList.prototype.get = function (index) {
@@ -68,13 +72,23 @@ ArrayList.prototype.add = function (x) {
         for (var i = 0; i < this.size() ; i++)
             this.theItems[i] = old[i];
     }
+
     this.theItems[this.theSize++] = x;
     this.modCount++;
 
-    //Send event to GUI
-    $(document).trigger("addToArray", x);
-    //this.GUI.updateTheSize(this.theSize);
-    //this.GUI.updateModCount(this.modCount);
+    //Update gui
+    //Ensure capacity
+    if(this.capacity == this.theSize - 1) {
+        $(document).trigger("extendCapacity", this.theSize - 1);
+        var temp = this.theSize;
+        setTimeout(function(){
+            $(document).trigger("replaceElement", [temp - 1, x]);
+        }, 20000);
+    } else {
+        $(document).trigger("replaceElement", [this.theSize - 1, x]);
+    }
+    $(document).trigger("updateTheSize", this.theSize);
+    $(document).trigger("updateModCount", this.modCount);
 
     return true;
 };
@@ -102,8 +116,8 @@ ArrayList.prototype.removeAtPos = function (index) {
     this.modCount++;
 
     //Update gui
-    //this.GUI.updateTheSize(this.theSize);
-    //this.GUI.updateModCount(this.modCount);
+    $(document).trigger("updateTheSize", this.theSize);
+    $(document).trigger("updateModCount", this.modCount);
 
     return removedItem;
 };

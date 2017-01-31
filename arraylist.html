@@ -33,33 +33,38 @@
             </div>
         </div>
         <div id="code" class="right">
-            <h3 class="center-align">Array List</h3>
-            <div>
-                <pre><code>
-    ArrayList.prototype.add = function (x) {
-        <span style="background-color: yellow;">if (this.theItems.length == this.size()) {</span>
-            old = this.theItems;
-            this.theItems = [];
-            for (var i = 0; i < this.size() ; i++)
-                this.theItems[i] = old[i];
-        }
+            
+            <div style="margin-bottom:4px;">
+                <h3>Array List</h3>
+                <pre><code id="code-text">
+ArrayList.prototype.add = function (x) {
+    <span style="background-color: yellow;">if (this.theItems.length == this.size()) {</span>
+        old = this.theItems;
+        this.theItems = [];
+        for (var i = 0; i < this.size() ; i++)
+            this.theItems[i] = old[i];
+    }
 
-        this.theItems[this.theSize++] = x;
-        this.modCount++;
+    this.theItems[this.theSize++] = x;
+    this.modCount++;
 
-        return true;
-    };
+    return true;
+};
                  </code></pre>
             </div>
         </div>
     </div>
 
+    <a id="downloadLink" style="display: none"></a>
+
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
     <script src="js/plugins.js"></script>
+    <script src="js/utils/cookiesUtils.js"></script>
     <script src="js/main.js"></script>
     <script src="js/materialize.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
     <script src="js/visualization.js"></script>
     <script src="js/datastructures/ArrayList.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>

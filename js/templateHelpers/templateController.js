@@ -26,20 +26,21 @@ function render(tmplName, tmplData) {
     return render.tmplCache[tmplName](tmplData);
 }
 
-var categoryData = {
-    categories: [
-    { id: "lists", name: "Lists", subCategories: [{id: "arraylist", name: "Array List"}, {id: "linkedlist", name:"Linked List"}] },
-    { id: "sorting", name: "Sorting", subCategories: [{id: "insertionsort", name: "Insertion Sort"}, {id: "mergesort", name: "Merge Sort"}, {id: "bubblesort", name: "Bubble Sort"}, {id: "quicksort", name: "Quick Sort"}] },
-    { id: "trees", name: "Trees", subCategories: [{id: "binarytree", name: "Binary Tree"}, {id:"binarysearchtree", name: "Binary Search Tree"}, {id: "binarysearchtreewithrank", name: "Binary Search Tree With Rank"}, {id:"avltree", name: "AVL Tree"}] },
-    { id: "graphs", name: "Graphs", subCategories: [{id: "djikstra", name: "Djikstra"}, {id: "bellmanford", name: "Bellman-Ford"}] }
-    ]
-};
+$.ajax({
+    url: "./js/templateHelpers/categoryData.json",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+        var renderedHeaderHtml = render("headerTemplate", data);
+        $("body").prepend(renderedHeaderHtml);
 
-var renderedHeaderHtml = render("headerTemplate", categoryData);
-$("body").prepend(renderedHeaderHtml);
+        var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+        if (currentFile == "index.html") {
+            renderedIndexContent = render("frontPageContentTemplate", data);
+            $("body").append(renderedIndexContent);
 
-var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
-if (currentFile == "index.html") {
-    var renderedIndexContent = render("frontPageContentTemplate", categoryData);
-    $("body").append(renderedIndexContent);
-}
+            $("#download-button").parent().remove();
+            $("#download-button-mobile").parent().remove();
+        }
+    }
+});

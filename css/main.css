@@ -111,7 +111,7 @@ textarea {
     margin: 0;
     text-align: center;
     font-size: 5ch;
-    will-change: scale, opacity;
+    will-change: scale, opacity, transform;
     z-index: 10;
 }
 
@@ -120,7 +120,7 @@ textarea {
     padding-left: 10px;
     padding-right: 10px;
     position: relative;
-    top:50%;
+    top:30%;
     padding-bottom: 2em;
     text-align: center;
 }
@@ -162,12 +162,11 @@ textarea {
     width: 50%;
     margin: 0 auto;
     position: relative; 
-    top:50%;
+    top: 50%;
 }
 
 #code {
     width: 50%;
-    height: 100%;
 }
 
 #code div {
@@ -175,11 +174,18 @@ textarea {
     position: relative;
 }
 
-#code div p {
-    margin: 10px;
+#code div h3 {
+    margin-left: 2vw;
 }
 
-
+pre {
+    height: auto;
+    max-height: 70vh;
+    overflow: auto;
+    word-break: normal !important;
+    word-wrap: normal !important;
+    white-space: pre !important;
+}
 
 
 
