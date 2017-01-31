@@ -1,0 +1,167 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Linked List</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/linkedlist.css">
+    <link rel="stylesheet" href="css/arraylist.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/vs.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div id="view">
+    <div id="graphics" class="left">
+        <div class="drawingArea">
+                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg>
+                    <g>
+                        <g class="node">
+                            <circle cx="30" cy="50" r="30"></circle>
+                            <text x="30" y="50" dy=".3em">H</text>
+                        </g>
+                        <g class="nextArrow">
+                            <path d="M 35 20 Q 60 -10 85 20" class="nextArrowLine" />
+                            <path d="M90 15 L80 25 L90 25 Z" class="nextArrowHead"/>
+                        </g>
+                        <g class="prevArrow">
+                            <path d="M 25 80 Q 0 110 -25 80" class="prevArrowLine"/>
+                            <path d="M-20 85 L-30 75 L-20 75 Z" class="prevArrowHead"/>
+                        </g>
+                    </g>
+
+                    <g>
+                        <g class="node">
+                            <circle cx="90" cy="50" r="30">2</circle>
+                            <text x="90" y="50" dy=".3em">1</text>
+                        </g>
+                        <g class="nextArrow">
+                            <path d="M 95 20 Q 120 -10 145 20" class="nextArrowLine" />
+                            <path d="M150 15 L140 25 L150 25 Z" class="nextArrowHead"/>
+                        </g>
+                        <g class="prevArrow">
+                            <path d="M 85 80 Q 60 110 35 80" class="prevArrowLine" />
+                            <path d="M30 85 L40 75 L30 75 Z" class="prevArrowHead"/>
+                        </g>
+                    </g>
+
+                    <g>
+                        <g class="node">
+                            <circle cx="150" cy="50" r="30">3</circle>
+                            <text x="150" y="50" dy=".3em">2</text>
+                        </g>
+                        <g class="nextArrow">
+                            <path d="M 155 20 Q 180 -10 205 20" class="nextArrowLine" />
+                            <path d="M210 15 L200 25 L210 25 Z" class="nextArrowHead"/>
+                        </g>
+                        <g class="prevArrow">
+                            <path d="M 145 80 Q 120 110 95 80" class="prevArrowLine" />
+                            <path d="M90 85 L100 75 L90 75 Z" class="prevArrowHead"/>
+                        </g>
+                    </g>
+
+                    <g>
+                        <g class="node">
+                            <circle cx="210" cy="50" r="30">4</circle>
+                            <text x="210" y="50" dy=".3em">3</text>
+                        </g>
+                        <g class="nextArrow">
+                            <path d="M 215 20 Q 240 -10 265 20" class="nextArrowLine" />
+                            <path d="M270 15 L260 25 L270 25 Z" class="nextArrowHead"/>
+                        </g>
+                        <g class="prevArrow">
+                            <path d="M 205 80 Q 180 110 155 80" class="prevArrowLine" />
+                            <path d="M150 85 L160 75 L150 75 Z" class="prevArrowHead"/>
+                        </g>
+                    </g>
+
+                    <g>
+                        <g class="node">
+                            <circle cx="270" cy="50" r="30">5</circle>
+                            <text x="270" y="50" dy=".3em">T</text>
+                        </g>
+                        <g class="nextArrow">
+                            <path d="M 275 20 Q 300 -10 325 20" class="nextArrowLine" />
+                            <path d="M330 15 L320 25 L330 25 Z" class="nextArrowHead"/>
+                        </g>
+                        <g class="prevArrow">
+                            <path d="M 265 80 Q 240 110 215 80" class="prevArrowLine"/>
+                            <path d="M210 85 L220 75 L210 75 Z" class="prevArrowHead"/>
+                        </g>
+                    </g>
+                    <g>
+                        <rect x="328" y="23" rx="10" ry="10"></rect>
+                        <text x="353" y="36" dy=".3em">null</text>
+                    </g>
+
+                </svg>
+        </div>
+    </div>
+    <div id="code" class="right">
+        <h3 class="center-align">Linked List</h3>
+        <div>
+                <pre><code>
+                    ArrayList.prototype.add = function (x) {
+                    <span style="background-color: yellow;">if (this.theItems.length == this.size()) {</span>
+                    old = this.theItems;
+                    this.theItems = [];
+                    for (var i = 0; i < this.size() ; i++)
+                    this.theItems[i] = old[i];
+                    }
+
+                    this.theItems[this.theSize++] = x;
+                    this.modCount++;
+
+                    return true;
+                    };
+                </code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script src="js/materialize.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="js/datastructures/ArrayList.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
+<script src="js/vendor/handlebars-v4.0.5.js"></script>
+<script src="js/templateHelpers/templateController.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/resize.js"></script>
+<script src="js/vendor/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function (b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l; b[l] || (b[l] =
+                function () { (b[l].q = b[l].q || []).push(arguments) }); b[l].l = +new Date;
+        e = o.createElement(i); r = o.getElementsByTagName(i)[0];
+        e.src = 'https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X', 'auto'); ga('send', 'pageview');
+</script>
+</body>
+</html>
