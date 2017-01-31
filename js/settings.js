@@ -4,6 +4,15 @@ $(document).ready(function(){
     loadFontSizeCookieValue();
     $('select').material_select();
     $('#file-input').on('change', readUploadedFile);
+
+    var uploadedVariable = getCookie('uploadedVariable');
+    if (uploadedVariable != '') {
+        console.log(JSON.parse(uploadedVariable));
+        deleteCookie('uploadedVariable');
+
+        //TODO: Talk to some generic manager of all things UI and set the 
+        //reference to this object, and update UI to display the state of the loaded object
+    }
 });
 
 $(document).on('change', '#font-size-select', function () {
@@ -11,7 +20,7 @@ $(document).on('change', '#font-size-select', function () {
     var selectedSize = $(this).find('option:selected').attr('value');
 
     if($('#code-text'))
-        $('#code-text').css({ 'font-size': selectedSize + "px" });
+        $('#code-text').css({ 'font-size': selectedSize + 'px' });
 
     setCookie('font-size', selectedSize, 1000);
 });
@@ -21,7 +30,7 @@ function loadFontSizeCookieValue() {
     if (savedValue) {
         $('#font-size-select').val(savedValue);
         if ($('#code-text'))
-            $('#code-text').css({ 'font-size': savedValue + "px" });
+            $('#code-text').css({ 'font-size': savedValue + 'px' });
     }
 }
 
@@ -29,8 +38,8 @@ function downloadObjectJson(objectToDownload) {
     // Ah... The things you do to make valid json that carries the info you need.
     var dataString = 'data:text/json;charset=utf-8,' + encodeURIComponent('{"' + objectToDownload.constructor.name + '": ' + JSON.stringify(objectToDownload) + '}');
     var dlAnchorElem = document.getElementById('downloadLink');
-    dlAnchorElem.setAttribute("href", dataString);
-    dlAnchorElem.setAttribute("download", (objectToDownload.constructor.name + ".json"));
+    dlAnchorElem.setAttribute('href', dataString);
+    dlAnchorElem.setAttribute('download', (objectToDownload.constructor.name + '.json'));
     dlAnchorElem.click();
 }
 
@@ -39,7 +48,6 @@ function readUploadedFile() {
     var fileReader = new FileReader();
     fileReader.onload = function (e) {
         var text = fileReader.result;
-        console.log(text);
         redirectToCorrectPageForUpload(JSON.parse(text));
     };
 
@@ -48,8 +56,8 @@ function readUploadedFile() {
 
 function redirectToCorrectPageForUpload(object) {
     $.ajax({
-        url: "./js/templateHelpers/categoryData.json",
-        dataType: "json",
+        url: './js/templateHelpers/categoryData.json',
+        dataType: 'json',
         success: function (data) {
             var categories = data.categories;
             var types = [];
@@ -62,10 +70,9 @@ function redirectToCorrectPageForUpload(object) {
 
             for(var i = 0; i < types.length; i++) {
                 if (Object.keys(object)[0].toLowerCase() == types[i]) {
-                    document.location.href = "./" + types[i] + ".html";
+                    document.location.href = './' + types[i] + '.html';
 
-                    //TODO: Talk to some generic manager of all things UI and set the 
-                    //reference to this object, and update UI to display the state of the loaded object
+                    setCookie('uploadedVariable', JSON.stringify(object), 1);
                 }
             }
         }
