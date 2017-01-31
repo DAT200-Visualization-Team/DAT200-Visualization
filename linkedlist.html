@@ -1,0 +1,117 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Linked List</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/linkedlist.css">
+    <link rel="stylesheet" href="css/arraylist.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/vs.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div id="view">
+    <div id="graphics" class="left">
+        <div class="drawingArea">
+            <!--<div class="linkedList">-->
+                <!--<div class="box deep-orange lighten-3 z-depth-3">1</div>
+                &lt;!&ndash;<image src="./svg/arrow.svg" class="arrow"></image>&ndash;&gt;
+                <div class="box deep-orange lighten-3 z-depth-3">2</div>
+                <div class="box deep-orange lighten-3 z-depth-3">3</div>
+                <div class="box deep-orange lighten-3 z-depth-3">4</div>
+                <div class="box deep-orange lighten-3 z-depth-3">5</div>-->
+                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg>
+                    <g>
+                        <circle cx="30" cy="50" r="30">1</circle>
+                        <circle cx="90" cy="50" r="30">2</circle>
+                        <circle cx="150" cy="50" r="30">3</circle>
+                        <circle cx="210" cy="50" r="30">4</circle>
+                        <circle cx="270" cy="50" r="30">5</circle>
+                        <path d="M 35 20 Q 60 -10 85 20" stroke="blue" stroke-width="5" fill="none" />
+                        <path d="M 95 20 Q 120 -10 145 20" stroke="blue" stroke-width="5" fill="none" />
+                        <path d="M 155 20 Q 180 -10 205 20" stroke="blue" stroke-width="5" fill="none" />
+                        <path d="M 215 20 Q 240 -10 265 20" stroke="blue" stroke-width="5" fill="none" />
+                        <path d="M 275 20 Q 300 -10 325 20" stroke="blue" stroke-width="5" fill="none" />
+
+                        <path d="M 265 80 Q 240 110 215 80" stroke="green" stroke-width="5" fill="none" />
+                        <path d="M 205 80 Q 180 110 155 80" stroke="green" stroke-width="5" fill="none" />
+                        <path d="M 145 80 Q 120 110 95 80" stroke="green" stroke-width="5" fill="none" />
+                        <path d="M 85 80 Q 60 110 35 80" stroke="green" stroke-width="5" fill="none" />
+                        <path d="M 25 80 Q 0 110 -25 80" stroke="green" stroke-width="5" fill="none" />
+
+
+
+                    </g>
+                </svg>
+            <!--</div>-->
+        </div>
+    </div>
+    <div id="code" class="right">
+        <h3 class="center-align">Linked List</h3>
+        <div>
+                <pre><code>
+                    ArrayList.prototype.add = function (x) {
+                    <span style="background-color: yellow;">if (this.theItems.length == this.size()) {</span>
+                    old = this.theItems;
+                    this.theItems = [];
+                    for (var i = 0; i < this.size() ; i++)
+                    this.theItems[i] = old[i];
+                    }
+
+                    this.theItems[this.theSize++] = x;
+                    this.modCount++;
+
+                    return true;
+                    };
+                </code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script src="js/materialize.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="js/datastructures/ArrayList.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
+<script src="js/vendor/handlebars-v4.0.5.js"></script>
+<script src="js/templateHelpers/templateController.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/resize.js"></script>
+<script src="js/vendor/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function (b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l; b[l] || (b[l] =
+                function () { (b[l].q = b[l].q || []).push(arguments) }); b[l].l = +new Date;
+        e = o.createElement(i); r = o.getElementsByTagName(i)[0];
+        e.src = 'https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X', 'auto'); ga('send', 'pageview');
+</script>
+</body>
+</html>
