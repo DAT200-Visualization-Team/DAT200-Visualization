@@ -32,19 +32,57 @@ svg {
     text-align: center;
 }
 
+.node text {
+    //font-family: "Verdana";
+    font-size: 24px;
+    text-anchor: middle;
+    fill: black;
+}
+
 circle {
     fill: orange;
-    fill-opacity: 0.5;
+    fill-opacity: 0.1;
+    stroke-opacity: 0.3;
     stroke: black;
     stroke-width: 1px;
 }
 
 .nextArrow {
-    stroke: "blue";
-    stroke-width: "5";
-    fill: "none";
+    stroke: blue;
+}
+
+.nextArrowLine {
+    stroke-width: 5px;
+    fill: none
+}
+
+.nextArrowHead {
+    fill: blue;
 }
 
 .prevArrow {
+    stroke: green;
+}
 
+.prevArrowLine {
+    stroke-width: 5px;
+    fill: none
+}
+
+.prevArrowHead {
+    fill: green;
+}
+
+g rect {
+    width: 50px;
+    height: 25px;
+    fill: rgb(200, 200, 230);
+    stroke-width: 1px;
+    stroke:rgb(150, 100, 100);
+}
+
+g text {
+    font-size: 16px;
+    text-anchor: middle;
+    fill: black;
 }
