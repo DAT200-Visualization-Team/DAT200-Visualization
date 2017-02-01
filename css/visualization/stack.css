@@ -17,3 +17,7 @@
     font-size: 2.5vmax;
     vertical-align: central;
 }
+
+.zero-scale {
+    transform: scale(0);
+}
