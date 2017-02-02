@@ -1,14 +1,20 @@
 var stack;
 
-function initStack(values) {
+$(document).ready(function () {
+    if (stack == null)
+        initStack();
+});
+
+function initStack(arrayList) {
     $('#stack').empty();
+    console.log(arrayList);
+    if (arrayList == null || !(arrayList.constructor.name === 'ArrayList')) {
+        arrayList = new ArrayList([1, 2, 3, 4, 5]);
+    }
 
-    if (values == null || !(values instanceof Array))
-        values = [1, 2, 3, 4, 5];
+    stack = new Stack();
 
-    stack = new Stack(values);
-
-    animatePushes(values);
+    animatePushes(arrayList.theItems);
 }
 
 function pushElement(value) {
@@ -22,7 +28,10 @@ function popElement() {
 function animatePushes(values) {
     var loadingSequence = [];
 
-    if (values == null || !(values instanceof Array)) {
+    if (values == null)
+        values = [null];
+
+    if (!(values instanceof Array)) {
         var tmp = values;
         values = [values];
     }
@@ -52,7 +61,24 @@ function animatePops(count) {
     $.Velocity.RunSequence(loadingSequence);
 }
 
-
 function makeElementsEmpty() {
     animatePops(stack.arrayList.size());
 }
+
+function processUploadedObject(object) {
+    var arrayList = new ArrayList(object.Stack.arrayList.theItems);
+    arrayList.modCount = object.Stack.arrayList.modCount;
+    arrayList.theSize = object.Stack.arrayList.theSize;
+    arrayList.capacity = object.Stack.arrayList.capacity;
+    initStack(arrayList);
+}
+
+$('#download-button, #download-button-mobile').on('click', function () {
+    downloadObjectJson(stack);
+});
+
+$('#push-input').keyup(function (event) {
+    if (event.keyCode == 13) {
+        pushElement($('#push-input').val());
+    }
+});

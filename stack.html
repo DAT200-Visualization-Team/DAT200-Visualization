@@ -29,8 +29,25 @@
         <div id="graphics" class="left">
             <div class="stack-wrapper">
                 <div id="stack">
-                    
+
                 </div>
+            </div>
+            <div class="fixed-action-btn toolbar">
+                <a class="btn-floating btn-large red">
+                    <i class="large material-icons">mode_edit</i>
+                </a>
+                <ul>
+                    <li class="waves-effect waves-light">
+                        <div class="input-field col s4">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input id="push-input" type="text" class="validate">
+                            <label for="push-input">Push</label>
+                        </div>
+                    </li>
+                    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">format_quote</i></a></li>
+                    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">publish</i></a></li>
+                    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">attach_file</i></a></li>
+                </ul>
             </div>
         </div>
         <div id="code" class="right">
@@ -41,7 +58,7 @@
 Stack.prototype.pop = function () {
     if(this.isEmpty())
         throw { name: "UnderflowException", message: "ArrayList is empty" };
-    <span style="background-color: yellow;">return arrayList.removeAtPos(arrayList.size() - 1);</span>
+                <span style="background-color: yellow;">return arrayList.removeAtPos(arrayList.size() - 1);</span>
 }
                  </code></pre>
             </div>
@@ -60,9 +77,6 @@ Stack.prototype.pop = function () {
     <script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
     <script src="js/vendor/velocity.min.js"></script>
     <script src="js/vendor/velocity.ui.min.js"></script>
-    <script src="js/datastructures/ArrayList.js"></script>
-    <script src="js/datastructures/Stack.js"></script>
-    <script src="js/visualization/StackVisualization.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
     <script src="js/vendor/handlebars-v4.0.5.js"></script>
@@ -71,6 +85,9 @@ Stack.prototype.pop = function () {
     <script src="js/resize.js"></script>
     <script src="js/vendor/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad(); $("#draggable").draggable();</script>
+    <script src="js/datastructures/ArrayList.js"></script>
+    <script src="js/datastructures/Stack.js"></script>
+    <script src="js/visualization/StackVisualization.js"></script>
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

@@ -5,13 +5,10 @@ $(document).ready(function(){
     $('select').material_select();
     $('#file-input').on('change', readUploadedFile);
 
-    var uploadedVariable = getCookie('uploadedVariable');
-    if (uploadedVariable != '') {
-        console.log(JSON.parse(uploadedVariable));
+    var uploadedObject = getCookie('uploadedVariable');
+    if (uploadedObject != '') {
         deleteCookie('uploadedVariable');
-
-        //TODO: Talk to some generic manager of all things UI and set the 
-        //reference to this object, and update UI to display the state of the loaded object
+        processUploadedObject(JSON.parse(uploadedObject));
     }
 });
 
@@ -35,7 +32,6 @@ function loadFontSizeCookieValue() {
 }
 
 function downloadObjectJson(objectToDownload) {
-    // Ah... The things you do to make valid json that carries the info you need.
     var dataString = 'data:text/json;charset=utf-8,' + encodeURIComponent('{"' + objectToDownload.constructor.name + '": ' + JSON.stringify(objectToDownload) + '}');
     var dlAnchorElem = document.getElementById('downloadLink');
     dlAnchorElem.setAttribute('href', dataString);
