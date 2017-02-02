@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 function initStack(arrayList) {
     $('#stack').empty();
-    console.log(arrayList);
+
     if (arrayList == null || !(arrayList.constructor.name === 'ArrayList')) {
         arrayList = new ArrayList([1, 2, 3, 4, 5]);
     }
@@ -37,7 +37,7 @@ function animatePushes(values) {
     }
 
     for (var i = 0; i < values.length; i++) {
-        var currentElement = $('<div class="stack-entry" style="display: none;"><h4 class="stack-value center-align">' + values[i] + '</h4></div>').prependTo('#stack');
+        var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="display: none;"><h4 class="stack-value center-align truncate">' + values[i] + '</h4></div>').prependTo('#stack');
         loadingSequence.push({ e: currentElement, p: 'fadeIn', o: { duration: 1000 } });
         stack.push(values[i]);
     }
