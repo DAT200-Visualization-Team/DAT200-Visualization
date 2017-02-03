@@ -1,6 +1,7 @@
 .table-container {
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #stack-wrapper {
@@ -8,6 +9,7 @@
     height: 70%;
     width: 100%;
     margin-top: 25vh;
+    overflow-x: hidden;
 }
 
 #stack {
