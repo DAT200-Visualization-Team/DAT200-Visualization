@@ -18,7 +18,9 @@ $( document ).ready(function() {
     arraylist = new ArrayList(array);
     //array2 = new GUIArray(5);
     //array2.createArray();
-    $( "#draggable" ).draggable();
+    $("#draggable").draggable();
+    $('#download-button').click(downloadCurrentArrayList);
+    $('#download-button-mobile').click(downloadCurrentArrayList);
 });
 
 $(document).on("extendCapacity", {test: this},
@@ -124,7 +126,7 @@ GUIArray.prototype.extendCapacity = function () {
     newDiv.className = "drawingArea";
     document.getElementById("graphics").appendChild(newDiv);
     var newArray = new Array(old.length * 2 + 1);
-    for(var i = 0; i < newArray.length; i++) {
+    for (var i = 0; i < newArray.length; i++) {
         //var value = this.addGUICell(i);
         newArray[i] = document.createElement("div");
         newArray[i].className = "element red lighten-3 z-depth-3";
@@ -134,6 +136,8 @@ GUIArray.prototype.extendCapacity = function () {
         newDiv.appendChild(newArray[i]);
         value.innerHTML = "X";
     }
+
+
 
     //Save animation so that add/replace can wait for it
     var animation = replaceArray(this, newArray, 0);
@@ -154,6 +158,10 @@ GUIArray.prototype.extendCapacity = function () {
 
     return animation;
 };
+
+function downloadCurrentArrayList() {
+    downloadObjectJson(arraylist);
+}
 
 function replaceArray (fromArray, toArray, pos) {
     var animation;

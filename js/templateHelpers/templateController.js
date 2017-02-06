@@ -38,6 +38,9 @@ $.ajax({
         if (currentFile == "index.html") {
             renderedIndexContent = render("frontPageContentTemplate", data);
             $("body").append(renderedIndexContent);
+
+            $("#download-button").parent().remove();
+            $("#download-button-mobile").parent().remove();
         }
     }
 });

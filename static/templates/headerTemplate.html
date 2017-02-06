@@ -16,12 +16,13 @@
 
 <nav class="red">
     <div class="nav-wrapper">
-        <a href="/index.html" class="brand-logo left">&nbsp;AlgDat</a>
+        <a href="./index.html" class="brand-logo left">&nbsp;AlgDat</a>
         <a href="#" data-activates="mobilemenu" class="right button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
             {{#each categories}}
                 <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
             {{/each}}
+            <li><a id="download-button" href="#"><i class="material-icons">file_download</i></a></li>
             <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
         </ul>
 
@@ -29,6 +30,7 @@
             {{#each categories}}
                 <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="mobile{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
             {{/each}}
+            <li><a id="download-button-mobile" href="#"><i class="material-icons">file_download</i></a></li>
             <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
         </ul>
     </div>
@@ -42,10 +44,10 @@
             <div class="file-field input-field">
                 <div class="btn">
                     <span>Load</span>
-                    <input type="file" multiple>
+                    <input type="file" id="file-input">
                 </div>
                 <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                    <input class="file-path validate" type="text" placeholder="Upload datastructure JSON file">
                 </div>
             </div>
             <!-- Set font size -->
