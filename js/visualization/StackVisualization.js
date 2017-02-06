@@ -37,7 +37,7 @@ function animatePushes(values) {
     }
 
     for (var i = 0; i < values.length; i++) {
-        var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate">' + values[i] + '</h4></div>').prependTo('#stack');
+        var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate noselect">' + values[i] + '</h4></div>').prependTo('#stack');
         loadingSequence.push({ e: currentElement, p: {translateY: [0, -500], opacity: 1}, o: { duration: 1000, easing: 'easeOutCubic' } });
         stack.push(values[i]);
     }
