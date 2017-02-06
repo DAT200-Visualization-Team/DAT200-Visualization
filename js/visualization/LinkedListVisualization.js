@@ -61,16 +61,10 @@ function initializeAndAdd(elements) {
 function initialize1() {
     clear();
     debugStepOver();
-    //$("#linkedlist").attr("visibility", "hidden");
     createHead(startPos);
     createTail(startPos + 120);
     updateDrawingArea();
-    //$("#linkedlist").removeAttr("visibility");
-    //animAppear($("#linkedlist").children().first(), 'appear', $("#linkedlist").children().last());
-    //saveState();
-    /*updateDrawingArea();
-     appear($("#linkedlist").children().last());
-     moveArrow(1, 'prevArrow', -60, 0);*/
+
 
     var head = $("#linkedlist").children().first();
     var tail = $("#linkedlist").children().last();
@@ -86,20 +80,12 @@ function initialize1() {
 
     debugStepOver();
     head.velocity("transition.expandIn", {
-            duration: 500,
-
+            duration: 1000,
             complete: function() {
                 debugStepOver();
                 tail.attr("opacity", "1");
-                tail.velocity(
-                    {translateY: "-=30"},
-                    {duration: "50", easing: "easeOutBounce"}
-                ).velocity(
-                    {translateY: "+=60"},
-                    {duration: "100", easing: "easeOutBounce"}
-                ).velocity(
-                    {translateY: "-=30"},
-                    {duration: "100", easing: "easeOutBounce",
+                tail.velocity("transition.expandIn", {
+                    duration: 1000,
                         complete: function() {
                             moveArrow(1, 'prevArrow', -60, 0);
                             debugStepOver();
@@ -107,34 +93,51 @@ function initialize1() {
                         }
                     }
                 )
-
             }
         }
     );
 }
 
 function testProgress(x, y, dx, dy) {
+    clear();
+    var arrow = $("<g></g>");
     var type = "nextArrow";
     arrow.addClass(type);
-
     var x1 = x + dx;
     var y1 = y + dy;
     var mx = (x + x1) / 2;
     var my = y - 30;
-
     var p1 = 'M ' + (x1+5) + ' ' + (y1-5) + ' ';
     var p2 = 'L ' + (x1-5) + ' ' + (y1+5) + ' ';
     var p3 = 'L ' + (x1+5) + ' ' + (y1+5) + ' ';
-
     var arch = '<path d="M ' + x + ' ' + y + ' Q ' + mx + ' ' + my + ' ' + x1 + ' ' + y1 + '" class="' + type + 'Line" />';
     var triangle = '<path d="' + p1 + p2 + p3 + 'Z" class="' + type + 'Head" />';
-    var arrow = $("<g></g>");
     arrow.append(arch);
     arrow.append(triangle);
-
     $("#linkedlist").append(arrow);
-
     updateDrawingArea();
+
+    var arch = $("#linkedlist").children().first().children().first();
+
+    console.log(arch);
+
+    var minEndPoint = 100;
+
+   arch.velocity({
+       tween: 1},
+       {duration: 3000 ,
+        progress: function(elements, complete, remaining, start, tweenValue) {
+            elements[0].setAttribute("d", "M 35 20 Q 60 -10 " + ((tweenValue * 100) + minEndPoint) + " 20");
+            console.log(elements[0].getAttribute("d"));
+        }
+    });
+
+    /*var props = {left: '100%'};
+
+    $.Velocity.animate(arch,
+        props, 0
+    );
+*/
 
 }
 
@@ -437,19 +440,10 @@ function createFreeArrow(type, x, y, dx, dy) {
     return arrow;
 }
 
-
-
 function clear() {
     $('svg').empty();
     nodes = [];
 }
-
-
-
-
-
-
-
 
 /***
  * ANIMATIONS
@@ -478,37 +472,3 @@ function animAppear(elementToAnimate, nextAnimation, nextElementToAnimate) {
         );
 }
 
-
-function testVelocity() {
-    //initializeAndAdd(4);
-    /*var ball = $("#Head").children().first().children().first();
-    console.log(ball);
-    /*$.Velocity.hook(ball, "translateX", "100px");
-    $.Velocity.hook(ball, "translateY", "50px");*/
-/*
-    //ball.velocity({ cx: "+=100", cy: "50px" }, {duration: 1000});
-    ball.velocity({ cx: "+=100", cy: "+=50" });*/
-
-
-
-
-    var ball = $("#Head");
-    console.log(ball);
-
-    //ball.velocity({ cx: "+=100", cy: "50px" }, {duration: 1000});
-    ball.velocity({ translateX: "+=300", translateY: "+=0" }, {duration: "3000", easing: "easeInOutExpo"});
-}
-
-function testVelocity2() {
-    var ball = $("#Head");
-    console.log(ball);
-
-    for (var i = 0; i < 10; i++) {
-        console.log(ball.velocity({translateX: "+=" + i*10, translateY: "+=0"}, {duration: "1000", easing: "easeInOutExpo"}));
-    }
-}
-
-function testVelocity3() {
-
-
-}
