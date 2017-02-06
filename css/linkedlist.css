@@ -65,3 +65,7 @@ g text {
     text-anchor: middle;
     fill: black;
 }
+
+.highlightLine {
+    background-color: yellow;
+}

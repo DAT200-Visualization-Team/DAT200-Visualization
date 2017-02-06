@@ -3,6 +3,7 @@ var states = [];
 var currentState = 0;
 var totalStates = 0;
 var startPos = 120;
+var debuggerLine = 1;
 
 function saveState() {
     states.push(nodes);
@@ -59,20 +60,97 @@ function initializeAndAdd(elements) {
 
 function initialize1() {
     clear();
-
-    var head = createHead(startPos);
-    head.attr("visibility", "hidden");
+    debugStepOver();
+    //$("#linkedlist").attr("visibility", "hidden");
+    createHead(startPos);
+    createTail(startPos + 120);
     updateDrawingArea();
-    head.attr("visibility", "visible");
-    appear($("#linkedlist"));
-    saveState();
-
-    /*createTail(startPos + 120);
-     updateDrawingArea();
+    //$("#linkedlist").removeAttr("visibility");
+    //animAppear($("#linkedlist").children().first(), 'appear', $("#linkedlist").children().last());
+    //saveState();
+    /*updateDrawingArea();
      appear($("#linkedlist").children().last());
      moveArrow(1, 'prevArrow', -60, 0);*/
 
+    var head = $("#linkedlist").children().first();
+    var tail = $("#linkedlist").children().last();
 
+    tail.attr("opacity", "0");
+
+    head.velocity( "transition.expandIn", {
+            duration: 500, complete: function () {
+                debugStepOver();
+            }
+        }
+    );
+
+    debugStepOver();
+    head.velocity("transition.expandIn", {
+            duration: 500,
+
+            complete: function() {
+                debugStepOver();
+                tail.attr("opacity", "1");
+                tail.velocity(
+                    {translateY: "-=30"},
+                    {duration: "50", easing: "easeOutBounce"}
+                ).velocity(
+                    {translateY: "+=60"},
+                    {duration: "100", easing: "easeOutBounce"}
+                ).velocity(
+                    {translateY: "-=30"},
+                    {duration: "100", easing: "easeOutBounce",
+                        complete: function() {
+                            moveArrow(1, 'prevArrow', -60, 0);
+                            debugStepOver();
+                            moveArrow(0, 'nextArrow', 60, 0);
+                        }
+                    }
+                )
+
+            }
+        }
+    );
+}
+
+function testProgress(x, y, dx, dy) {
+    var type = "nextArrow";
+    arrow.addClass(type);
+
+    var x1 = x + dx;
+    var y1 = y + dy;
+    var mx = (x + x1) / 2;
+    var my = y - 30;
+
+    var p1 = 'M ' + (x1+5) + ' ' + (y1-5) + ' ';
+    var p2 = 'L ' + (x1-5) + ' ' + (y1+5) + ' ';
+    var p3 = 'L ' + (x1+5) + ' ' + (y1+5) + ' ';
+
+    var arch = '<path d="M ' + x + ' ' + y + ' Q ' + mx + ' ' + my + ' ' + x1 + ' ' + y1 + '" class="' + type + 'Line" />';
+    var triangle = '<path d="' + p1 + p2 + p3 + 'Z" class="' + type + 'Head" />';
+    var arrow = $("<g></g>");
+    arrow.append(arch);
+    arrow.append(triangle);
+
+    $("#linkedlist").append(arrow);
+
+    updateDrawingArea();
+
+}
+
+
+function debugStepOver() {
+    var code = $('#code pre code');
+    if (debuggerLine > 0) {
+        var previousLine = code.children().eq(debuggerLine - 1);
+        previousLine.removeClass("highlightLine");
+    }
+    var line = code.children().eq(debuggerLine);
+    line.attr("class", "highlightLine");
+
+    //funker ikke
+    (line !== code.children().last()) ? debuggerLine++ : console.log("No further lines");
+    console.log(line);
 }
 
 function updateDrawingArea() {
@@ -277,15 +355,16 @@ function createNode(pos, name, manualAppend, id) {
     }
 
     $('svg').append(n);
+    return n;
 }
 
 function createHead(pos) {
     //createNull(pos, 'left');
-    createNode(pos, 'H', false, 'Head');
+    return createNode(pos, 'H', false, 'Head');
 }
 
 function createTail(pos) {
-    createNode(pos, 'T', false, 'Tail');
+    return createNode(pos, 'T', false, 'Tail');
     //createNull(pos, 'right');
 }
 
@@ -374,20 +453,28 @@ function clear() {
 
 /***
  * ANIMATIONS
- *
- *
  */
-function appear(element) {
-    element
+function animAppear(elementToAnimate, nextAnimation, nextElementToAnimate) {
+    elementToAnimate
         .velocity(
-            {translateY: "-=50"},
+            {translateY: "-=30"},
             {duration: "50", easing: "easeOutBounce"}
         ).velocity(
-            {translateY: "+=100"},
+            {translateY: "+=60"},
             {duration: "100", easing: "easeOutBounce"}
         ).velocity(
-            {translateY: "-=50"},
-            {duration: "100", easing: "easeOutBounce"}
+            {translateY: "-=30"},
+            {duration: "100", easing: "easeOutBounce",
+                complete: function() {
+                    switch(nextAnimation) {
+                        case 'appear':
+                            animAppear(nextElementToAnimate);
+                        case null:
+                            return;
+                    }
+
+                }
+            }
         );
 }
 

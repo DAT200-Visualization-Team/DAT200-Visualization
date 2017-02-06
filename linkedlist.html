@@ -39,29 +39,29 @@
     </div>
     <div id="code" class="right">
         <h3 class="center-align">Linked List</h3>
-        <button name="Init" onclick="initialize()">Init</button>
+        <button name="Init" onclick="initialize()" id="initbtn">Init</button>
         <button name="InitNAdd" onclick="initializeAndAdd(4)">Init&Add</button>
         <button name="Forward" onclick="traverseState('f')">Forward</button>
         <button name="Backward" onclick="traverseState('b')">Backward</button>
         <div>
             <pre>
                 <code>
-                    function LinkedList() {
-                        this.head = new Node(null, null, null);
-                        this.tail = new Node(null, this.head, null);
-                        this.head.next = this.tail;
-                        this.theSize = 0;
-                        this.modCount = 0;
-                    }
+                    <span>function LinkedList() {</span>
+                        <span>this.head = new Node(null, null, null);</span>
+                        <span>this.tail = new Node(null, this.head, null);</span>
+                        <span>this.head.next = this.tail;</span>
+                        <span>this.theSize = 0;</span>
+                        <span>this.modCount = 0;</span>
+                    <span>}</span>
 
-                    LinkedList.prototype.add = function(idx, data) {
-                        var p = this.getNode(idx);
-                        <span style="background-color: yellow;">var newNode = new Node(data, p.prev, p);</span>
-                        newNode.prev.next = newNode;
-                        p.prev = newNode;
-                        this.theSize++;
-                        this.modCount++;
-                    };
+                    <span>LinkedList.prototype.add = function(idx, data) {</span>
+                        <span>var p = this.getNode(idx);</span>
+                        <span>var newNode = new Node(data, p.prev, p);</span>
+                        <span>newNode.prev.next = newNode;</span>
+                        <span>p.prev = newNode;</span>
+                        <span>this.theSize++;</span>
+                        <span>this.modCount++;</span>
+                    <span>};</span>
                 </code>
             </pre>
         </div>
@@ -87,7 +87,7 @@
 <script src="js/vendor/highlight.pack.js"></script>
 <script src="js/vendor/velocity.min.js"></script>
 <script src="js/vendor/velocity.ui.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initHighlightingOnLoad(); $("#draggable").draggable();</script>
 
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
