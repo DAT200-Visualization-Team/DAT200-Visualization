@@ -119,7 +119,7 @@ function testProgress(x, y, dx, dy) {
 
     var arch = $("#linkedlist").children().first().children().first();
 
-    console.log(arch);
+    //console.log(arch);
 
     var minEndPoint = 100;
 
@@ -128,16 +128,9 @@ function testProgress(x, y, dx, dy) {
        {duration: 3000 ,
         progress: function(elements, complete, remaining, start, tweenValue) {
             elements[0].setAttribute("d", "M 35 20 Q 60 -10 " + ((tweenValue * 100) + minEndPoint) + " 20");
-            console.log(elements[0].getAttribute("d"));
+            //console.log(elements[0].getAttribute("d"));
         }
     });
-
-    /*var props = {left: '100%'};
-
-    $.Velocity.animate(arch,
-        props, 0
-    );
-*/
 
 }
 
@@ -470,5 +463,43 @@ function animAppear(elementToAnimate, nextAnimation, nextElementToAnimate) {
                 }
             }
         );
+}
+
+// Input is jQuery element
+function aniMoveArrow(arrow, dx, dy) {
+    var arch = arrow.children().first().attr("d");
+    arch = arch.split(' ');
+    var x0 = parseInt(arch[1]);
+    var y0 = parseInt(arch[2]);
+    var x1 = parseInt(arch[6]);
+    var y1 = parseInt(arch[7]);
+
+    var triangle = arrow.children().last().attr("d");
+    triangle = triangle.split(' ');
+    var p0x = parseInt(triangle[1]);
+    var p0y = parseInt(triangle[2]);
+    var p1x = parseInt(triangle[4]);
+    var p1y = parseInt(triangle[5]);
+    var p2x = parseInt(triangle[7]);
+    var p2y = parseInt(triangle[8]);
+    //console.log();
+
+    arrow.children().velocity(
+        {tween: 1},
+        {duration: 2000 ,
+            progress: function(elements, complete, remaining, start, tweenValue) {
+                console.log(elements);
+                elements[0].setAttribute(
+                    "d", "M " + x0 + " " + y0 + " Q " + ((x0 + x1 + (tweenValue * dx)) / 2) + " " + -10 + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
+                );
+                elements[1].setAttribute(
+                    "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
+                );
+
+            }
+        }
+    );
+
+
 }
 
