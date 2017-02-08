@@ -1,8 +1,10 @@
 var stack;
 
 $(document).ready(function () {
-    if (stack == null)
+    if (stack == null) {
+        stack = new Stack();
         initStack();
+    }
 });
 
 function initStack(arrayList) {
@@ -11,8 +13,6 @@ function initStack(arrayList) {
     if (arrayList == null || !(arrayList.constructor.name === 'ArrayList')) {
         arrayList = new ArrayList([1, 2, 3, 4, 5]);
     }
-
-    stack = new Stack();
 
     animatePushes(arrayList.theItems);
 }
@@ -115,6 +115,8 @@ function processUploadedObject(object) {
     arrayList.modCount = object.Stack.arrayList.modCount;
     arrayList.theSize = object.Stack.arrayList.theSize;
     arrayList.capacity = object.Stack.arrayList.capacity;
+    stack = new Stack();
+    stack.arrayList = arrayList;
     initStack(arrayList);
 }
 
