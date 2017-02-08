@@ -1,9 +1,3 @@
-.table-container {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
 #stack-wrapper {
     display: table;
     height: 70%;

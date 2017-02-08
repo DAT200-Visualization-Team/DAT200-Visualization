@@ -125,6 +125,12 @@ textarea {
     text-align: center;
 }
 
+.table-container {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .noselect {
     cursor: default;
     -webkit-touch-callout: none; /* iOS Safari */
