@@ -9,7 +9,7 @@ $(document).ready(function () {
         $("#code").width(0);
     }*/
 
-    if (Math.min($(window).width(), $(window).height()) < 700) {
+    if ($(window).width() < 700) {
         windowToggleState = 1;
         $("#graphics").show();
         $("#graphics").width($("#view").width());
@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     $("#toggle-view-button").click(function () {
         if (++windowToggleState > 2) windowToggleState = 0;
-        if (windowToggleState === 0 && Math.min($(window).width(), $(window).height()) < 700) {
+        if (windowToggleState === 0 && $(window).width() < 750) {
             windowToggleState = 1;
             $("#graphics").show();
         }
