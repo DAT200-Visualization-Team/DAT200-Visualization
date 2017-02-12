@@ -12,7 +12,10 @@
 
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--
     <link rel="stylesheet" href="css/linkedlist.css">
+-->
+    <link rel="stylesheet" href="css/visualization/linkedlistRect.css">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/materialize.css">
@@ -20,7 +23,10 @@
     <link rel="stylesheet" href="css/vs.css">
     <script src></script>
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+<!--
     <script src="js/visualization/LinkedListVisualization.js"></script>
+-->
+    <script src="js/visualization/LinkedListVisualizationRect.js"></script>
 
 </head>
 <body>
@@ -40,19 +46,10 @@
         <h3 class="center-align">Linked List</h3>
         <button name="Init" onclick="initialize()" id="initbtn">Init</button>
         <button name="InitNAdd" onclick="initializeAndAdd(4)">Init&Add</button>
-        <button name="Forward" onclick="traverseState('f')">Forward</button>
-        <button name="Backward" onclick="traverseState('b')">Backward</button>
+        <button name="clear" onclick="clear()">clear</button>
         <div>
             <pre>
                 <code>
-                    <span>function LinkedList() {</span>
-                        <span>this.head = new Node(null, null, null);</span>
-                        <span>this.tail = new Node(null, this.head, null);</span>
-                        <span>this.head.next = this.tail;</span>
-                        <span>this.theSize = 0;</span>
-                        <span>this.modCount = 0;</span>
-                    <span>}</span>
-
                     <span>LinkedList.prototype.add = function(idx, data) {</span>
                         <span>var p = this.getNode(idx);</span>
                         <span>var newNode = new Node(data, p.prev, p);</span>
@@ -61,6 +58,14 @@
                         <span>this.theSize++;</span>
                         <span>this.modCount++;</span>
                     <span>};</span>
+
+                    <span>function LinkedList() {</span>
+                        <span>this.head = new Node(null, null, null);</span>
+                        <span>this.tail = new Node(null, this.head, null);</span>
+                        <span>this.head.next = this.tail;</span>
+                        <span>this.theSize = 0;</span>
+                        <span>this.modCount = 0;</span>
+                    <span>}</span>
                 </code>
             </pre>
         </div>
