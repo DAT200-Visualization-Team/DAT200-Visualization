@@ -1,17 +1,20 @@
-var nodes = [];
+var linkedList = new LinkedList();
 var offsetX = 50;
 var offsetY = 100;
 var nodeHeight = 60;
 var nodeWidth = 40;
 var nodeSpace = 90;
-
 var speed = 1;
 var animationTime = 1000 * speed;
 
+$('#download-button, #download-button-mobile').on('click', function () {
+    var arrayRepresentation = linkedList.toArray();
+    arrayRepresentation.unshift(linkedList.theSize, linkedList.modCount);
+    downloadObjectJson(arrayRepresentation, 'LinkedList');
+});
 
 function clear() {
     $('svg').empty();
-    nodes = [];
     updateDrawingArea();
 }
 
@@ -39,15 +42,9 @@ function createNode(xPos, yPos, data, id, idx, prevIsShort, nextIsShort) {
 
     if(idx == null || idx === -1) { 
         $("#linkedlist").append(n);
-        nodes.push(n);
         n = $("#linkedlist:last-child")
         return n; 
     }
-
-    for (var i = nodes.length; i > idx; i--) {
-        nodes[i] = nodes[i - 1];
-    }
-    nodes[idx] = n;
 
     n.insertBefore($("#linkedlist").children().eq(idx));
     n = $("#linkedlist").children().eq(idx);
@@ -131,14 +128,18 @@ function updateDrawingArea() {
 }
 
 function redraw() {
-    var arr = nodes;
     clear();
     var pos = offsetX + nodeWidth + nodeSpace;
     createNode(offsetX, offsetY, 'H', 'Head', -1, true, false);
 
-    for(var i = 1; i < arr.length - 1; i++, pos += (nodeWidth + nodeSpace)) {
-        var data = arr[i].children().first().children().last().text();
+    var it = linkedList.iterator(1);
+    while(it.hasNext()) {
+        var data = it.next();
+        if(!it.hasNext()) {
+            break;
+        }
         createNode(pos, offsetY, data);
+        pos += (nodeWidth + nodeSpace);
     }
     createNode(pos, offsetY, 'T', 'Tail', -1, false, true);
     updateDrawingArea();
@@ -147,6 +148,11 @@ function redraw() {
 //TODO: implement and include "highlightNextLine"
 function initialize() {
     clear();
+    linkedList = new LinkedList();
+
+    linkedList.addLast('H');
+    linkedList.addLast('T');
+
     createNode(offsetX, offsetY, 'H', 'Head', -1, true, true);
     createNode(offsetX + nodeSpace + nodeWidth, offsetY, 'T', 'Tail', -1, true, true);
     updateDrawingArea();
@@ -178,12 +184,14 @@ function initialize() {
 }
 
 function addByIndex(idx, data) {
-    if (nodes.length === 0) {
+    if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
-    else if(idx >= nodes.length -1) {
-        throw new Error("Index is bigger than the number of elements in list");
+    else if(idx < 0 || idx >= linkedList.size() - 1) {
+        throw new Error("Index is out of range");
     }
+
+    linkedList.add(idx + 1, data);
 
     // Get and draw p
     var p = createPointer('south',
@@ -204,7 +212,7 @@ function addByIndex(idx, data) {
     //taking first the head in mind, and then the tail
     var i = idx + 2;
     var elementsToBeMoved;
-    for(; i < nodes.length + 1; i++) {
+    for(; i < linkedList.size() + 1; i++) {
         i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
             : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
     }
@@ -250,7 +258,6 @@ function addByIndex(idx, data) {
                                 aniMoveArrow(idx, 'next', 0, -(45+15));
                                 aniMoveArrow(idx+2, 'prev', 0, -(15+45));
 
-
                                 setTimeout(function() {
                                     redraw();
                                 }, animationTime);
@@ -265,14 +272,15 @@ function addByIndex(idx, data) {
 
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
-    if (nodes.length === 0) {
+    if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
-    else if(idx >= nodes.length - 1) {
-        throw new Error("Index is bigger than the number of elements in list");
+    else if(idx < 0 || idx >= linkedList.size() - 2) {
+        throw new Error("Index is out of range");
     }
+
     idx = idx + 1; //'cause u can't remove the head
-    var p = $("#linkedlist").children().eq(idx);
+    linkedList.removeByIdx(idx);
 
     //p.next.prev = p.prev;
     aniMoveCurvedArrow(idx+1, 'prev', -(nodeWidth+nodeSpace), 0, 60);
@@ -283,23 +291,17 @@ function removeNode(idx) {
 
         //Clean up the mess and redraw
         setTimeout(function() {
+            var p = $("#linkedlist").children().eq(idx);
             p.velocity(
                 "fadeOut", {duration: animationTime}
             );
-
-            //TODO: fix this jalla-mekk
-            //remove from the data structure
-            for (var i = idx-1; i < nodes.length - 1; i++) {
-                nodes[i] = nodes[i + 1];
-            }
-            nodes.pop();
 
             aniMoveCurvedArrow(idx + 1, 'prev', (nodeWidth+nodeSpace), 0, -60);
             aniMoveCurvedArrow(idx - 1, 'next', -(nodeWidth+nodeSpace), 0, 60);
 
             var i = idx + 1;
             var elementsToBeMoved;
-            for(; i < nodes.length + 1; i++) {
+            for(; i < linkedList.size() + 1; i++) {
                 i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
                     : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
             }
@@ -321,8 +323,8 @@ function getNode(idx) {
     var p = createPointer('south', offsetX+nodeWidth/2, 50, offsetX+nodeWidth/2, 80);
     p = $("#linkedlist").children().last();
     updateDrawingArea();
-    if (idx < nodes.length / 2) {
-        for(var i = 0; i < nodes.length; i++) {
+    if (idx < linkedList.size() / 2) {
+        for(var i = 0; i < linkedList.size(); i++) {
             p.velocity(
                 { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
                 {duration: animationTime}
@@ -336,7 +338,7 @@ function findPos(data) {
         offsetX + nodeSpace + nodeWidth / 2, 50,
         offsetX + nodeSpace + nodeWidth / 2, 80);
 
-    for (var i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < linkedList.size(); i++) {
         p.velocity(
             { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
             {duration: animationTime}
