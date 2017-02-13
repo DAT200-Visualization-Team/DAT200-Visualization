@@ -287,8 +287,6 @@ function removeNode(idx) {
                 "fadeOut", {duration: animationTime}
             );
 
-            p.remove();
-
             //TODO: fix this jalla-mekk
             //remove from the data structure
             for (var i = idx-1; i < nodes.length - 1; i++) {
@@ -296,13 +294,13 @@ function removeNode(idx) {
             }
             nodes.pop();
 
-            aniMoveCurvedArrow(idx, 'prev', (nodeWidth+nodeSpace), 0, -60);
-            aniMoveCurvedArrow(idx-1, 'next', -(nodeWidth+nodeSpace), 0, 60);
+            aniMoveCurvedArrow(idx + 1, 'prev', (nodeWidth+nodeSpace), 0, -60);
+            aniMoveCurvedArrow(idx - 1, 'next', -(nodeWidth+nodeSpace), 0, 60);
 
-            var i = idx;
+            var i = idx + 1;
             var elementsToBeMoved;
             for(; i < nodes.length + 1; i++) {
-                i === idx ? elementsToBeMoved = $("#linkedlist").children().eq(i)
+                i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
                     : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
             }
             elementsToBeMoved.velocity(
