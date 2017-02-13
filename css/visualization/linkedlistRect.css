@@ -12,16 +12,15 @@ svg {
 }
 
 .data rect {
-    width: 40px;
-    height: 60px;
     fill: rgb(200, 200, 230);
     stroke-width: 1px;
     stroke:rgb(150, 100, 100);
 }
+
 .data text {
     font-size: 24px;
-    alignment-baseline: middle;
-    text-anchor: middle;
+   /* alignment-baseline: middle;
+    text-anchor: middle;*/
     fill: black;
 
     /*<g>

@@ -27,8 +27,8 @@ function createNode(xPos, yPos, data, id, idx, prevIsShort, nextIsShort) {
 
     nData
         .addClass("data")
-        .append('<rect x="' + xPos + '" y="' + yPos + '"></rect>')
-        .append('<text x="' + (xPos+nodeWidth/2) + '" y="' + (yPos+nodeHeight/2) + '">' + data + '</text>');
+        .append('<rect x="' + xPos + '" y="' + yPos + '" width="' + nodeWidth + '" height="' + nodeHeight + '"></rect>')
+        .append('<text x="' + (xPos+nodeWidth/2) + '" y="' + (yPos+nodeHeight/2) + '" alignment-baseline="middle" text-anchor="middle">' + data + '</text>');
     var nNext = createArrow("n", (xPos+nodeWidth), (yPos+15), nextLength, 0);
     var nPrev = createArrow("p", xPos, (yPos+45), prevLength, 0);
     n
@@ -122,6 +122,7 @@ function createPointer(direction, x0, y0, x1, y1) {
     pointer.append(curve);
     pointer.append(triangle);
     $("#linkedlist").append(pointer);
+    pointer = $("#linkedlist:last-child");
     return pointer;
 }
 
@@ -176,11 +177,11 @@ function initialize() {
     );
 }
 
-function addWithIndex(idx, data) {
+function addByIndex(idx, data) {
     if (nodes.length === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
-    else if(idx === nodes.length) {
+    else if(idx >= nodes.length -1) {
         throw new Error("Index is bigger than the number of elements in list");
     }
 
@@ -264,6 +265,12 @@ function addWithIndex(idx, data) {
 
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
+    if (nodes.length === 0) {
+        throw new Error("Linked List has not yet been initialized");
+    }
+    else if(idx >= nodes.length - 1) {
+        throw new Error("Index is bigger than the number of elements in list");
+    }
     idx = idx + 1; //'cause u can't remove the head
     var p = $("#linkedlist").children().eq(idx);
 
@@ -309,6 +316,50 @@ function removeNode(idx) {
         }, animationTime);
     }, animationTime);
 }
+
+//TODO: finish this
+//FIXME: the arrow won't move
+function getNode(idx) {
+    var p = createPointer('south', offsetX+nodeWidth/2, 50, offsetX+nodeWidth/2, 80);
+    p = $("#linkedlist").children().last();
+    updateDrawingArea();
+    if (idx < nodes.length / 2) {
+        for(var i = 0; i < nodes.length; i++) {
+            p.velocity(
+                { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
+                {duration: animationTime}
+            );
+        }
+    }
+}
+
+function findPos(data) {
+    var p = createPointer('south',
+        offsetX + nodeSpace + nodeWidth / 2, 50,
+        offsetX + nodeSpace + nodeWidth / 2, 80);
+
+    for (var i = 0; i < nodes.length; i++) {
+        p.velocity(
+            { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
+            {duration: animationTime}
+        );
+    }
+
+
+    /*for (var p = this.head.next; p !== this.tail; p = p.next) {
+        if (x === null) {
+            if (p.data === null) {
+                return p;
+            }
+        }
+        else if (x === p.data) { //must really use x.equals(p.data)
+            return p;
+        }
+    }*/
+}
+
+
+
 
 
 /***
@@ -399,9 +450,11 @@ function aniMoveCurvedArrow(nodeIdx, arrowType, dx, dy, my1) {
 
 function initializeAndAdd(howMany) {
     speed = 0.001;
+    animationTime = 1000*speed;
     initialize();
     for (var i = 0; i <= howMany; i++) {
-        addWithIndex(i, i);
+        addByIndex(i, i);
     }
     speed = 1;
+    animationTime = 1000*speed;
 }
