@@ -163,26 +163,32 @@ function initialize() {
     var tail = $("#linkedlist").children().last();
     tail.attr("opacity", "0");
 
-    head.velocity("transition.expandIn", {
-            duration: animationTime,
-            complete: function() {
-                tail.attr("opacity", "1");
-                tail.velocity("transition.expandIn", {
-                        duration: animationTime,
-                        complete: function() {
-                            setTimeout(function() {
-                                aniMoveArrow(0, 'next', 45, 0);
-                                setTimeout(function() {
-                                    redraw();
-                                }, animationTime);
-                            }, animationTime);
-                            aniMoveArrow(1, 'prev', -45, 0);
-                        }
-                    }
-                )
-            }
-        }
-    );
+    var loadingSequence = [
+        { e: head, p: "transition.expandIn", o: { duration: animationTime } },
+        { e: tail, p: "transition.expandIn", o: { duration: animationTime } },
+    ];
+
+    $.Velocity.RunSequence(loadingSequence);
+    //head.velocity("transition.expandIn", {
+    //        duration: animationTime,
+    //        complete: function() {
+    //            tail.attr("opacity", "1");
+    //            tail.velocity("transition.expandIn", {
+    //                    duration: animationTime,
+    //                    complete: function() {
+    //                        setTimeout(function() {
+    //                            aniMoveArrow(0, 'next', 45, 0);
+    //                            setTimeout(function() {
+    //                                redraw();
+    //                            }, animationTime);
+    //                        }, animationTime);
+    //                        aniMoveArrow(1, 'prev', -45, 0);
+    //                    }
+    //                }
+    //            )
+    //        }
+    //    }
+    //);
 }
 
 function addByIndex(idx, data) {
@@ -389,20 +395,29 @@ function aniMoveArrow(nodeIdx, arrowType, dx, dy) {
     var p2y = parseInt(triangle[8]);
 
     //TODO: make the prev of Tail move as soon as Tail is faded in
-    arrow.children().velocity(
-        {tween: 1},
-        {duration: animationTime,
-            progress: function(elements, complete, remaining, start, tweenValue) {
-                elements[0].setAttribute(
-                    "d", "M " + x0 + " " + y0 + " Q " + x0 + " " + y0 + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
-                );
-                elements[1].setAttribute(
-                    "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
-                );
+    //arrow.children().velocity(
+    //    {tween: 1},
+    //    {duration: animationTime,
+            //progress: function(elements, complete, remaining, start, tweenValue) {
+            //    elements[0].setAttribute(
+            //        "d", "M " + x0 + " " + y0 + " Q " + x0 + " " + y0 + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
+            //    );
+            //    elements[1].setAttribute(
+            //        "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
+            //    );
 
-            }
-        }
+    //        }
+    //    }
+    //);
+    var progressAnimation = function(elements, complete, remaining, start, tweenValue) {
+        elements[0].setAttribute(
+            "d", "M " + x0 + " " + y0 + " Q " + x0 + " " + y0 + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
+        );
+        elements[1].setAttribute(
+            "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
     );
+
+    return { e: arrow.children(), p: {tween: 1}, o: {duration: animationTime, progress: progressAnimation}}
 }
 
 function aniMoveCurvedArrow(nodeIdx, arrowType, dx, dy, my1) {
