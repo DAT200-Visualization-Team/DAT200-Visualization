@@ -3,14 +3,25 @@ var windowToggleState = 0;
 $(document).ready(function () {
     $("#graphics").resizable();
 
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    /*if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         windowToggleState = 1;
+        $("#graphics").width($("#view").width());
+        $("#code").width(0);
+    }*/
+
+    if ($(window).width() < 700) {
+        windowToggleState = 1;
+        $("#graphics").show();
         $("#graphics").width($("#view").width());
         $("#code").width(0);
     }
 
     $("#toggle-view-button").click(function () {
         if (++windowToggleState > 2) windowToggleState = 0;
+        if (windowToggleState === 0 && $(window).width() < 750) {
+            windowToggleState = 1;
+            $("#graphics").show();
+        }
 
         switch (windowToggleState) {
             case 0:

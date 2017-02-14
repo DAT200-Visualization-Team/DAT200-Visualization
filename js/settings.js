@@ -31,11 +31,14 @@ function loadFontSizeCookieValue() {
     }
 }
 
-function downloadObjectJson(objectToDownload) {
-    var dataString = 'data:text/json;charset=utf-8,' + encodeURIComponent('{"' + objectToDownload.constructor.name + '": ' + JSON.stringify(objectToDownload) + '}');
+function downloadObjectJson(objectToDownload, fileName) {
+    if(fileName == null) {
+        fileName = objectToDownload.constructor.name;
+    }
+    var dataString = 'data:text/json;charset=utf-8,' + encodeURIComponent('{"' + fileName + '": ' + JSON.stringify(objectToDownload) + '}');
     var dlAnchorElem = document.getElementById('downloadLink');
     dlAnchorElem.setAttribute('href', dataString);
-    dlAnchorElem.setAttribute('download', (objectToDownload.constructor.name + '.json'));
+    dlAnchorElem.setAttribute('download', (fileName + '.json'));
     dlAnchorElem.click();
 }
 
