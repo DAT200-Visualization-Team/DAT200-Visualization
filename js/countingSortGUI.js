@@ -135,7 +135,7 @@ var arrowHeadHeight = 10;
 var arrow = drawingArea.append("svg")
 //    .attr("width", 19.2)
 //    .attr("height", 50)
-    .attr("opacity", 0)
+//    .attr("opacity", 0)
     .attr('y', arrElementHeight)
     .attr('x', arrElementWidth / 2 - arrowWidth);
 
@@ -216,13 +216,15 @@ function showArrow() {
 function hideArrow() {
     arrow.transition()
         .duration(500)
-        .attr("opacity", 0);
+        .attr('opacity', 0);
 }
 
 function pointArrow(index) {
     arrow.transition()
         .duration(500)
         .attr('x', index * (width / data.length) + arrElementWidth / 3 - arrowWidth / 2);
+        //.attr('y', array._groups[0][0].firstElementChild.attr('y'));
+    //console.log(array._groups[0][0].firstElementChild.attr('y'));
 }
 
 function highlight(index, array) {
@@ -247,14 +249,16 @@ function runCommand() {
     unHighlightCode();
     switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
         case "coun":
+            //showArrow();
             eval(cmd[currentCmd]);
             clearHighlight(unsortedArray);
             //countUpdate();
             break;
         case "sort":
             //Hide arrow, no longer needed
-            hideArrow();
+            //moveArrow(countingArray);
             eval(cmd[currentCmd]);
+            hideArrow();
             //sortedUpdate();
             break;
         case "high":
