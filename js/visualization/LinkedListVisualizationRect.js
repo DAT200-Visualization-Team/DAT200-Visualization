@@ -23,9 +23,11 @@ function processUploadedObject(object) {
     clear();
     linkedList = new LinkedList();
 
-    createNode(offsetX, offsetY, arrayRepresentation[2], 'Head', -1, true, false);
-    var pos = offsetX + nodeWidth + nodeSpace;
-    for(var i = 3; i < arrayRepresentation.length - 1; i++, pos += nodeWidth+nodeSpace) {
+
+    var pos = offsetX;
+    createNode(pos, offsetY, arrayRepresentation[i], 'Head', -1, true, false);
+
+    for (var i = 3; i < arrayRepresentation.length - 1; i++, pos += nodeWidth + nodeSpace) {
         linkedList.addLast(arrayRepresentation[i]);
         createNode(pos, offsetY, arrayRepresentation[i]);
     }
@@ -47,22 +49,22 @@ function createNode(xPos, yPos, data, id, idx, prevIsShort, nextIsShort) {
     var prevLength;
     var nextLength;
 
-    prevIsShort ? prevLength = nodeSpace/2 : prevLength = nodeSpace;
-    nextIsShort ? nextLength = nodeSpace/2 : nextLength = nodeSpace;
+    prevIsShort ? prevLength = nodeSpace / 2 : prevLength = nodeSpace;
+    nextIsShort ? nextLength = nodeSpace / 2 : nextLength = nodeSpace;
 
     nData
         .addClass("data")
         .append('<rect x="' + xPos + '" y="' + yPos + '" width="' + nodeWidth + '" height="' + nodeHeight + '"></rect>')
-        .append('<text x="' + (xPos+nodeWidth/2) + '" y="' + (yPos+nodeHeight/2) + '" alignment-baseline="middle" text-anchor="middle" font-size="24" fill="black">' + data + '</text>');
-    var nNext = createArrow("n", (xPos+nodeWidth), (yPos+15), nextLength, 0);
-    var nPrev = createArrow("p", xPos, (yPos+45), prevLength, 0);
+        .append('<text x="' + (xPos + nodeWidth / 2) + '" y="' + (yPos + nodeHeight / 2) + '" alignment-baseline="middle" text-anchor="middle" font-size="24" fill="black">' + data + '</text>');
+    var nNext = createArrow("n", (xPos + nodeWidth), (yPos + 15), nextLength, 0);
+    var nPrev = createArrow("p", xPos, (yPos + 45), prevLength, 0);
     n
         .append(nData)
         .append(nNext)
         .append(nPrev)
         .attr("class", "node");
 
-    if(idx == null || idx === -1) {
+    if (idx == null || idx === -1) {
 
         $("#linkedlist").append(n);
         n = $("#linkedlist:last-child")
@@ -85,17 +87,17 @@ function createArrow(type, x0, y0, dx, dy) {
         var y1 = y0 + dy;
         var offset = -3;
 
-        var p1 = 'M ' + (x1-5) + ' ' + (y1-5) + ' ';
-        var p2 = 'L ' + (x1-5) + ' ' + (y1+5) + ' ';
+        var p1 = 'M ' + (x1 - 5) + ' ' + (y1 - 5) + ' ';
+        var p2 = 'L ' + (x1 - 5) + ' ' + (y1 + 5) + ' ';
         var p3 = 'L ' + (x1) + ' ' + (y1) + ' ';
     }
-    else if(type === "p") {
+    else if (type === "p") {
         var x1 = x0 - dx;
         var y1 = y0 - dy;
         var offset = 3;
 
-        var p1 = 'M ' + (x1+5) + ' ' + (y1+5) + ' ';
-        var p2 = 'L ' + (x1+5) + ' ' + (y1-5) + ' ';
+        var p1 = 'M ' + (x1 + 5) + ' ' + (y1 + 5) + ' ';
+        var p2 = 'L ' + (x1 + 5) + ' ' + (y1 - 5) + ' ';
         var p3 = 'L ' + (x1) + ' ' + (y1) + ' ';
     }
     else {
@@ -104,7 +106,7 @@ function createArrow(type, x0, y0, dx, dy) {
     var mx = x0;
     var my = y0;
 
-    var curve = '<path d="M ' + x0 + ' ' + y0 + ' Q ' + mx + ' ' + my + ' ' + (x1+offset) + ' ' + y1 + '" class="' + className + 'Line" />';
+    var curve = '<path d="M ' + x0 + ' ' + y0 + ' Q ' + mx + ' ' + my + ' ' + (x1 + offset) + ' ' + y1 + '" class="' + className + 'Line" />';
     var triangle = '<path d="' + p1 + p2 + p3 + 'Z" class="' + className + 'Head" />';
     arrow.append(curve);
     arrow.append(triangle);
@@ -157,9 +159,9 @@ function redraw() {
     createNode(offsetX, offsetY, 'H', 'Head', -1, true, false);
 
     var it = linkedList.iterator(1);
-    while(it.hasNext()) {
+    while (it.hasNext()) {
         var data = it.next();
-        if(!it.hasNext()) {
+        if (!it.hasNext()) {
             break;
         }
         createNode(pos, offsetY, data);
@@ -184,33 +186,22 @@ function initialize() {
     var tail = $("#linkedlist").children().last();
     tail.attr("opacity", "0");
 
-    head.velocity("transition.expandIn", {
-            duration: animationTime,
-            complete: function() {
-                tail.attr("opacity", "1");
-                tail.velocity("transition.expandIn", {
-                        duration: animationTime,
-                        complete: function() {
-                            setTimeout(function() {
-                                aniMoveArrow(0, 'next', 45, 0);
-                                setTimeout(function() {
-                                    redraw();
-                                }, animationTime);
-                            }, animationTime);
-                            aniMoveArrow(1, 'prev', -45, 0);
-                        }
-                    }
-                )
-            }
-        }
-    );
+    var loadingSequence = [
+        { e: head, p: "transition.expandIn", o: { duration: animationTime } },
+        { e: tail, p: "transition.expandIn", o: { duration: animationTime } },
+        aniMoveArrow(1, 'prev', -45, 0),
+        aniMoveArrow(0, 'next', 45, 0),
+        { e: head, p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
+    ];
+
+    $.Velocity.RunSequence(loadingSequence);
 }
 
 function addByIndex(idx, data) {
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
-    else if(idx < 0 || idx >= linkedList.size() - 1) {
+    else if (idx < 0 || idx >= linkedList.size() - 1) {
         throw new Error("Index is out of range");
     }
 
@@ -218,79 +209,50 @@ function addByIndex(idx, data) {
 
     // Get and draw p
     var p = createPointer('south',
-        (offsetX + nodeWidth/2 + ((nodeWidth + nodeSpace) * (idx+1))),
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
         50,
-        (offsetX + nodeWidth/2 + ((nodeWidth + nodeSpace) * (idx+1))),
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
         80);
 
 
     // Draw newNode with both arrows
-    var node = createNode((offsetX + ((idx+1) * (nodeWidth + nodeSpace))),
-        offsetY+nodeHeight, data, true, (idx + 1));
+    var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
+        offsetY + nodeHeight, data, true, (idx + 1));
     updateDrawingArea();
 
-    var node = $("#linkedlist").children().eq(idx+1);
+    var node = $("#linkedlist").children().eq(idx + 1);
     node.attr("opacity", "0");
 
     //taking first the head in mind, and then the tail
     var i = idx + 2;
     var elementsToBeMoved;
-    for(; i < linkedList.size() + 1; i++) {
+    for (; i < linkedList.size() + 1; i++) {
         i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
             : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
     }
 
     p = $("#linkedlist").children().last();
-    p.velocity(
-        "transition.expandIn", {
-            duration: animationTime,
-            complete: function() {
 
-                //Fading in the new node while old nodes make place
-                aniMoveArrow(idx, 'next', nodeSpace+nodeWidth, 0);
-                aniMoveArrow(idx+2, 'prev', -(nodeSpace+nodeWidth), 0);
-                elementsToBeMoved.velocity(
-                    { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
-                    {duration: animationTime}
-                );
-                aniMoveArrow(idx+1, 'prev', 0, -(45+5));
-                aniMoveArrow(idx+1, 'next', 0, -(15+55));
+    // All the arrow animations are called at this point, so they all use the start position of the arrows
+    var loadingSequence = [
+        { e: p, p: "transition.expandIn", o: { duration: animationTime } },
+        aniMoveArrow(idx, 'next', nodeSpace + nodeWidth, 0),
+        aniMoveArrow(idx + 2, 'prev', -(nodeSpace + nodeWidth), 0, 0, false),
+        { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
+        aniMoveArrow(idx + 1, 'prev', 0, -(45 + 5)),
+        aniMoveArrow(idx + 1, 'next', 0, -(15 + 55)),
+        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo" } },
+        aniMoveArrow(idx, 'next', 0, 45 + 15),
+        aniMoveArrow(idx + 2, 'prev', 0, 15 + 45),
+        { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
+        aniMoveArrow(idx + 1, 'prev', 0, 0, 0, false),
+        aniMoveArrow(idx + 1, 'next', 0, 0, 0, false),
+        aniMoveArrow(idx, 'next', 0, 0, 0, false),
+        aniMoveArrow(idx + 2, 'prev', 0, 0, 0, false),
+        { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
+    ];
 
-
-                node.attr("opacity", "1");
-                node.velocity("transition.expandIn", {
-                    duration: animationTime, easing: "easeInOutExpo",
-                    complete: function() {
-
-                        // Draw newNode.prev.next to newNode
-                        aniMoveArrow(idx, 'next', -(nodeSpace+nodeWidth), 45+15);
-
-                        // Draw p.prev to newNode
-                        setTimeout(function() {
-                            aniMoveArrow(idx+2, 'prev', (nodeSpace+nodeWidth), 15+45);
-
-                            // Redraw to clean up the mess
-                            setTimeout(function() {
-                                node.velocity({
-                                    translateY: "" + (-nodeHeight)}, {
-                                    duration: animationTime
-                                });
-
-                                aniMoveArrow(idx+1, 'prev', 0, 45+5);
-                                aniMoveArrow(idx+1, 'next', 0, 15+55);
-                                aniMoveArrow(idx, 'next', 0, -(45+15));
-                                aniMoveArrow(idx+2, 'prev', 0, -(15+45));
-
-                                setTimeout(function() {
-                                    redraw();
-                                }, animationTime);
-                            }, animationTime);
-                        }, animationTime);
-                    }
-                });
-            }
-        }
-    );
+    $.Velocity.RunSequence(loadingSequence);
 }
 
 //TODO: find a meaningful variable to take in
@@ -298,7 +260,7 @@ function removeNode(idx) {
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
-    else if(idx < 0 || idx >= linkedList.size() - 2) {
+    else if (idx < 0 || idx >= linkedList.size() - 2) {
         throw new Error("Index is out of range");
     }
 
@@ -306,34 +268,34 @@ function removeNode(idx) {
     linkedList.removeByIdx(idx);
 
     //p.next.prev = p.prev;
-    aniMoveArrow(idx+1, 'prev', -(nodeWidth+nodeSpace), 0, 60);
+    aniMoveArrow(idx + 1, 'prev', -(nodeWidth + nodeSpace), 0, 60);
 
     //p.prev.next = p.next;
-    setTimeout(function() {
-        aniMoveArrow(idx-1, 'next', (nodeWidth+nodeSpace), 0, -60);
+    setTimeout(function () {
+        aniMoveArrow(idx - 1, 'next', (nodeWidth + nodeSpace), 0, -60);
 
         //Clean up the mess and redraw
-        setTimeout(function() {
+        setTimeout(function () {
             var p = $("#linkedlist").children().eq(idx);
             p.velocity(
-                "fadeOut", {duration: animationTime}
+                "fadeOut", { duration: animationTime }
             );
 
-            aniMoveArrow(idx + 1, 'prev', (nodeWidth+nodeSpace), 0, -60);
-            aniMoveArrow(idx - 1, 'next', -(nodeWidth+nodeSpace), 0, 60);
+            aniMoveArrow(idx + 1, 'prev', (nodeWidth + nodeSpace), 0, -60);
+            aniMoveArrow(idx - 1, 'next', -(nodeWidth + nodeSpace), 0, 60);
 
             var i = idx + 1;
             var elementsToBeMoved;
-            for(; i < linkedList.size() + 1; i++) {
+            for (; i < linkedList.size() + 1; i++) {
                 i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
                     : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
             }
             elementsToBeMoved.velocity(
-                { translateX: "-" + (nodeWidth+nodeSpace), translateY: "+=0" },
-                {duration: animationTime}
+                { translateX: "-" + (nodeWidth + nodeSpace), translateY: "+=0" },
+                { duration: animationTime }
             );
 
-            setTimeout(function() {
+            setTimeout(function () {
                 redraw();
             }, animationTime);
         }, animationTime);
@@ -343,14 +305,14 @@ function removeNode(idx) {
 //TODO: finish this
 //FIXME: the arrow won't move
 function getNode(idx) {
-    var p = createPointer('south', offsetX+nodeWidth/2, 50, offsetX+nodeWidth/2, 80);
+    var p = createPointer('south', offsetX + nodeWidth / 2, 50, offsetX + nodeWidth / 2, 80);
     p = $("#linkedlist").children().last();
     updateDrawingArea();
     if (idx < linkedList.size() / 2) {
-        for(var i = 0; i < linkedList.size(); i++) {
+        for (var i = 0; i < linkedList.size() ; i++) {
             p.velocity(
-                { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
-                {duration: animationTime}
+                { translateX: "+" + (nodeWidth + nodeSpace), translateY: "+=0" },
+                { duration: animationTime }
             );
         }
     }
@@ -361,10 +323,10 @@ function findPos(data) {
         offsetX + nodeSpace + nodeWidth / 2, 50,
         offsetX + nodeSpace + nodeWidth / 2, 80);
 
-    for (var i = 0; i < linkedList.size(); i++) {
+    for (var i = 0; i < linkedList.size() ; i++) {
         p.velocity(
-            { translateX: "+" + (nodeWidth+nodeSpace), translateY: "+=0" },
-            {duration: animationTime}
+            { translateX: "+" + (nodeWidth + nodeSpace), translateY: "+=0" },
+            { duration: animationTime }
         );
     }
 
@@ -381,14 +343,12 @@ function findPos(data) {
     }*/
 }
 
-
-
-
-
 /***
  * ANIMATIONS
  */
-function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy) {
+
+function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy, sequence) {
+
     var node = $("#linkedlist").children().eq(nodeIdx);
     var arrow;
     (arrowType === 'next') ? (arrow = node.children().eq(1)) : (arrow = node.children().eq(2));
@@ -399,9 +359,9 @@ function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy) {
     var y0 = parseInt(arch[2]);
     var x1 = parseInt(arch[6]);
     var y1 = parseInt(arch[7]);
-    var mx = (x0 + x1 + dx)/2;
+    var mx = (x0 + x1 + dx) / 2;
     var my0 = parseInt(arch[5]);
-    if(dmy == null) {
+    if (dmy == null) {
         dmy = 0;
         mx = x0; //delete this line, and all arrows will get curvy without specifying dmy
 
@@ -417,19 +377,15 @@ function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy) {
     var p2y = parseInt(triangle[8]);
 
     //TODO: make the prev of Tail move as soon as Tail is faded in (initialize())
-    arrow.children().velocity(
-        {tween: 1},
-        {duration: animationTime,
-            progress: function(elements, complete, remaining, start, tweenValue) {
-                elements[0].setAttribute(
-                    "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * dmy) +my0)  + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
-                );
-                elements[1].setAttribute(
-                    "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
-                );
-            }
-        }
-    );
+    var progressAnimation = function (elements, complete, remaining, start, tweenValue) {
+        elements[0].setAttribute(
+            "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * dmy) + my0) + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
+        );
+        elements[1].setAttribute(
+            "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
+        );
+    }
+    return { e: arrow.children(), p: { tween: 1 }, o: { duration: animationTime, progress: progressAnimation, sequenceQueue: sequence } }
 }
 
 
@@ -439,11 +395,11 @@ function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy) {
 
 function initializeAndAdd(howMany) {
     speed = 0.001;
-    animationTime = 1000*speed;
+    animationTime = 1000 * speed;
     initialize();
     for (var i = 0; i <= howMany; i++) {
         addByIndex(i, i);
     }
     speed = 1;
-    animationTime = 1000*speed;
+    animationTime = 1000 * speed;
 }
