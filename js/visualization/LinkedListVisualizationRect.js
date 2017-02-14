@@ -18,22 +18,21 @@ $('#download-button, #download-button-mobile').on('click', function () {
     downloadObjectJson(arrayRepresentation, 'LinkedList');
 });
 
-function processUploadedObject() {
+function processUploadedObject(object) {
     var arrayRepresentation = object.LinkedList;
     clear();
     linkedList = new LinkedList();
 
-    var pos = offsetX;
-    createNode(pos, offsetY, arrayRepresentation[i], 'Head', -1, true, false);
-
+    createNode(offsetX, offsetY, arrayRepresentation[2], 'Head', -1, true, false);
+    var pos = offsetX + nodeWidth + nodeSpace;
     for(var i = 3; i < arrayRepresentation.length - 1; i++, pos += nodeWidth+nodeSpace) {
         linkedList.addLast(arrayRepresentation[i]);
         createNode(pos, offsetY, arrayRepresentation[i]);
     }
     createNode(pos, offsetY, arrayRepresentation[i], 'Tail', -1, false, true);
-
     linkedList.theSize = arrayRepresentation[0];
     linkedList.modCount = arrayRepresentation[1];
+    updateDrawingArea();
 }
 
 function clear() {
