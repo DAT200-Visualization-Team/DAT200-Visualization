@@ -18,10 +18,10 @@ svg {
 }
 
 .data text {
-    font-size: 24px;
+    /*font-size: 24px;*/
    /* alignment-baseline: middle;
     text-anchor: middle;*/
-    fill: black;
+    /*fill: black;*/
     /*<g>
     **<rect x="0" y="0" width="60" height="60" fill="red"></rect>
     **<text x="30" y="30" font-family="Verdana" font-size="32" fill="blue" alignment-baseline="middle" text-anchor="middle">1</text>

@@ -54,7 +54,7 @@ function createNode(xPos, yPos, data, id, idx, prevIsShort, nextIsShort) {
     nData
         .addClass("data")
         .append('<rect x="' + xPos + '" y="' + yPos + '" width="' + nodeWidth + '" height="' + nodeHeight + '"></rect>')
-        .append('<text x="' + (xPos+nodeWidth/2) + '" y="' + (yPos+nodeHeight/2) + '" alignment-baseline="middle" text-anchor="middle">' + data + '</text>');
+        .append('<text x="' + (xPos+nodeWidth/2) + '" y="' + (yPos+nodeHeight/2) + '" alignment-baseline="middle" text-anchor="middle" font-size="24" fill="black">' + data + '</text>');
     var nNext = createArrow("n", (xPos+nodeWidth), (yPos+15), nextLength, 0);
     var nPrev = createArrow("p", xPos, (yPos+45), prevLength, 0);
     n
@@ -63,10 +63,12 @@ function createNode(xPos, yPos, data, id, idx, prevIsShort, nextIsShort) {
         .append(nPrev)
         .attr("class", "node");
 
-    if(idx == null || idx === -1) { 
+    if(idx == null || idx === -1) {
+
         $("#linkedlist").append(n);
         n = $("#linkedlist:last-child")
-        return n; 
+        return n;
+
     }
 
     n.insertBefore($("#linkedlist").children().eq(idx));
