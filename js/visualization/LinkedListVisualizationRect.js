@@ -7,11 +7,34 @@ var nodeSpace = 90;
 var speed = 1;
 var animationTime = 1000 * speed;
 
+//TODO: implement and include "highlightNextLine"
+
+//TODO: implement a fast (non-animation) initialize and add a number of randomly generated nodes
+
+
 $('#download-button, #download-button-mobile').on('click', function () {
     var arrayRepresentation = linkedList.toArray();
     arrayRepresentation.unshift(linkedList.theSize, linkedList.modCount);
     downloadObjectJson(arrayRepresentation, 'LinkedList');
 });
+
+function processUploadedObject() {
+    var arrayRepresentation = object.LinkedList;
+    clear();
+    linkedList = new LinkedList();
+
+    var pos = offsetX;
+    createNode(pos, offsetY, arrayRepresentation[i], 'Head', -1, true, false);
+
+    for(var i = 3; i < arrayRepresentation.length - 1; i++, pos += nodeWidth+nodeSpace) {
+        linkedList.addLast(arrayRepresentation[i]);
+        createNode(pos, offsetY, arrayRepresentation[i]);
+    }
+    createNode(pos, offsetY, arrayRepresentation[i], 'Tail', -1, false, true);
+
+    linkedList.theSize = arrayRepresentation[0];
+    linkedList.modCount = arrayRepresentation[1];
+}
 
 function clear() {
     $('svg').empty();
@@ -145,7 +168,6 @@ function redraw() {
     updateDrawingArea();
 }
 
-//TODO: implement and include "highlightNextLine"
 function initialize() {
     clear();
     linkedList = new LinkedList();
@@ -283,11 +305,11 @@ function removeNode(idx) {
     linkedList.removeByIdx(idx);
 
     //p.next.prev = p.prev;
-    aniMoveCurvedArrow(idx+1, 'prev', -(nodeWidth+nodeSpace), 0, 60);
+    aniMoveArrow(idx+1, 'prev', -(nodeWidth+nodeSpace), 0, 60);
 
     //p.prev.next = p.next;
     setTimeout(function() {
-        aniMoveCurvedArrow(idx-1, 'next', (nodeWidth+nodeSpace), 0, -60);
+        aniMoveArrow(idx-1, 'next', (nodeWidth+nodeSpace), 0, -60);
 
         //Clean up the mess and redraw
         setTimeout(function() {
@@ -296,8 +318,8 @@ function removeNode(idx) {
                 "fadeOut", {duration: animationTime}
             );
 
-            aniMoveCurvedArrow(idx + 1, 'prev', (nodeWidth+nodeSpace), 0, -60);
-            aniMoveCurvedArrow(idx - 1, 'next', -(nodeWidth+nodeSpace), 0, 60);
+            aniMoveArrow(idx + 1, 'prev', (nodeWidth+nodeSpace), 0, -60);
+            aniMoveArrow(idx - 1, 'next', -(nodeWidth+nodeSpace), 0, 60);
 
             var i = idx + 1;
             var elementsToBeMoved;
@@ -365,45 +387,7 @@ function findPos(data) {
 /***
  * ANIMATIONS
  */
-function aniMoveArrow(nodeIdx, arrowType, dx, dy) {
-    var node = $("#linkedlist").children().eq(nodeIdx);
-    var arrow;
-    (arrowType === 'next') ? (arrow = node.children().eq(1)) : (arrow = node.children().eq(2));
-
-    var arch = arrow.children().first().attr("d");
-    arch = arch.split(' ');
-    var x0 = parseInt(arch[1]);
-    var y0 = parseInt(arch[2]);
-    var x1 = parseInt(arch[6]);
-    var y1 = parseInt(arch[7]);
-
-    var triangle = arrow.children().last().attr("d");
-    triangle = triangle.split(' ');
-    var p0x = parseInt(triangle[1]);
-    var p0y = parseInt(triangle[2]);
-    var p1x = parseInt(triangle[4]);
-    var p1y = parseInt(triangle[5]);
-    var p2x = parseInt(triangle[7]);
-    var p2y = parseInt(triangle[8]);
-
-    //TODO: make the prev of Tail move as soon as Tail is faded in
-    arrow.children().velocity(
-        {tween: 1},
-        {duration: animationTime,
-            progress: function(elements, complete, remaining, start, tweenValue) {
-                elements[0].setAttribute(
-                    "d", "M " + x0 + " " + y0 + " Q " + x0 + " " + y0 + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
-                );
-                elements[1].setAttribute(
-                    "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
-                );
-
-            }
-        }
-    );
-}
-
-function aniMoveCurvedArrow(nodeIdx, arrowType, dx, dy, my1) {
+function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy) {
     var node = $("#linkedlist").children().eq(nodeIdx);
     var arrow;
     (arrowType === 'next') ? (arrow = node.children().eq(1)) : (arrow = node.children().eq(2));
@@ -416,6 +400,11 @@ function aniMoveCurvedArrow(nodeIdx, arrowType, dx, dy, my1) {
     var y1 = parseInt(arch[7]);
     var mx = (x0 + x1 + dx)/2;
     var my0 = parseInt(arch[5]);
+    if(dmy == null) {
+        dmy = 0;
+        mx = x0; //delete this line, and all arrows will get curvy without specifying dmy
+
+    }
 
     var triangle = arrow.children().last().attr("d");
     triangle = triangle.split(' ');
@@ -426,18 +415,17 @@ function aniMoveCurvedArrow(nodeIdx, arrowType, dx, dy, my1) {
     var p2x = parseInt(triangle[7]);
     var p2y = parseInt(triangle[8]);
 
-    //TODO: make the prev of Tail move as soon as Tail is faded in
+    //TODO: make the prev of Tail move as soon as Tail is faded in (initialize())
     arrow.children().velocity(
         {tween: 1},
         {duration: animationTime,
             progress: function(elements, complete, remaining, start, tweenValue) {
                 elements[0].setAttribute(
-                    "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * my1) +my0)  + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
+                    "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * dmy) +my0)  + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
                 );
                 elements[1].setAttribute(
                     "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
                 );
-
             }
         }
     );
