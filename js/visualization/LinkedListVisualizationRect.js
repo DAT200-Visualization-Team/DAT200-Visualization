@@ -231,17 +231,22 @@ function addByIndex(idx, data) {
             : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
     }
 
+    var nNext = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(1));
+    var nPrev = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
+    var npNext = new Arrow($("#linkedlist").children().eq(idx).children().eq(1));
+    var nnPrev = new Arrow($("#linkedlist").children().eq(idx + 2).children().eq(2));
+
     p = $("#linkedlist").children().last();
 
     // All the arrow animations are called at this point, so they all use the start position of the arrows
-    var loadingSequence = [
+    /*var loadingSequence = [
         { e: p, p: "transition.expandIn", o: { duration: animationTime } },
         aniMoveArrow(idx, 'next', nodeSpace + nodeWidth, 0),
         aniMoveArrow(idx + 2, 'prev', -(nodeSpace + nodeWidth), 0, 0, false),
         { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
         aniMoveArrow(idx + 1, 'prev', 0, -(45 + 5)),
         aniMoveArrow(idx + 1, 'next', 0, -(15 + 55)),
-        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo" } },
+        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false } },
         aniMoveArrow(idx, 'next', 0, 45 + 15),
         aniMoveArrow(idx + 2, 'prev', 0, 15 + 45),
         { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
@@ -249,6 +254,24 @@ function addByIndex(idx, data) {
         aniMoveArrow(idx + 1, 'next', 0, 0, 0, false),
         aniMoveArrow(idx, 'next', 0, 0, 0, false),
         aniMoveArrow(idx + 2, 'prev', 0, 0, 0, false),
+        { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
+    ];*/
+
+    var loadingSequence = [
+        { e: p, p: "transition.expandIn", o: { duration: animationTime } },
+        npNext.animate(nodeSpace + nodeWidth, 0),
+        nnPrev.animate(-(nodeSpace + nodeWidth), 0, 0, false),
+        { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
+        nPrev.animate(0, -(45 + 5)),
+        nNext.animate(0, -(15 + 55), 0, false),
+        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false } },
+        npNext.animate(-(nodeSpace+nodeWidth), 45 + 15),
+        nnPrev.animate((nodeSpace+nodeWidth), 15 + 45),
+        { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
+        nPrev.animate(0, 45+5),
+        nNext.animate(0, 15+55, 0, false),
+        npNext.animate(0, -(45+15), 0, false),
+        nnPrev.animate(0, -(15+45), 0, false),
         { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
     ];
 
@@ -402,4 +425,19 @@ function initializeAndAdd(howMany) {
     }
     speed = 1;
     animationTime = 1000 * speed;
+}
+
+function testGhost() {
+    var arr = createArrow('n', 100, 100, 50, 0);
+    $("#linkedlist").append(arr);
+
+    updateDrawingArea();
+
+    var arrOb = new Arrow($("#linkedlist").children().first());
+
+    var loadingSequence = [arrOb.animate(50, 0), arrOb.animate(-50, 0)];
+
+    $.Velocity.RunSequence(loadingSequence);
+
+
 }
