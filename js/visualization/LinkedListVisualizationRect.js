@@ -290,39 +290,21 @@ function removeNode(idx) {
     idx = idx + 1; //'cause u can't remove the head
     linkedList.removeByIdx(idx);
 
-    //p.next.prev = p.prev;
-    aniMoveArrow(idx + 1, 'prev', -(nodeWidth + nodeSpace), 0, 60);
+    var elementsToBeMoved;
+    for (var i = idx + 1; i < linkedList.size() + 1; i++) {
+        console.log(i);
+        i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
+            : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
+    }
 
-    //p.prev.next = p.next;
-    setTimeout(function () {
-        aniMoveArrow(idx - 1, 'next', (nodeWidth + nodeSpace), 0, -60);
-
-        //Clean up the mess and redraw
-        setTimeout(function () {
-            var p = $("#linkedlist").children().eq(idx);
-            p.velocity(
-                "fadeOut", { duration: animationTime }
-            );
-
-            aniMoveArrow(idx + 1, 'prev', (nodeWidth + nodeSpace), 0, -60);
-            aniMoveArrow(idx - 1, 'next', -(nodeWidth + nodeSpace), 0, 60);
-
-            var i = idx + 1;
-            var elementsToBeMoved;
-            for (; i < linkedList.size() + 1; i++) {
-                i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
-                    : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
-            }
-            elementsToBeMoved.velocity(
-                { translateX: "-" + (nodeWidth + nodeSpace), translateY: "+=0" },
-                { duration: animationTime }
-            );
-
-            setTimeout(function () {
-                redraw();
-            }, animationTime);
-        }, animationTime);
-    }, animationTime);
+    $.Velocity.RunSequence([
+        aniMoveArrow(idx + 1, 'prev', -(nodeWidth + nodeSpace), 0, 60),
+        { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime, sequenceQueue: false } },
+        aniMoveArrow(idx + 1, 'prev', (nodeWidth + nodeSpace), 0, 60, false),
+        aniMoveArrow(idx - 1, 'next', (nodeWidth + nodeSpace), 0, -60, false),
+        { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime } },
+        { e: $("#linkedlist"), p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
+    ]);
 }
 
 //TODO: finish this
