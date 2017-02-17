@@ -1,0 +1,38 @@
+{
+  "javascript": {
+    "stack": {
+      "constructor": {
+        "header": "function Stack() {",
+        "lines": [ "  this.arrayList = new ArrayList();" ]
+      },
+      "isEmpty": {
+        "header": "Stack.prototype.isEmpty = function () {",
+        "lines": [ "  return this.arrayList.size() === 0;" ]
+      },
+      "makeEmpty": {
+        "header": "Stack.prototype.makeEmpty = function () {",
+        "lines": [ "  this.arrayList.clear();" ]
+      },
+      "push": {
+        "header": "Stack.prototype.push = function (element) {",
+        "lines": [ "  this.arrayList.add(element);" ]
+      },
+      "top": {
+        "header": "Stack.prototype.top = function () {",
+        "lines": [
+          "  if (this.isEmpty())",
+          "    throw { name: 'UnderflowException', message: 'ArrayList is empty' };",
+          "  return this.arrayList.get(this.arrayList.size() - 1);"
+        ]
+      },
+      "pop": {
+        "header": "Stack.prototype.pop = function () {",
+        "lines": [
+          "  if(this.isEmpty())",
+          "    throw { name: 'UnderflowException', message: 'ArrayList is empty' };",
+          "  return this.arrayList.removeAtPos(this.arrayList.size() - 1);"
+        ]
+      }
+    }
+  }
+}

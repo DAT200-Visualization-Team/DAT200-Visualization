@@ -26,11 +26,6 @@ function popElement() {
 }
 
 function animatePushes(values) {
-    $('#code-text').html(pushLines);
-
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-
     var loadingSequence = [];
 
     if (values == null)
@@ -42,11 +37,8 @@ function animatePushes(values) {
     }
 
     for (var i = 0; i < values.length; i++) {
-        var line = document.getElementsByClassName('code-line')[0];
-        loadingSequence.push({ e: line, p: { backgroundColorAlpha: 1 }, o: { duration: 500 } });
         var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate noselect">' + values[i] + '</h4></div>').prependTo('#stack');
         loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 1000, easing: 'linear' } });
-        loadingSequence.push({ e: line, p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
         stack.push(values[i]);
     }
 
@@ -130,5 +122,4 @@ $('#push-input').keyup(function (event) {
     }
 });
 
-var pushLines = 'Stack.prototype.push = function (element) {\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">this.arrayList.add(element);</span>\n}';
 var popLines = 'Stack.prototype.pop = function () {\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">if(this.isEmpty())</span>\n\t\t<span class="code-line" style="background-color: rgba(255,255,0,0);">throw { name: "UnderflowException", message: "ArrayList is empty" };</span>\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">return this.arrayList.removeAtPos(this.arrayList.size() - 1);</span>\n}'
