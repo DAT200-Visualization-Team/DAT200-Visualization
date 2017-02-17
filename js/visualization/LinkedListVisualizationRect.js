@@ -238,25 +238,6 @@ function addByIndex(idx, data) {
 
     p = $("#linkedlist").children().last();
 
-    // All the arrow animations are called at this point, so they all use the start position of the arrows
-    /*var loadingSequence = [
-        { e: p, p: "transition.expandIn", o: { duration: animationTime } },
-        aniMoveArrow(idx, 'next', nodeSpace + nodeWidth, 0),
-        aniMoveArrow(idx + 2, 'prev', -(nodeSpace + nodeWidth), 0, 0, false),
-        { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
-        aniMoveArrow(idx + 1, 'prev', 0, -(45 + 5)),
-        aniMoveArrow(idx + 1, 'next', 0, -(15 + 55)),
-        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false } },
-        aniMoveArrow(idx, 'next', 0, 45 + 15),
-        aniMoveArrow(idx + 2, 'prev', 0, 15 + 45),
-        { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
-        aniMoveArrow(idx + 1, 'prev', 0, 0, 0, false),
-        aniMoveArrow(idx + 1, 'next', 0, 0, 0, false),
-        aniMoveArrow(idx, 'next', 0, 0, 0, false),
-        aniMoveArrow(idx + 2, 'prev', 0, 0, 0, false),
-        { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
-    ];*/
-
     var loadingSequence = [
         { e: p, p: "transition.expandIn", o: { duration: animationTime } },
         npNext.animate(nodeSpace + nodeWidth, 0),
@@ -268,7 +249,7 @@ function addByIndex(idx, data) {
         npNext.animate(-(nodeSpace+nodeWidth), 45 + 15),
         nnPrev.animate((nodeSpace+nodeWidth), 15 + 45),
         { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
-        nPrev.animate(0, 45+5),
+        nPrev.animate(0, 45+5, 0,false),
         nNext.animate(0, 15+55, 0, false),
         npNext.animate(0, -(45+15), 0, false),
         nnPrev.animate(0, -(15+45), 0, false),
@@ -292,60 +273,76 @@ function removeNode(idx) {
 
     var elementsToBeMoved;
     for (var i = idx + 1; i < linkedList.size() + 1; i++) {
-        console.log(i);
         i === idx + 1 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
             : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
     }
 
+    var leftArrow = new Arrow($("#linkedlist").children().eq(idx - 1).children().eq(1));
+    var rightArrow = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
+
     $.Velocity.RunSequence([
-        aniMoveArrow(idx + 1, 'prev', -(nodeWidth + nodeSpace), 0, 60),
-        { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime, sequenceQueue: false } },
-        aniMoveArrow(idx + 1, 'prev', (nodeWidth + nodeSpace), 0, 60, false),
-        aniMoveArrow(idx - 1, 'next', (nodeWidth + nodeSpace), 0, -60, false),
-        { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime } },
+        rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60),
+        leftArrow.animate((nodeWidth + nodeSpace), 0, -60),
+        { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime} },
+        rightArrow.animate((nodeWidth + nodeSpace), 0, -60, false),
+        leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, false),
+        { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
         { e: $("#linkedlist"), p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
     ]);
 }
 
-//TODO: finish this
-//FIXME: the arrow won't move
+//TODO: finish this together with highlightCode
 function getNode(idx) {
-    var p = createPointer('south', offsetX + nodeWidth / 2, 50, offsetX + nodeWidth / 2, 80);
-    p = $("#linkedlist").children().last();
-    updateDrawingArea();
-    if (idx < linkedList.size() / 2) {
-        for (var i = 0; i < linkedList.size() ; i++) {
-            p.velocity(
-                { translateX: "+" + (nodeWidth + nodeSpace), translateY: "+=0" },
-                { duration: animationTime }
-            );
+    var loadingSequence = [];
+
+    if (idx < (linkedList.size() - 1) / 2) {
+        var p = createPointer('south',
+            offsetX + nodeWidth + nodeSpace + nodeWidth / 2,
+            50, offsetX + nodeWidth + nodeSpace + nodeWidth / 2, 80);
+        updateDrawingArea();
+        p = new Arrow($("#linkedlist").children().last());
+        for (var i = 0; i < idx ; i++) {
+            loadingSequence.push(p.translateStraightArrow((nodeWidth + nodeSpace), 0));
         }
     }
+    else {
+        var p = createPointer('south',
+            offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2,
+            50, offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2, 80);
+        updateDrawingArea();
+        p = new Arrow($("#linkedlist").children().last());
+        for (var i = linkedList.size() - 2; i > idx ; i--) {
+            loadingSequence.push(p.translateStraightArrow(-(nodeWidth + nodeSpace), 0));
+        }
+    }
+    $.Velocity.RunSequence(loadingSequence);
+
+    //TODO: remove this later
+    setTimeout(function() {
+        redraw();
+    }, 3000);
 }
 
 function findPos(data) {
     var p = createPointer('south',
-        offsetX + nodeSpace + nodeWidth / 2, 50,
-        offsetX + nodeSpace + nodeWidth / 2, 80);
+        offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
+        offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 80);
+    updateDrawingArea();
+    p = new Arrow($("#linkedlist").children().last());
+    var loadingSequence = [];
 
-    for (var i = 0; i < linkedList.size() ; i++) {
-        p.velocity(
-            { translateX: "+" + (nodeWidth + nodeSpace), translateY: "+=0" },
-            { duration: animationTime }
-        );
+    for (var i = 1; i < 10 /*linkedList.size() - 1*/; i++) {
+        if($("#linkedlist").children().eq(i).children().first().text() == data) {
+            break;
+        }
+        loadingSequence.push(p.translateStraightArrow(nodeWidth + nodeSpace, 0));
     }
+    $.Velocity.RunSequence(loadingSequence);
 
-
-    /*for (var p = this.head.next; p !== this.tail; p = p.next) {
-        if (x === null) {
-            if (p.data === null) {
-                return p;
-            }
-        }
-        else if (x === p.data) { //must really use x.equals(p.data)
-            return p;
-        }
-    }*/
+    //TODO: remove this later
+    setTimeout(function() {
+        redraw();
+    }, 3000);
 }
 
 /***
@@ -381,7 +378,7 @@ function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy, sequence) {
     var p2x = parseInt(triangle[7]);
     var p2y = parseInt(triangle[8]);
 
-    //TODO: make the prev of Tail move as soon as Tail is faded in (initialize())
+    //TOD0: make the prev of Tail move as soon as Tail is faded in (initialize())
     var progressAnimation = function (elements, complete, remaining, start, tweenValue) {
         elements[0].setAttribute(
             "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * dmy) + my0) + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
@@ -409,17 +406,3 @@ function initializeAndAdd(howMany) {
     animationTime = 1000 * speed;
 }
 
-function testGhost() {
-    var arr = createArrow('n', 100, 100, 50, 0);
-    $("#linkedlist").append(arr);
-
-    updateDrawingArea();
-
-    var arrOb = new Arrow($("#linkedlist").children().first());
-
-    var loadingSequence = [arrOb.animate(50, 0), arrOb.animate(-50, 0)];
-
-    $.Velocity.RunSequence(loadingSequence);
-
-
-}
