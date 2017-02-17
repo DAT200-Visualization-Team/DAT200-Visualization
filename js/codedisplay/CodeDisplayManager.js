@@ -45,19 +45,19 @@ CodeDisplayManager.prototype.changeFunction = function (functionName, line) {
     this.currentLine = line;
 }
 
-CodeDisplayManager.prototype.highlightNextLine = function (highlightTime) {
-    this.highlightLine(this.currentLine, highlightTime);
+CodeDisplayManager.prototype.highlightNextLine = function (highlightTime, initialDelay) {
+    this.highlightLine(this.currentLine, highlightTime, initialDelay);
     this.currentLine++;
 };
 
-CodeDisplayManager.prototype.highlightLine = function (index, highlightTime) {
-    if (highlightTime == null)
-        highlightTime = 1000;
+CodeDisplayManager.prototype.highlightLine = function (index, highlightTime, initialDelay) {
+    if (highlightTime == null) highlightTime = 1000;
+    if (initialDelay == null) initialDelay = 0;
 
     var lineToDisplay = $("#" + this.currentFunction).find(".highlighted-code");
 
     $.Velocity.RunSequence([
-        { e: lineToDisplay[index], p: { backgroundColorAlpha: 1 }, o: { duration: highlightTime / 2 } },
+        { e: lineToDisplay[index], p: { backgroundColorAlpha: 1 }, o: { duration: highlightTime / 2, delay: initialDelay } },
         { e: lineToDisplay[index], p: { backgroundColorAlpha: 0 }, o: { duration: highlightTime / 2 } }
     ]);
 
