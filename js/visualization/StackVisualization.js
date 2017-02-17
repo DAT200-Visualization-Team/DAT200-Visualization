@@ -1,4 +1,5 @@
 var stack;
+var codeDisplayManager;
 
 $(document).ready(function () {
     if (stack == null) {

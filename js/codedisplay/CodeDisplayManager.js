@@ -47,6 +47,7 @@ CodeDisplayManager.prototype.changeFunction = function (functionName, line) {
 
 CodeDisplayManager.prototype.highlightNextLine = function (highlightTime) {
     this.highlightLine(this.currentLine, highlightTime);
+    this.currentLine++;
 };
 
 CodeDisplayManager.prototype.highlightLine = function (index, highlightTime) {
