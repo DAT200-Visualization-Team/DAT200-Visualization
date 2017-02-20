@@ -1,8 +1,10 @@
 var stack;
+var codeDisplayManager;
 
 $(document).ready(function () {
     if (stack == null) {
         stack = new Stack();
+        codeDisplayManager = new CodeDisplayManager("javascript", "stack");
         initStack();
     }
 });
@@ -26,12 +28,9 @@ function popElement() {
 }
 
 function animatePushes(values) {
-    $('#code-text').html(pushLines);
-
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-
     var loadingSequence = [];
+    codeDisplayManager.loadFunctions("push");
+    codeDisplayManager.changeFunction("push");
 
     if (values == null)
         values = [null];
@@ -42,11 +41,9 @@ function animatePushes(values) {
     }
 
     for (var i = 0; i < values.length; i++) {
-        var line = document.getElementsByClassName('code-line')[0];
-        loadingSequence.push({ e: line, p: { backgroundColorAlpha: 1 }, o: { duration: 500 } });
         var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate noselect">' + values[i] + '</h4></div>').prependTo('#stack');
-        loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 1000, easing: 'linear' } });
-        loadingSequence.push({ e: line, p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
+        loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
+        loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 2000, easing: 'easeOutQuad' } });
         stack.push(values[i]);
     }
 
@@ -54,42 +51,36 @@ function animatePushes(values) {
 }
 
 function animatePops(count) {
-    $('#code-text').html(popLines);
-
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
+    codeDisplayManager.loadFunctions("pop");
+    codeDisplayManager.changeFunction("pop");
 
     var loadingSequence = [];
-    var lines = $('.code-line');
     if (count == null) {
         count = 1;
     }
 
     for (var i = 0; i < count; i++) {
 
-        loadingSequence.push({ e: lines[0], p: { backgroundColorAlpha: 1 }, o: { duration: 500 } });
+        codeDisplayManager.highlightLine(0);
         try {
             stack.pop()
-            loadingSequence.push({ e: lines[0], p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
 
             var currentElement = $('#stack').children().eq(i);
 
-            loadingSequence.push({ e: lines[2], p: { backgroundColorAlpha: 1 }, o: { duration: 500 } });
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
             loadingSequence.push({
                 e: currentElement, p: { translateX: generateRandomNumberInRange(-100, 100), translateY: generateRandomNumberInRange(-100, -40) },
-                o: { duration: 1500, easing: 'easeOutQuad' },
+                o: { duration: 1500, delay: 1000 , easing: 'easeOutQuad' },
             });
             
             loadingSequence.push({
                 e: currentElement, p: { translateX: pickRandomNumber(-5000, 5000) },
                 o: { duration: 1000, easing: 'easeInSine', complete: function (elements) { elements[0].remove() } },
             });
-            loadingSequence.push({ e: lines[2], p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(2, 500));
         }
         catch (err) {
-            loadingSequence.push({ e: lines[0], p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
-            loadingSequence.push({ e: lines[1], p: { backgroundColorAlpha: 1 }, o: { duration: 500 } });
-            loadingSequence.push({ e: lines[1], p: { backgroundColorAlpha: 0 }, o: { duration: 500 } });
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(1, 500));
             break;
         }
     }
@@ -129,6 +120,3 @@ $('#push-input').keyup(function (event) {
         pushElement($('#push-input').val());
     }
 });
-
-var pushLines = 'Stack.prototype.push = function (element) {\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">this.arrayList.add(element);</span>\n}';
-var popLines = 'Stack.prototype.pop = function () {\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">if(this.isEmpty())</span>\n\t\t<span class="code-line" style="background-color: rgba(255,255,0,0);">throw { name: "UnderflowException", message: "ArrayList is empty" };</span>\n\t<span class="code-line" style="background-color: rgba(255,255,0,0);">return this.arrayList.removeAtPos(this.arrayList.size() - 1);</span>\n}'

@@ -16,12 +16,12 @@ Stack.prototype.push = function (element) {
 
 Stack.prototype.top = function () {
     if (this.isEmpty())
-        throw { name: "UnderflowException", message: "ArrayList is empty" };
+        throw { name: 'UnderflowException', message: 'ArrayList is empty' };
     return this.arrayList.get(this.arrayList.size() - 1);
 }
 
 Stack.prototype.pop = function () {
     if(this.isEmpty())
-        throw { name: "UnderflowException", message: "ArrayList is empty" };
+        throw { name: 'UnderflowException', message: 'ArrayList is empty' };
     return this.arrayList.removeAtPos(this.arrayList.size() - 1);
 }
