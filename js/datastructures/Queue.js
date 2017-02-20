@@ -36,7 +36,7 @@ Queue.prototype.enqueue = function(x) {
 
 Queue.prototype.dequeue = function() {
     if(this.isEmpty()) {
-        throw {name: "UnderflowException", message: "Queue is empty (dequeue)"};
+        throw {name: 'UnderflowException', message: 'Queue is empty (dequeue)'};
     }
     this.currentSize--;
     var returnVal = this.theArray[this.front];

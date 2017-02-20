@@ -42,7 +42,8 @@ function animatePushes(values) {
 
     for (var i = 0; i < values.length; i++) {
         var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate noselect">' + values[i] + '</h4></div>').prependTo('#stack');
-        loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 2000, easing: 'easeOutQuad', begin: function () { codeDisplayManager.highlightLine(0, 2000); } } });
+        loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
+        loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 2000, easing: 'easeOutQuad' } });
         stack.push(values[i]);
     }
 
@@ -66,18 +67,20 @@ function animatePops(count) {
 
             var currentElement = $('#stack').children().eq(i);
 
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
             loadingSequence.push({
                 e: currentElement, p: { translateX: generateRandomNumberInRange(-100, 100), translateY: generateRandomNumberInRange(-100, -40) },
-                o: { duration: 1500, delay: 1000 , easing: 'easeOutQuad', begin: function () { codeDisplayManager.highlightLine(2, 2500) } },
+                o: { duration: 1500, delay: 1000 , easing: 'easeOutQuad' },
             });
             
             loadingSequence.push({
                 e: currentElement, p: { translateX: pickRandomNumber(-5000, 5000) },
                 o: { duration: 1000, easing: 'easeInSine', complete: function (elements) { elements[0].remove() } },
             });
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(2, 500));
         }
         catch (err) {
-            codeDisplayManager.highlightLine(1, 1000, 1000);
+            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(1, 500));
             break;
         }
     }

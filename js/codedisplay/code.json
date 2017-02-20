@@ -33,6 +33,85 @@
           "  return this.arrayList.removeAtPos(this.arrayList.size() - 1);"
         ]
       }
+    },
+    "queue": {
+      "constructor": {
+        "header": "function Queue() {",
+        "lines": [
+          "  this.theArray = [];",
+          "  this.currentSize = 0;",
+          "  this.front = 0;",
+          "  this.back = -1;"
+        ]
+      },
+      "isEmpty": {
+        "header": "Queue.prototype.isEmpty = function() {",
+        "lines": [
+          "  return this.currentSize === 0;"
+        ]
+      },
+      "makeEmpty": {
+        "header": "Queue.prototype.makeEmpty = function() {",
+        "lines": [
+          "  this.currentSize = 0;",
+          "  this.front = 0;",
+          "  this.back = -1;"
+        ]
+      },
+      "increment": {
+        "header": "Queue.prototype.increment = function(x) {",
+        "lines": [
+          "  x++;",
+          "  if(x === this.theArray.length) {",
+          "      x = 0;",
+          "  }",
+          "  return x;"
+        ]
+      },
+      "enqueue": {
+        "header": "Queue.prototype.enqueue = function(x) {",
+        "lines": [
+          "  if (this.currentSize === this.theArray.length) {",
+          "      this.doubleQueue();",
+          "  }",
+          "  this.back = this.increment(this.back);",
+          "  this.theArray[this.back] = x;",
+          "  this.currentSize++;"
+        ]
+      },
+      "dequeue": {
+        "header": "Queue.prototype.dequeue = function() {",
+        "lines": [
+          "  if(this.isEmpty()) {",
+          "      throw {name: 'UnderflowException', message: 'Queue is empty (dequeue)'};",
+          "  }",
+          "  this.currentSize--;",
+          "  var returnVal = this.theArray[this.front];",
+          "  this.front = this.increment(this.front);",
+          "  return returnVal;"
+        ]
+      },
+      "getFront": {
+        "header": "Queue.prototype.getFront = function() {",
+        "lines": [
+          "  if(this.isEmpty()) {",
+          "      throw {name: 'UnderflowException', message: 'Queue is empty (getFront)'};",
+          "  }",
+          "  return this.theArray[this.front];"
+        ]
+      },
+      "doubleQueue": {
+        "header": "Queue.prototype.doubleQueue = function() {",
+        "lines": [
+          "  var newArray = new Array(this.theArray.length * 2);",
+          "  for(var i = 0; i < this.currentSize; i++, this.front = this.increment(this.front)) {",
+          "      newArray[i] = this.theArray[this.front];",
+          "  }",
+          "  this.theArray = newArray;",
+          "  this.front = 0;",
+          "  this.back = this.currentSize - 1;"
+        ]
+      }
     }
   }
 }
