@@ -2,11 +2,11 @@ function linearSearch(array, search) {
     for (var i = 0; i < array.length; i++)
         if (array[i] === search) return i;
     
-    return false;
+    return -1;
 }
 
 function binarySearch(sortedArray, search) {
-    var testIndex = sortedArray.length / 2;
+    var testIndex = Math.floor(sortedArray.length / 2);
     var max = sortedArray.length - 1;
     var min = 0;
 
@@ -20,7 +20,7 @@ function binarySearch(sortedArray, search) {
         else
             min = testIndex;
 
-        testIndex = (max + min) / 2;
+        testIndex = Math.floor((max + min) / 2);
         
         if (max - min <= 1) {
             if (sortedArray[max] === search) return max;
