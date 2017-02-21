@@ -131,6 +131,10 @@ bld/
 
 # Visual Studio 2015 cache/options directory
 .vs/
+Web.config
+WebEssentials2015-Settings.json
+*.sln
+*.suo
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
