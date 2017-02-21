@@ -331,7 +331,7 @@ function findPos(data) {
     p = new Arrow($("#linkedlist").children().last());
     var loadingSequence = [];
 
-    for (var i = 1; i < 10 /*linkedList.size() - 1*/; i++) {
+    for (var i = 1; i < linkedList.size() - 1; i++) {
         if($("#linkedlist").children().eq(i).children().first().text() == data) {
             break;
         }
@@ -345,10 +345,32 @@ function findPos(data) {
     }, 3000);
 }
 
+//Iterator
+function iterator(idx) {
+    var p = createPointer('south',
+        offsetX + (nodeSpace + nodeWidth) * (idx + 1) + nodeWidth / 2, 50,
+        offsetX + (nodeSpace + nodeWidth) * (idx + 1) + nodeWidth / 2, 80);
+    $("#linkedlist").children().last().attr("opacity", "0");
+    updateDrawingArea();
+    $("#linkedlist").children().last().velocity("fadeIn", { duration: animationTime });
+    $("#linkedlist").children().last().attr("opacity", "1");
+}
+
+function iteratorNext() {
+    p = new Arrow($("#linkedlist").children().last());
+    $.Velocity.RunSequence([p.translateStraightArrow(nodeWidth + nodeSpace, 0)]);
+}
+
+function iteratorPrev() {
+    p = new Arrow($("#linkedlist").children().last());
+    $.Velocity.RunSequence([p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)]);
+}
+
+
+
 /***
  * ANIMATIONS
  */
-
 function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy, sequence) {
 
     var node = $("#linkedlist").children().eq(nodeIdx);
