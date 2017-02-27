@@ -1,12 +1,19 @@
 function ExpressionTree() {
-
+    this.inOrderResult = "";
 }
 
 ExpressionTree.prototype.isOperator = function (c) {
     var operators = ['+', '-', '*', '/', '^', '%']
-    if (c in operators)
-        return true;
-    return false;
+    return operators.indexOf(c) !== -1;
+};
+
+ExpressionTree.prototype.inOrder = function (t, result) {
+
+    if (t.left != null) this.inOrder(t.left, this.inOrderResult);
+    this.inOrderResult += t.element + " ";
+    if (t.right != null) this.inOrder(t.right, this.inOrderResult);
+
+    return this.inOrderResult.trim();
 };
 
 ExpressionTree.prototype.constructTree = function (postfix) {

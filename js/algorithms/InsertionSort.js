@@ -22,7 +22,6 @@ function insertionSort(a) {
     commands.push("codeLineHighlight(10)");
 
     //Send commands to GUI
-    console.log(commands);
     $(document).trigger("sort", commands.join('!'));
 
     return a;
