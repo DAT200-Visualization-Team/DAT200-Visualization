@@ -12,10 +12,11 @@ function hanoi(disks, from, to, temp) {
 */
 
 function Hanoi(disks, from, to, temp) {
-    this.report = [];
-    // TODO: send command ('init', disks, 'from', 'to', 'temp');
+    this.commands = [];
+    // TODO: send command ('init', disks, 'from', 'to');
     this.calculate(disks, from, to, temp);
-    // TODO: send command ('moveDisk', disk, 'from', 'to'); for every sub-array in report
+    // TODO: send command ('moveDisk', disk, 'from', 'to'); for every sub-array in commands
+    sendCommands(this.commands);
 }
 
 
@@ -23,14 +24,19 @@ Hanoi.prototype.calculate = function(disks, from, to, temp) {
     if (disks === 0)
         return;
     this.calculate(disks - 1, from, temp, to);
-    this.report.push([disks, from, to]);
+    this.commands.push([disks, from, to]);
     this.calculate(disks - 1, temp, to, from);
 };
 
 Hanoi.prototype.showReport = function() {
-    console.log(this.report);
+    console.log(this.commands);
+    return this.commands;
 };
 
 
-var h = new Hanoi(3, "A", "C", "B");
-h.showReport();
+
+var h = new Hanoi(9, "A", "C", "B");
+//var rep = h.showReport();
+//console.log(rep[0]);*/
+
+
