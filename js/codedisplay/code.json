@@ -112,6 +112,20 @@
           "  this.back = this.currentSize - 1;"
         ]
       }
+    },
+    "hanoi": {
+      {
+        "": {
+          "header": "function hanoi(disks, from, to, temp) {",
+          "lines": [
+            "    if (disks === 0)",
+            "        return;",
+            "    hanoi(disks - 1, from, temp, to);",
+            "    console.log(\"Moving disc \" + disks + \" from \" + from + \" to \" + to);",
+            "    hanoi(disks - 1, temp, to, from);"
+          ]
+        }
+      }
     }
   }
 }
