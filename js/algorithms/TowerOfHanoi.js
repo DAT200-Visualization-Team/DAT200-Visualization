@@ -13,10 +13,9 @@ function hanoi(disks, from, to, temp) {
 
 function Hanoi(disks, from, to, temp) {
     this.commands = [];
-    // TODO: send command ('init', disks, 'from', 'to');
     this.calculate(disks, from, to, temp);
-    // TODO: send command ('moveDisk', disk, 'from', 'to'); for every sub-array in commands
-    sendCommands(this.commands);
+    resetGUI();
+    sendCommands(this.commands, disks, from);
 }
 
 
@@ -35,7 +34,7 @@ Hanoi.prototype.showReport = function() {
 
 
 
-var h = new Hanoi(9, "A", "C", "B");
+//var h = new Hanoi(3, "A", "C", "B");
 //var rep = h.showReport();
 //console.log(rep[0]);*/
 

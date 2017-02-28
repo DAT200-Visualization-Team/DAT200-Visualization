@@ -41,10 +41,10 @@ function setPlatform() {
         .append(createRect(platformWidth / 3 * 1.5 - (pegWidth / 2) + platformX, platformY - pegHeight, pegWidth, pegHeight+10))
         .append(createRect(platformWidth / 3 * 2.5 - (pegWidth / 2) + platformX, platformY - pegHeight, pegWidth, pegHeight+10))
         .append(createRect(platformX, platformY, platformWidth, platformHeight));
+
     xPosPegA = parseInt($("#pegs").children().eq(0).attr("x")) + (pegWidth / 2);
     xPosPegB = parseInt($("#pegs").children().eq(1).attr("x")) + (pegWidth / 2);
     xPosPegC = parseInt($("#pegs").children().eq(2).attr("x")) + (pegWidth / 2);
-    //updateSVG();
 }
 
 // Disks are created out of the viewport in the y-direction,
@@ -53,20 +53,12 @@ function setPlatform() {
 function setDisks(n, from) {
     var disks = [];
     var y = platformY - diskHeight - 1000;
-    switch (from) {
-        case 'A':
-            var x = platformWidth / 3 * 0.5;
-            break;
-        case 'B':
-            var x = platformWidth / 3 * 1.5;
-            break;
-        case 'C':
-            var x = platformWidth / 3 * 2.5;
-            break;
-    }
+
+    // Resize
+    diskWidthDiff = Math.pow((n - 9), 2) + 20;
 
     for (var i = 0; i < n; i++) {
-        disks.push('<rect x="' + (x - (maxDiskWidth - (i * diskWidthDiff)) / 2)
+        disks.push('<rect x="' + (window["xPosPeg" + from] - (maxDiskWidth - (i * diskWidthDiff)) / 2)
             + '" y="' + (y - (i * diskHeight))
             + '" width="' + (maxDiskWidth - (i * diskWidthDiff))
             + '" height="' + diskHeight
@@ -76,16 +68,16 @@ function setDisks(n, from) {
     return disks;
 }
 
-function initialize(disks, from , to) {
+function initialize(disks, from) {
     setPlatform();
     var disks = setDisks(disks, from);
     for (var i = 0; i < disks.length; i++) {
-        $("#peg" + from ).prepend(disks[i]);
+        $("#disks").prepend(disks[i]);
         window["peg" + from].push(i + 1);
     }
     updateSVG();
 
-    return { e: $("#peg" + from), p: { translateY: "+=1000px" }, o: { duration: animationTime, easing: "easeInSine"} };
+    return { e: $("#disks"), p: { translateY: "+=1000px" }, o: { duration: animationTime, easing: "easeInSine"} };
 }
 
 function moveDisk(disk, from, to) {
@@ -95,8 +87,7 @@ function moveDisk(disk, from, to) {
     movement.push({ e: $("#disk" + disk), p: { y: "-= " + (pegHeight + 2 * diskHeight)}, o: { duration: animationTime, easing: "easeInSine" } });
 
     // move to peg
-    //var xPos = 0 - parseInt($("#disk" + disk).attr("x")) - parseInt($("#disk" + disk).attr("width") / 2);
-    var xPos = 0 - parseInt(window["xPosPeg" + from]) /*- parseInt($("#disk" + disk).attr("width") / 2)*/;
+    var xPos = -parseInt(window["xPosPeg" + from]);
     if (to === "A")
         xPos += platformWidth / 3 * 0.5;
     else if (to === "B")
@@ -104,26 +95,21 @@ function moveDisk(disk, from, to) {
     else if (to === "C")
         xPos += platformWidth / 3 * 2.5;
 
-    //console.log("Disk " + disk + "'s xPos" + xPos);
-
     movement.push({ e: $("#disk" + disk), p: { x: "+= " + xPos}, o: { duration: animationTime, easing: "easeInSine" } });
 
     // move down
     var yPos = (pegHeight + 2 * diskHeight)
-        + diskHeight * (window["peg" + from].length - 1) /*($("#peg" + from).children().length - 1)*/
-        - diskHeight * (window["peg" + to].length) /*$("#peg" + to).children().length*/;
+        + diskHeight * (window["peg" + from].length - 1)
+        - diskHeight * (window["peg" + to].length);
     movement.push({ e: $("#disk" + disk), p: { y: "+= " + yPos }, o: { duration: animationTime, easing: "easeInSine" } });
 
-    findAndRemoveDisk(disk);
+    removeDiskFromOldPeg(disk);
     window["peg" + to].push(disk);
-    /*console.log("pegA: " + pegA);
-    console.log("pegB: " + pegB);
-    console.log("pegC: " + pegC);*/
 
     return movement;
 }
 
-function findAndRemoveDisk(disk) {
+function removeDiskFromOldPeg(disk) {
     if (pegA.indexOf(disk) !== -1) {
         pegA.splice(pegA.indexOf(disk), 1);
         return "pegA";
@@ -138,9 +124,17 @@ function findAndRemoveDisk(disk) {
     }
 }
 
-function sendCommands(commands) {
+function resetGUI() {
+    $("#pegs").children().remove();
+    $("#disks").children().remove();
+    pegA = [];
+    pegB = [];
+    pegC = [];
+}
+
+function sendCommands(commands, disks, from) {
     var loadingSequence = [];
-    var init = initialize(9, "A", "C");
+    var init = initialize(disks, from);
     loadingSequence.push(init);
     for (var i = 0; i < commands.length; i++) {
         var movedisk = moveDisk(commands[i][0], commands[i][1], commands[i][2]);
@@ -148,33 +142,6 @@ function sendCommands(commands) {
         loadingSequence.push(movedisk[1]);
         loadingSequence.push(movedisk[2]);
     }
-    $.Velocity.RunSequence(loadingSequence);
-
-}
-
-function testSeqAnimating() {
-    var init = initialize(3, "A", "C");
-    var movedisk = moveDisk(1, "A", "C");
-
-    loadingSequence = [
-        init,
-        movedisk[0],
-        movedisk[1],
-        movedisk[2]
-    ];
-
-    $.Velocity.RunSequence(loadingSequence);
-}
-
-function testSomeMore(disk, from, to) {
-    var movedisk = moveDisk(disk, from, to);
-
-    loadingSequence = [
-        movedisk[0],
-        movedisk[1],
-        movedisk[2]
-    ];
-
     $.Velocity.RunSequence(loadingSequence);
 
 }
