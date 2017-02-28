@@ -20,10 +20,15 @@ function Hanoi(disks, from, to, temp) {
 
 
 Hanoi.prototype.calculate = function(disks, from, to, temp) {
-    if (disks === 0)
+    this.commands.push(0);
+    if (disks === 0) {
+        this.commands.push(1);
         return;
+    }
+    this.commands.push(2);
     this.calculate(disks - 1, from, temp, to);
     this.commands.push([disks, from, to]);
+    this.commands.push(4);
     this.calculate(disks - 1, temp, to, from);
 };
 

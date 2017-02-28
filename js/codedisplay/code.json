@@ -3,19 +3,27 @@
     "stack": {
       "constructor": {
         "header": "function Stack() {",
-        "lines": [ "  this.arrayList = new ArrayList();" ]
+        "lines": [
+          "  this.arrayList = new ArrayList();"
+        ]
       },
       "isEmpty": {
         "header": "Stack.prototype.isEmpty = function () {",
-        "lines": [ "  return this.arrayList.size() === 0;" ]
+        "lines": [
+          "  return this.arrayList.size() === 0;"
+        ]
       },
       "makeEmpty": {
         "header": "Stack.prototype.makeEmpty = function () {",
-        "lines": [ "  this.arrayList.clear();" ]
+        "lines": [
+          "  this.arrayList.clear();"
+        ]
       },
       "push": {
         "header": "Stack.prototype.push = function (element) {",
-        "lines": [ "  this.arrayList.add(element);" ]
+        "lines": [
+          "  this.arrayList.add(element);"
+        ]
       },
       "top": {
         "header": "Stack.prototype.top = function () {",
@@ -114,17 +122,15 @@
       }
     },
     "hanoi": {
-      {
-        "": {
-          "header": "function hanoi(disks, from, to, temp) {",
-          "lines": [
-            "    if (disks === 0)",
-            "        return;",
-            "    hanoi(disks - 1, from, temp, to);",
-            "    console.log(\"Moving disc \" + disks + \" from \" + from + \" to \" + to);",
-            "    hanoi(disks - 1, temp, to, from);"
-          ]
-        }
+      "hanoi1": {
+        "header": "function hanoi(disks, from, to, temp) {",
+        "lines": [
+          "    if (disks === 0)",
+          "        return;",
+          "    hanoi(disks - 1, from, temp, to);",
+          "    console.log(\"Moving disc \" + disks + \" from \" + from + \" to \" + to);",
+          "    hanoi(disks - 1, temp, to, from);"
+        ]
       }
     }
   }

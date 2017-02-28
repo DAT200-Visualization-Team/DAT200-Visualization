@@ -50,14 +50,8 @@
         <div>
             <h3>Tower of Hanoi</h3>
             <pre>
+                <code id="code-text">
 
-                <code>
-    <span>function hanoi(disks, from, to, temp) {</span>
-        <span>if (disks === 0)</span>
-            <span>return;</span>
-        <span>hanoi(disks - 1, from, temp, to);</span>
-        <span>hanoi(disks - 1, temp, to, from);</span>
-    <span>}</span>
                 </code>
             </pre>
         </div>
@@ -84,6 +78,7 @@
 <script src="js/resize.js"></script>
 <script src="js/vendor/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad(); $("#draggable").draggable();</script>
+<script src="js/codedisplay/CodeDisplayManager.js"></script>
 <script src="js/visualization/TowerOfHanoiVisualization.js"></script>
 <script src="js/algorithms/TowerOfHanoi.js"></script>
 

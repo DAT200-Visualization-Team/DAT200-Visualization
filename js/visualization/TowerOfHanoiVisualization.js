@@ -19,7 +19,9 @@ var xPosPegA = 0;
 var xPosPegB = 0;
 var xPosPegC = 0;
 
-var animationTime = 1000;
+var animationTime = 10;
+
+var codeDisplayManager;
 
 function updateSVG() {
     $(".towerOfHanoiContainer").html($(".towerOfHanoiContainer").html());
@@ -45,6 +47,8 @@ function setPlatform() {
     xPosPegA = parseInt($("#pegs").children().eq(0).attr("x")) + (pegWidth / 2);
     xPosPegB = parseInt($("#pegs").children().eq(1).attr("x")) + (pegWidth / 2);
     xPosPegC = parseInt($("#pegs").children().eq(2).attr("x")) + (pegWidth / 2);
+
+    codeDisplayManager = new CodeDisplayManager("javascript", "hanoi");
 }
 
 // Disks are created out of the viewport in the y-direction,
@@ -136,11 +140,20 @@ function sendCommands(commands, disks, from) {
     var loadingSequence = [];
     var init = initialize(disks, from);
     loadingSequence.push(init);
+    codeDisplayManager.loadFunctions("hanoi1");
+    codeDisplayManager.changeFunction("hanoi1");
     for (var i = 0; i < commands.length; i++) {
-        var movedisk = moveDisk(commands[i][0], commands[i][1], commands[i][2]);
-        loadingSequence.push(movedisk[0]);
-        loadingSequence.push(movedisk[1]);
-        loadingSequence.push(movedisk[2]);
+        if(commands[i] instanceof Array) {
+            var tmp = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
+            loadingSequence.push(tmp[0]);
+            var movedisk = moveDisk(commands[i][0], commands[i][1], commands[i][2]);
+            loadingSequence.push(movedisk[0], movedisk[1], movedisk[2]);
+            loadingSequence.push(tmp[1]);
+        } else {
+            var tmp = codeDisplayManager.getVelocityFramesForHighlight(commands[i], animationTime);
+            //console.log(tmp);
+            loadingSequence.push(tmp[0], tmp[1]);
+        }
     }
     $.Velocity.RunSequence(loadingSequence);
 
