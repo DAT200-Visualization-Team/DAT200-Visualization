@@ -12,6 +12,9 @@ function hanoi(disks, from, to, temp) {
 */
 
 function Hanoi(disks, from, to, temp) {
+    if (disks > 9) {
+        throw {name: "ArgumentOutOfRangeException", message: "GUI can only handle maximum 9 disks"};
+    }
     this.commands = [];
     this.calculate(disks, from, to, temp);
     resetGUI();
@@ -36,6 +39,14 @@ Hanoi.prototype.showReport = function() {
     console.log(this.commands);
     return this.commands;
 };
+
+function doHanoi() {
+    var numdisks = ($("#numdisk :checked").val());
+    var from = $("#from").val()/*.toString()*/;
+    var to = $("#to").val()/*.toString()*/;
+    console.log(numdisks, from, to);
+    new Hanoi(3, from, to);
+}
 
 
 

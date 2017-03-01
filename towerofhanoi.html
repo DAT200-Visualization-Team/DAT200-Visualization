@@ -23,7 +23,8 @@
 </head>
 <body>
 <!--[if lt IE 8]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
 <![endif]-->
 
 <div id="view">
@@ -33,16 +34,8 @@
     <div id="graphics" class="left">
         <div class="towerOfHanoiContainer">
             <svg id="towerOfHanoi">
-
-                <g id="pegs">
-
-                </g>
-
-
-                <g id="disks">
-                </g>
-
-
+                <g id="pegs"></g>
+                <g id="disks"></g>
             </svg>
         </div>
     </div>
@@ -50,11 +43,47 @@
         <div>
             <h3>Tower of Hanoi</h3>
             <pre>
-                <code id="code-text">
-
-                </code>
+                <code id="code-text"></code>
             </pre>
         </div>
+        <div class="input-field" style="margin-right: 500px; margin-left: 15px ">
+            <select id="numdisks">
+                <option value="" disabled>Num disks</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+            <select id="from">
+                <option value="" disabled>From</option>
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+            <select id="to">
+                <option value="" disabled>To</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C" selected>C</option>
+            </select>
+            <div>
+                <select id="speed" name="speed">
+                    <option value="" disabled>To</option>
+                    <option value="1">1x</option>
+                    <option value="2">2x</option>
+                    <option value="3" selected>3x</option>
+                </select>
+                <label for="speed">Speed</label>
+            </div>
+            <button type="submit" onclick="doHanoi()">Run Hanoi</button>
+        </div>
+
+
     </div>
 </div>
 
@@ -77,7 +106,8 @@
 <script src="js/settings.js"></script>
 <script src="js/resize.js"></script>
 <script src="js/vendor/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad(); $("#draggable").draggable();</script>
+<script>hljs.initHighlightingOnLoad();
+$("#draggable").draggable();</script>
 <script src="js/codedisplay/CodeDisplayManager.js"></script>
 <script src="js/visualization/TowerOfHanoiVisualization.js"></script>
 <script src="js/algorithms/TowerOfHanoi.js"></script>
@@ -86,13 +116,19 @@
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
     (function (b, o, i, l, e, r) {
-        b.GoogleAnalyticsObject = l; b[l] || (b[l] =
-                function () { (b[l].q = b[l].q || []).push(arguments) }); b[l].l = +new Date;
-        e = o.createElement(i); r = o.getElementsByTagName(i)[0];
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+                function () {
+                    (b[l].q = b[l].q || []).push(arguments)
+                });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
         e.src = 'https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e, r)
     }(window, document, 'script', 'ga'));
-    ga('create', 'UA-XXXXX-X', 'auto'); ga('send', 'pageview');
+    ga('create', 'UA-XXXXX-X', 'auto');
+    ga('send', 'pageview');
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ var platformX = 0;
 var platformY = 500;
 var platformWidth = 600;
 var platformHeight = 20;
-var pegWidth = 10;
+var pegWidth = 14; // must be an even number
 var pegHeight = 250;
 var maxDiskWidth = 200;
 var diskWidthDiff = 20;
@@ -19,7 +19,7 @@ var xPosPegA = 0;
 var xPosPegB = 0;
 var xPosPegC = 0;
 
-var animationTime = 10;
+var animationTime = 1;
 
 var codeDisplayManager;
 
@@ -47,6 +47,11 @@ function setPlatform() {
     xPosPegA = parseInt($("#pegs").children().eq(0).attr("x")) + (pegWidth / 2);
     xPosPegB = parseInt($("#pegs").children().eq(1).attr("x")) + (pegWidth / 2);
     xPosPegC = parseInt($("#pegs").children().eq(2).attr("x")) + (pegWidth / 2);
+
+    $("#pegs")
+        .append('<text x="' + (xPosPegA) + '" y="' + (platformY + platformHeight + 40) + '" font-size="24px" text-anchor="middle">A</text>')
+        .append('<text x="' + (xPosPegB) + '" y="' + (platformY + platformHeight + 40) + '" font-size="24px" text-anchor="middle">B</text>')
+        .append('<text x="' + (xPosPegC) + '" y="' + (platformY + platformHeight + 40) + '" font-size="24px" text-anchor="middle">C</text>');
 
     codeDisplayManager = new CodeDisplayManager("javascript", "hanoi");
 }
@@ -156,5 +161,5 @@ function sendCommands(commands, disks, from) {
         }
     }
     $.Velocity.RunSequence(loadingSequence);
-
 }
+
