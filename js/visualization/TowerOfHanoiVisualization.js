@@ -19,7 +19,7 @@ var xPosPegA = 0;
 var xPosPegB = 0;
 var xPosPegC = 0;
 
-var animationTime = 1;
+var animationTime = 1000;
 
 var codeDisplayManager;
 
@@ -132,6 +132,7 @@ function removeDiskFromOldPeg(disk) {
         return "pegC";
     }
 }
+
 
 function resetGUI() {
     $("#pegs").children().remove();

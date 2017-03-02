@@ -41,17 +41,21 @@ Hanoi.prototype.showReport = function() {
 };
 
 function doHanoi() {
-    var numdisks = ($("#numdisk :checked").val());
-    var from = $("#from").val()/*.toString()*/;
-    var to = $("#to").val()/*.toString()*/;
-    console.log(numdisks, from, to);
-    new Hanoi(3, from, to);
-}
+    var numdisks = parseInt($("#numdisks").val());
+    var from = $("#from").val().toString();
+    var to = $("#to").val().toString();
+    var speed = parseInt($("#speed").val());
 
+    animationTime /= speed;
+
+    var arr = ["A", "B", "C"].filter(function(value) {
+        return from !== value && to !== value;
+    });
+
+    new Hanoi(numdisks, from, to, arr[0]);
+}
 
 
 //var h = new Hanoi(3, "A", "C", "B");
 //var rep = h.showReport();
 //console.log(rep[0]);*/
-
-
