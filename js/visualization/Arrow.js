@@ -38,8 +38,6 @@ Arrow.prototype.animate = function(dx, dy, dmy, sequence) {
         arrow.mx = arrow.x0;
     }
 
-
-
     var tx1 = arrow.x1;
     var ty1 = arrow.y1;
     var tmy = arrow.my;

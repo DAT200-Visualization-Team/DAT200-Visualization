@@ -38,28 +38,10 @@
     </div>
     <div id="code" class="right">
         <h3 class="center-align">Linked List</h3>
-        <button name="Init" onclick="initialize()" id="initbtn">Init</button>
-        <button name="InitNAdd" onclick="initializeAndAdd(4)">Init&Add</button>
-        <button name="clear" onclick="clear()">clear</button>
         <div>
             <pre>
                 <code>
-                    <span>LinkedList.prototype.add = function(idx, data) {</span>
-                        <span>var p = this.getNode(idx);</span>
-                        <span>var newNode = new Node(data, p.prev, p);</span>
-                        <span>newNode.prev.next = newNode;</span>
-                        <span>p.prev = newNode;</span>
-                        <span>this.theSize++;</span>
-                        <span>this.modCount++;</span>
-                    <span>};</span>
 
-                    <span>function LinkedList() {</span>
-                        <span>this.head = new Node(null, null, null);</span>
-                        <span>this.tail = new Node(null, this.head, null);</span>
-                        <span>this.head.next = this.tail;</span>
-                        <span>this.theSize = 0;</span>
-                        <span>this.modCount = 0;</span>
-                    <span>}</span>
                 </code>
             </pre>
         </div>

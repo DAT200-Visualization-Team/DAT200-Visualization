@@ -9,8 +9,15 @@ var animationTime = 1000 * speed;
 
 //TODO: implement and include "highlightNextLine"
 
-//TODO: implement a fast (non-animation) initialize and add a number of randomly generated nodes
-
+// (non-animation) initializer, adds some nodes
+function fastInitialize() {
+    linkedList.addFirst("H");
+    linkedList.addLast("x");
+    linkedList.addLast("y");
+    linkedList.addLast("z");
+    linkedList.addLast("T");
+    redraw();
+}
 
 $('#download-button, #download-button-mobile').on('click', function () {
     var arrayRepresentation = linkedList.toArray();
@@ -186,11 +193,14 @@ function initialize() {
     var tail = $("#linkedlist").children().last();
     tail.attr("opacity", "0");
 
+    var hArrow = new Arrow(head.children().eq(1));
+    var tArrow = new Arrow(tail.children().eq(2));
+
     var loadingSequence = [
         { e: head, p: "transition.expandIn", o: { duration: animationTime } },
         { e: tail, p: "transition.expandIn", o: { duration: animationTime } },
-        aniMoveArrow(1, 'prev', -45, 0),
-        aniMoveArrow(0, 'next', 45, 0),
+        tArrow.animate(-45, 0),
+        hArrow.animate(45, 0),
         { e: head, p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
     ];
 
@@ -364,67 +374,5 @@ function iteratorNext() {
 function iteratorPrev() {
     p = new Arrow($("#linkedlist").children().last());
     $.Velocity.RunSequence([p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)]);
-}
-
-
-
-/***
- * ANIMATIONS
- */
-function aniMoveArrow(nodeIdx, arrowType, dx, dy, dmy, sequence) {
-
-    var node = $("#linkedlist").children().eq(nodeIdx);
-    var arrow;
-    (arrowType === 'next') ? (arrow = node.children().eq(1)) : (arrow = node.children().eq(2));
-
-    var arch = arrow.children().first().attr("d");
-    arch = arch.split(' ');
-    var x0 = parseInt(arch[1]);
-    var y0 = parseInt(arch[2]);
-    var x1 = parseInt(arch[6]);
-    var y1 = parseInt(arch[7]);
-    var mx = (x0 + x1 + dx) / 2;
-    var my0 = parseInt(arch[5]);
-    if (dmy == null) {
-        dmy = 0;
-        mx = x0; //delete this line, and all arrows will get curvy without specifying dmy
-
-    }
-
-    var triangle = arrow.children().last().attr("d");
-    triangle = triangle.split(' ');
-    var p0x = parseInt(triangle[1]);
-    var p0y = parseInt(triangle[2]);
-    var p1x = parseInt(triangle[4]);
-    var p1y = parseInt(triangle[5]);
-    var p2x = parseInt(triangle[7]);
-    var p2y = parseInt(triangle[8]);
-
-    //TOD0: make the prev of Tail move as soon as Tail is faded in (initialize())
-    var progressAnimation = function (elements, complete, remaining, start, tweenValue) {
-        elements[0].setAttribute(
-            "d", "M " + x0 + " " + y0 + " Q " + mx + " " + ((tweenValue * dmy) + my0) + " " + ((tweenValue * dx) + x1) + " " + ((tweenValue * dy) + y1)
-        );
-        elements[1].setAttribute(
-            "d", "M " + (p0x + (dx * tweenValue)) + " " + (p0y + (dy * tweenValue)) + " L " + (p1x + (dx * tweenValue)) + " " + (p1y + (dy * tweenValue)) + " L " + (p2x + (dx * tweenValue)) + " " + (p2y + (dy * tweenValue) + " Z")
-        );
-    }
-    return { e: arrow.children(), p: { tween: 1 }, o: { duration: animationTime, progress: progressAnimation, sequenceQueue: sequence } }
-}
-
-
-/**
- * Some helpers while developing - Delete when all animations are done
-**/
-
-function initializeAndAdd(howMany) {
-    speed = 0.001;
-    animationTime = 1000 * speed;
-    initialize();
-    for (var i = 0; i <= howMany; i++) {
-        addByIndex(i, i);
-    }
-    speed = 1;
-    animationTime = 1000 * speed;
 }
 
