@@ -132,6 +132,68 @@
           "    hanoi(disks - 1, temp, to, from);"
         ]
       }
+    },
+    "linkedlist": {
+      "constructor": {
+        "header": "function LinkedList() {",
+        "lines": [ "    this.head = new Node(null, null, null);", "    this.tail = new Node(null, this.head, null);", "    this.head.next = this.tail;", "    this.theSize = 0;", "    this.modCount = 0;", "}" ]
+      },
+      "clear": {
+        "header": "LinkedList.prototype.clear = function() {",
+        "lines": [ "    this.head = new Node(null, null, null);", "    this.tail = new Node(null, this.head, null);", "    this.head.next = this.tail;", "    this.theSize = 0;", "    this.modCount++;", "};" ]
+      },
+      "size": {
+        "header": "LinkedList.prototype.size = function() {",
+        "lines": [ "    return this.theSize;", "};" ]
+      },
+      "isEmpty": {
+        "header": "LinkedList.prototype.isEmpty = function() {",
+        "lines": [ "    return this.theSize === 0;", "};" ]
+      },
+      "add": {
+        "header": "LinkedList.prototype.add = function(idx, data) {",
+        "lines": [ "    var p = this.getNode(idx);", "    var newNode = new Node(data, p.prev, p);", "    newNode.prev.next = newNode;", "    p.prev = newNode;", "    this.theSize++;", "    this.modCount++;", "};" ]
+      },
+      "addFirst": {
+        "header": "LinkedList.prototype.addFirst = function(data) {",
+        "lines": [ "    this.add(0, data);", "};" ]
+      },
+      "addLast": {
+        "header": "LinkedList.prototype.addLast = function(data) {",
+        "lines": [ "    this.add(this.size(), data);", "};" ]
+      },
+      "removeNode": {
+        "header": "LinkedList.prototype.removeNode = function(p) {",
+        "lines": [ "    p.next.prev = p.prev;", "    p.prev.next = p.next;", "    this.theSize--;", "    this.modCount++;", "    return p.data;", "};" ]
+      },
+      "removeByIdx": {
+        "header": "LinkedList.prototype.removeByIdx = function(idx) {",
+        "lines": [ "    return this.removeNode(this.getNode(idx));", "};" ]
+      },
+      "removeFirst": {
+        "header": "LinkedList.prototype.removeFirst = function() {",
+        "lines": [ "    if (this.isEmpty()) {", "        throw {name: 'NoSuchElementException', message: \"List is empty.\"};", "    }", "    return this.removeByIdx(0);", "};" ]
+      },
+      "removeLast": {
+        "header": "LinkedList.prototype.removeLast = function() {",
+        "lines": [ "    if (this.isEmpty()) {", "        throw {name: \"NoSuchElementException\", message: \"List is empty.\"};", "    }", "    return this.removeByIdx(this.size() - 1);", "};" ]
+      },
+      "removeByData": {
+        "header": "LinkedList.prototype.removeByData = function(data) {",
+        "lines": [ "    var pos = this.findPos(data);", "    if (pos == -1) {", "        return false;", "    }", "    else {", "        this.removeNode(pos);", "        return true;", "    }", "};" ]
+      },
+      "getNode": {
+        "header": "LinkedList.prototype.getNode = function(idx) {",
+        "lines": [ "    var p;", "    if (idx < this.size() / 2) {", "        p = this.head.next;", "        for (var i = 0; i < idx; i++) {", "            p = p.next;", "        }", "    } else {", "        p = this.tail;", "        for (var i = this.size(); i > idx; i--) {", "            p = p.prev;", "        }", "    }", "    return p;", "};" ]
+      },
+      "set": {
+        "header": "LinkedList.prototype.set = function(idx, newVal) {",
+        "lines": [ "    var p = this.getNode(idx);", "    var oldVal = p.data;", "    p.data = newVal;", "    return oldVal;", "};" ]
+      },
+      "findPos": {
+        "header": "LinkedList.prototype.findPos = function(x) {",
+        "lines": [ "    for(var p = this.head.next; p !== this.tail; p = p.next) {", "        if (x === null) {", "            if(p.data === null) {", "                return p;", "            }", "        }", "        else if(x === p.data) { //must really use x.equals(p.data)", "            return p;", "        }", "    }", "    return -1;", "};" ]
+      }
     }
   }
 }

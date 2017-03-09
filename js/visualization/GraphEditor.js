@@ -1,5 +1,5 @@
 // set up SVG for D3
-var width = 400,
+var width = $('#graphics').width(),
     height = $('#graphics').height(),
     colors = d3.scaleOrdinal(d3.schemeCategory10);;
 
@@ -174,6 +174,8 @@ function restart() {
           else selected_node = mousedown_node;
           selected_link = null;
 
+          console.log("Mouse down at " + mousedown_node.id);
+
           // reposition drag line
           drag_line
             .style('marker-end', 'url(#end-arrow)')
@@ -183,6 +185,7 @@ function restart() {
           restart();
       })
       .on('mouseup', function (d) {
+          console.log("Mouse up at " + mousedown_node);
           if (!mousedown_node) return;
 
           // needed by FF
@@ -245,7 +248,7 @@ function restart() {
     force.force('link').links(links);
 
     // set the graph in motion
-    force.alpha(1).restart();
+    force.alpha(0.05).restart();
 }
 
 function mousedown() {
@@ -263,7 +266,7 @@ function mousedown() {
     node.x = point[0];
     node.y = point[1];
     nodes.push(node);
-    console.log("Node(x,y) = (" + node.x + ", " + node.y + ")");
+    
     restart();
 }
 
@@ -305,13 +308,11 @@ var lastKeyDown = -1;
 
 function keydown() {
     d3.event.preventDefault();
-
     if (lastKeyDown !== -1) return;
     lastKeyDown = d3.event.keyCode;
 
     // ctrl
     if (d3.event.keyCode === 17) {
-        console.log(d3.select('svg'));
         circle.call(d3.drag()
             .container(d3.select('svg')._groups[0][0])
             .on('start', dragstarted)
@@ -368,31 +369,32 @@ function dragstarted() {
     if (!d3.event.active) force.alphaTarget(0.3).restart();
     d3.event.subject.fx = d3.event.subject.x;
     d3.event.subject.fy = d3.event.subject.y;
-    console.log("started");
 }
 
 function dragged() {
     d3.event.subject.fx = d3.event.x;
     d3.event.subject.fy = d3.event.y;
-    console.log("dragging");
-    console.log(d3.event.x);
+    console.log(d3.event.subject);
 }
 
 function dragended() {
     if (!d3.event.active) force.alphaTarget(0);
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
-    console.log("ended");
+    resetMouseVars();
 }
 
 function keyup() {
+    console.log("Before last key down is reset: " + d3.event.keyCode);
     lastKeyDown = -1;
 
     // ctrl
     if (d3.event.keyCode === 17) {
-        circle
-          .on('mousedown.drag', null)
-          .on('touchstart.drag', null);
+        circle.call(d3.drag()
+            .container(d3.select('svg')._groups[0][0])
+            .on('start', null)
+            .on('drag', null)
+            .on('end', null));
         svg.classed('ctrl', false);
     }
 }

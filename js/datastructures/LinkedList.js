@@ -57,7 +57,6 @@ LinkedList.prototype.removeFirst = function() {
         throw {name: "NoSuchElementException", message: "List is empty."};
     }
     return this.removeByIdx(0);
-
 };
 
 LinkedList.prototype.removeLast = function() {
