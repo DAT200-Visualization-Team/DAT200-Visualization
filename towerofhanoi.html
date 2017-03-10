@@ -23,7 +23,8 @@
 </head>
 <body>
 <!--[if lt IE 8]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
 <![endif]-->
 
 <div id="view">
@@ -33,55 +34,59 @@
     <div id="graphics" class="left">
         <div class="towerOfHanoiContainer">
             <svg id="towerOfHanoi">
-
-                <g id="pegs">
-                    <!--
-                    <rect x="95" y="250" width="10" height="260" ry="10" />
-                    <rect x="295" y="250" width="10" height="260" ry="10" />
-                    <rect x="495" y="250" width="10" height="260" ry="10" />
-                    <rect x="0" y="500" width="600" height="20" ry="10" />
-                    -->
-                </g>
-
-
-                <g id="pegA">
-                </g>
-
-
-                <g id="pegB">
-                </g>
-
-
-                <g id="pegC">
-
-                    <rect x="480" y="320" width="40" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="470" y="340" width="60" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="460" y="360" width="80" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="450" y="380" width="100" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="440" y="400" width="120" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="430" y="420" width="140" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="420" y="440" width="160" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="410" y="460" width="180" height="20" rx="10" ry="10" class="disk"/>
-                    <rect x="400" y="480" width="200" height="20" rx="10" ry="10" class="disk"/>
-
-                </g>
-
+                <g id="pegs"></g>
+                <g id="disks"></g>
             </svg>
         </div>
     </div>
     <div id="code" class="right">
         <div>
             <h3>Tower of Hanoi</h3>
-            <pre>
 
-                <code>
-    <span>function hanoi(disks, from, to, temp) {</span>
-        <span>if (disks === 0)</span>
-            <span>return;</span>
-        <span>hanoi(disks - 1, from, temp, to);</span>
-        <span>hanoi(disks - 1, temp, to, from);</span>
-    <span>}</span>
-                </code>
+            <div class="input-field row" style="margin-right: 100px; margin-left: 15px;">
+                <select id="numdisks" class="col s3">
+                    <option value="" disabled>Num disks</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+                <select id="from" class="col s3">
+                    <option value="" disabled>From</option>
+                    <option value="A" selected>A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+                <select id="to" class="col s3">
+                    <option value="" disabled>To</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C" selected>C</option>
+                </select>
+                <select id="speed" name="speed" class="col s3">
+                    <option value="" disabled>Speed</option>
+                    <option value="1" selected>1x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                    <option value="4">4x</option>
+                    <option value="5">5x</option>
+                    <option value="6">6x</option>
+                    <option value="7">7x</option>
+                    <option value="8">8x</option>
+                    <option value="9">9x</option>
+                    <option value="10">10x</option>
+                </select>
+                <button class="col s12" type="submit" onclick="doHanoi()">Run Hanoi</button>
+            </div>
+
+
+            <pre>
+                <code id="code-text"></code>
             </pre>
         </div>
     </div>
@@ -106,21 +111,29 @@
 <script src="js/settings.js"></script>
 <script src="js/resize.js"></script>
 <script src="js/vendor/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad(); $("#draggable").draggable();</script>
-<script src="js/algorithms/TowerOfHanoi.js"></script>
+<script>hljs.initHighlightingOnLoad();
+$("#draggable").draggable();</script>
+<script src="js/codedisplay/CodeDisplayManager.js"></script>
 <script src="js/visualization/TowerOfHanoiVisualization.js"></script>
+<script src="js/algorithms/TowerOfHanoi.js"></script>
 
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
     (function (b, o, i, l, e, r) {
-        b.GoogleAnalyticsObject = l; b[l] || (b[l] =
-                function () { (b[l].q = b[l].q || []).push(arguments) }); b[l].l = +new Date;
-        e = o.createElement(i); r = o.getElementsByTagName(i)[0];
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+                function () {
+                    (b[l].q = b[l].q || []).push(arguments)
+                });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
         e.src = 'https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e, r)
     }(window, document, 'script', 'ga'));
-    ga('create', 'UA-XXXXX-X', 'auto'); ga('send', 'pageview');
+    ga('create', 'UA-XXXXX-X', 'auto');
+    ga('send', 'pageview');
 </script>
 </body>
 </html>
