@@ -105,9 +105,6 @@ function tick() {
 // update graph (called when needed)
 function restart() {
     // path (link) group
-    console.log("Links restart:");
-    console.log(links);
-    console.log(links);
     path = path.data(links);
 
     // update existing links
@@ -133,12 +130,10 @@ function restart() {
           restart();
       });
 
-    path = path.merge(p);
-
     // remove old links
     path.exit().remove();
 
-
+    path = path.merge(p);
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
     circle = circle.data(nodes, function (d) { return d.id; });
@@ -239,10 +234,9 @@ function restart() {
         .attr('class', 'id')
         .text(function (d) { return d.id; });
 
-    circle = circle.merge(g);
-
     // remove old nodes
     circle.exit().remove();
+    circle = circle.merge(g);
 
     force.nodes(nodes);
     force.force('link').links(links);
@@ -301,10 +295,6 @@ function spliceLinksForNode(node) {
     toSplice.map(function (l) {
         links.splice(links.indexOf(l), 1);
     });
-    console.log("Links:");
-    console.log(links);
-    console.log("Nodes:");
-    console.log(nodes);
 }
 
 // only respond once per keydown
