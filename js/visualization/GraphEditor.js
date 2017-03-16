@@ -94,7 +94,6 @@ function tick() {
             sourceY = d.source.y + (sourcePadding * normY),
             targetX = d.target.x - (targetPadding * normX),
             targetY = d.target.y - (targetPadding * normY);
-        //console.log("SourceX = " + sourceX + ", SourceY = " + sourceY + ", TargetX = " + targetX + " and TargetY =" + targetY);
         return 'M ' + sourceX + ',' + sourceY + 'L ' + targetX + ',' + targetY;
     });
 
@@ -106,6 +105,9 @@ function tick() {
 // update graph (called when needed)
 function restart() {
     // path (link) group
+    console.log("Links restart:");
+    console.log(links);
+    console.log(links);
     path = path.data(links);
 
     // update existing links
@@ -174,8 +176,6 @@ function restart() {
           else selected_node = mousedown_node;
           selected_link = null;
 
-          console.log("Mouse down at " + mousedown_node.id);
-
           // reposition drag line
           drag_line
             .style('marker-end', 'url(#end-arrow)')
@@ -185,7 +185,6 @@ function restart() {
           restart();
       })
       .on('mouseup', function (d) {
-          console.log("Mouse up at " + mousedown_node);
           if (!mousedown_node) return;
 
           // needed by FF
@@ -241,6 +240,7 @@ function restart() {
         .text(function (d) { return d.id; });
 
     circle = circle.merge(g);
+
     // remove old nodes
     circle.exit().remove();
 
@@ -301,6 +301,10 @@ function spliceLinksForNode(node) {
     toSplice.map(function (l) {
         links.splice(links.indexOf(l), 1);
     });
+    console.log("Links:");
+    console.log(links);
+    console.log("Nodes:");
+    console.log(nodes);
 }
 
 // only respond once per keydown
@@ -374,7 +378,6 @@ function dragstarted() {
 function dragged() {
     d3.event.subject.fx = d3.event.x;
     d3.event.subject.fy = d3.event.y;
-    console.log(d3.event.subject);
 }
 
 function dragended() {
@@ -385,16 +388,11 @@ function dragended() {
 }
 
 function keyup() {
-    console.log("Before last key down is reset: " + d3.event.keyCode);
     lastKeyDown = -1;
 
     // ctrl
     if (d3.event.keyCode === 17) {
-        circle.call(d3.drag()
-            .container(d3.select('svg')._groups[0][0])
-            .on('start', null)
-            .on('drag', null)
-            .on('end', null));
+        circle.on(".drag", null);
         svg.classed('ctrl', false);
     }
 }
