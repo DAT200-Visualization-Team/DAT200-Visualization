@@ -7,7 +7,8 @@ var svg = d3.select('#graphics')
   .append('svg')
   .attr('oncontextmenu', 'return false;')
   .attr('width', width)
-  .attr('height', height);
+  .attr('height', height)
+  .attr('text-rendering', 'optimizeLegibility');
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
@@ -20,8 +21,8 @@ var nodes = [
 ],
   lastNodeId = 2,
   links = [
-    { source: nodes[0], target: nodes[1], left: false, right: true },
-    { source: nodes[1], target: nodes[2], left: false, right: true }
+    { source: nodes[0], target: nodes[1], left: false, right: true, cost: 1 },
+    { source: nodes[1], target: nodes[2], left: false, right: true, cost: 1 }
   ];
 
 var force = d3.forceSimulation()
@@ -66,6 +67,26 @@ var drag_line = svg.append('svg:path')
 var path = svg.append('svg:g').selectAll('path'),
     circle = svg.append('svg:g').selectAll('g');
 
+linklabels = svg.selectAll(".linklabel")
+        .data(links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .style("font-size", "30px")
+        .style("fill", "#b72121")
+        .style("alignment-baseline", "baseline")
+        .style("dominant-baseline", "baseline");
+
+linklabels.append('textPath')
+        .attr('startOffset', '50%')
+        .attr('href', function (d, i) { return '#linkpath' + i })
+        .style("pointer-events", "none")
+        .style("text-anchor", "middle")
+        .style("alignment-baseline", "baseline")
+        .style("dominant-baseline", "baseline")
+        .text(function (d, i) { return d.cost });
+
+
 // mouse event vars
 var selected_node = null,
     selected_link = null,
@@ -100,6 +121,19 @@ function tick() {
     circle.attr('transform', function (d) {
         return 'translate(' + d.x + ',' + d.y + ')';
     });
+
+    linklabels.attr('transform', function (d, i) {
+        if (d.target.x < d.source.x) {
+            bbox = this.getBBox();
+            rx = bbox.x + bbox.width / 2;
+            ry = bbox.y + bbox.height / 2;
+            return 'rotate(180 ' + rx + ' ' + ry + ')';
+        }
+        else {
+            return 'rotate(0)';
+        }
+    });
+
 }
 
 // update graph (called when needed)
@@ -116,6 +150,7 @@ function restart() {
     // add new links
     var p = path.enter().append('svg:path')
       .attr('class', 'link')
+      .attr('id', function(d, i){return "linkpath" + i})
       .classed('selected', function (d) { return d === selected_link; })
       .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
       .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; })
@@ -134,6 +169,28 @@ function restart() {
     path.exit().remove();
 
     path = path.merge(p);
+
+    // add new link labels
+    var l = linklabels.data(links).enter().append('text')
+        .style("pointer-events", "none")
+        .style("font-size", "30px")
+        .style("fill", "#b72121")
+        .style("alignment-baseline", "baseline")
+        .style("dominant-baseline", "baseline")
+        .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('href', function (d, i) { return '#linkpath' + i })
+            .style("pointer-events", "none")
+            .style("text-anchor", "middle")
+            .style("alignment-baseline", "baseline")
+            .style("dominant-baseline", "baseline")
+            .text(function (d, i) { return d.cost });
+
+    // remove old link labels
+    linklabels.exit().remove();
+
+    linklabels.merge(l);
+
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
     circle = circle.data(nodes, function (d) { return d.id; });
@@ -215,7 +272,7 @@ function restart() {
           if (link) {
               link[direction] = true;
           } else {
-              link = { source: source, target: target, left: false, right: false };
+              link = { source: source, target: target, left: false, right: false, cost: 1 };
               link[direction] = true;
               links.push(link);
           }
