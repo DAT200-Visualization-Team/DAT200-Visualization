@@ -6,15 +6,21 @@ var nodeWidth = 40;
 var nodeSpace = 90;
 var speed = 1;
 var animationTime = 1000 * speed;
+var codeDisplayManager;
 
-//TODO: implement and include "highlightNextLine"
 
 // (non-animation) initializer, adds some nodes
-function fastInitialize() {
+function fastInitialize(n) {
+    codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
     linkedList.addFirst("H");
     linkedList.addLast("x");
     linkedList.addLast("y");
     linkedList.addLast("z");
+    if(n != null) {
+        for(var i = 0; i < n; i++) {
+            linkedList.addLast(i);
+        }
+    }
     linkedList.addLast("T");
     redraw();
 }
@@ -29,7 +35,6 @@ function processUploadedObject(object) {
     var arrayRepresentation = object.LinkedList;
     clear();
     linkedList = new LinkedList();
-
 
     var pos = offsetX;
     createNode(pos, offsetY, arrayRepresentation[i], 'Head', -1, true, false);
@@ -181,6 +186,14 @@ function redraw() {
 function initialize() {
     clear();
     linkedList = new LinkedList();
+    codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
+    codeDisplayManager.loadFunctions("constructor");
+    codeDisplayManager.changeFunction("constructor");
+    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
+    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
+    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
+    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
+    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
 
     linkedList.addLast('H');
     linkedList.addLast('T');
@@ -191,16 +204,27 @@ function initialize() {
 
     var head = $("#linkedlist").children().first();
     var tail = $("#linkedlist").children().last();
+    head.attr("opacity", "0");
     tail.attr("opacity", "0");
 
     var hArrow = new Arrow(head.children().eq(1));
     var tArrow = new Arrow(tail.children().eq(2));
 
     var loadingSequence = [
+        line0[0],
         { e: head, p: "transition.expandIn", o: { duration: animationTime } },
+        line0[1],
+        line1[0],
         { e: tail, p: "transition.expandIn", o: { duration: animationTime } },
         tArrow.animate(-45, 0),
+        line1[1],
+        line2[0],
         hArrow.animate(45, 0),
+        line2[1],
+        line3[0],
+        line3[1],
+        line4[0],
+        line4[1],
         { e: head, p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
     ];
 
@@ -247,22 +271,44 @@ function addByIndex(idx, data) {
     var nnPrev = new Arrow($("#linkedlist").children().eq(idx + 2).children().eq(2));
 
     p = $("#linkedlist").children().last();
+    p.attr("opacity", 0);
+
+    codeDisplayManager.loadFunctions("add");
+    codeDisplayManager.changeFunction("add");
+    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
+    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
+    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
+    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
+    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
+    var line5 = codeDisplayManager.getVelocityFramesForHighlight(5, animationTime);
 
     var loadingSequence = [
+        line0[0],
         { e: p, p: "transition.expandIn", o: { duration: animationTime } },
+        line0[1],
+        line1[0],
         npNext.animate(nodeSpace + nodeWidth, 0),
         nnPrev.animate(-(nodeSpace + nodeWidth), 0, 0, false),
         { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
         nPrev.animate(0, -(45 + 5)),
         nNext.animate(0, -(15 + 55), 0, false),
         { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false } },
+        line1[1],
+        line2[0],
         npNext.animate(-(nodeSpace+nodeWidth), 45 + 15),
+        line2[1],
+        line3[0],
         nnPrev.animate((nodeSpace+nodeWidth), 15 + 45),
         { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
         nPrev.animate(0, 45+5, 0,false),
         nNext.animate(0, 15+55, 0, false),
         npNext.animate(0, -(45+15), 0, false),
         nnPrev.animate(0, -(15+45), 0, false),
+        line3[1],
+        line4[0],
+        line4[1],
+        line5[0],
+        line5[1],
         { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
     ];
 
@@ -290,13 +336,31 @@ function removeNode(idx) {
     var leftArrow = new Arrow($("#linkedlist").children().eq(idx - 1).children().eq(1));
     var rightArrow = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
 
+    codeDisplayManager.loadFunctions("removeNode");
+    codeDisplayManager.changeFunction("removeNode");
+    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
+    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
+    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
+    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
+    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
+
     $.Velocity.RunSequence([
+        line0[0],
         rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60),
+        line0[1],
+        line1[0],
         leftArrow.animate((nodeWidth + nodeSpace), 0, -60),
         { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime} },
         rightArrow.animate((nodeWidth + nodeSpace), 0, -60, false),
         leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, false),
         { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
+        line1[1],
+        line2[0],
+        line2[1],
+        line3[0],
+        line3[1],
+        line4[0],
+        line4[1],
         { e: $("#linkedlist"), p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
     ]);
 }
@@ -304,33 +368,54 @@ function removeNode(idx) {
 //TODO: finish this together with highlightCode
 function getNode(idx) {
     var loadingSequence = [];
+    codeDisplayManager.loadFunctions("getNode");
+    codeDisplayManager.changeFunction("getNode");
+    var lines = [];
+    for(var i = 0; i <= 12; i++) {
+        lines[i] = codeDisplayManager.getVelocityFramesForHighlight(i, animationTime);
+    }
+    loadingSequence.push(lines[0][0], lines[0][1]);
+    loadingSequence.push(lines[1][0], lines[1][1]);
 
     if (idx < (linkedList.size() - 1) / 2) {
+        loadingSequence.push(lines[2][0]);
         var p = createPointer('south',
             offsetX + nodeWidth + nodeSpace + nodeWidth / 2,
             50, offsetX + nodeWidth + nodeSpace + nodeWidth / 2, 80);
         updateDrawingArea();
+        p = $("#linkedlist").children().last();
+        p.attr("opacity", 0);
+
+        loadingSequence.push({e: p, p: "transition.expandIn", o: { duration: animationTime }});
         p = new Arrow($("#linkedlist").children().last());
+        loadingSequence.push(lines[2][1], lines[3][0]);
         for (var i = 0; i < idx ; i++) {
+            loadingSequence.push(lines[3][1], lines[4][0]);
             loadingSequence.push(p.translateStraightArrow((nodeWidth + nodeSpace), 0));
+            loadingSequence.push(lines[4][1], lines[3][0]);
         }
+        loadingSequence.push(lines[3][1], lines[5][0], lines[5][1], lines[6][0]);
     }
     else {
+        loadingSequence.push(lines[6][0], lines[6][1], lines[7][0], lines[7][1]);
         var p = createPointer('south',
             offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2,
             50, offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2, 80);
+        loadingSequence.push(lines[7][0]);
         updateDrawingArea();
+
+        p = $("#linkedlist").children().last();
+        p.attr("opacity", 0);
+        loadingSequence.push({e: p, p: "transition.expandIn", o: { duration: animationTime }});
         p = new Arrow($("#linkedlist").children().last());
         for (var i = linkedList.size() - 2; i > idx ; i--) {
             loadingSequence.push(p.translateStraightArrow(-(nodeWidth + nodeSpace), 0));
         }
     }
+    loadingSequence.push(lines[6][1], lines[12][0], lines[12][1]);
+
     $.Velocity.RunSequence(loadingSequence);
 
-    //TODO: remove this later
-    setTimeout(function() {
-        redraw();
-    }, 3000);
 }
 
 function findPos(data) {
