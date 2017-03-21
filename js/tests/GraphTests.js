@@ -13,7 +13,6 @@ QUnit.test("Simple graph", function (assert) {
     assert.deepEqual(sg.getPath("D"), {A: 0, C: 3, D: 4}, "Passed!");
 });
 
-/*
 QUnit.test("Graph 1", function (assert) {
     var g = new Graph();
      g.addEdge("A", "B", 4);
@@ -24,9 +23,8 @@ QUnit.test("Graph 1", function (assert) {
      g.addEdge("E", "D", 4);
      g.addEdge("D", "F", 11);
      g.dijkstra("A");
-    assert.deepEqual(g.getPath("F"), {A: 0, C: 2, E: 5, D: 9, F: 20}, "Passed!");
+     assert.deepEqual(g.getPath("F"), {A: 0, C: 2, E: 5, D: 9, F: 20}, "Passed!");
 });
-*/
 
 QUnit.test("Graph 2", function (assert) {
     var g2 = new Graph();
@@ -65,7 +63,6 @@ QUnit.test("Graph 3", function (assert) {
     assert.deepEqual(g3.getPath("H"), {A: 0, B: 20, F: 30, C: 40, H: 60}, "Passed!");
 });
 
-/*
 QUnit.test("Graph 4", function (assert) {
     var g4 = new Graph();
     g4.addEdge("A", "B", 5);
@@ -83,8 +80,6 @@ QUnit.test("Graph 4", function (assert) {
     g4.dijkstra("A");
     assert.deepEqual(g4.getPath("F"), {A: 0, B: 5, G: 6, E: 7, F: 8}, "Passed!");
 });
-*/
-
 
 QUnit.module("Bellman-Ford");
 
@@ -166,26 +161,6 @@ QUnit.test("Graph 4", function (assert) {
     g4.negative("A");
     assert.deepEqual(g4.getPath("F"), {A: 0, B: 5, G: 6, E: 7, F: 8}, "Passed!");
 });
-
-
-/*QUnit.test("Negative-cost cycle graph 1", function (assert) {
-    var ncg1 = new Graph();
-    ncg1.addEdge("A", "B", 2);
-    ncg1.addEdge("A", "D", 1);
-    ncg1.addEdge("B", "D", 3);
-    ncg1.addEdge("C", "A", 4);
-    ncg1.addEdge("C", "F", 5);
-    ncg1.addEdge("D", "C", 2);
-    ncg1.addEdge("D", "E", 2);
-    ncg1.addEdge("D", "F", 8);
-    ncg1.addEdge("D", "G", 4);
-    ncg1.addEdge("E", "B", -10);
-    ncg1.addEdge("E", "G", 6);
-    ncg1.addEdge("G", "F", 1);
-    ncg1.negative("A");
-    //ncg1.getPath("F")
-    assert.throws(ncg1.getPath("F"), /Negative cycle detected/, "Passed!");
-});*/
 
 QUnit.test("Graph with negative edge", function (assert) {
     var gne = new Graph();

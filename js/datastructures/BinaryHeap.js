@@ -51,7 +51,7 @@ BinaryHeap.prototype.add = function(x) {
     var hole = ++this.currentSize;
     this.array[0] = x;
 
-    for(; x < this.array[parseInt(hole/2)]; hole = parseInt(hole / 2)) {
+    for(; compare(x, this.array[parseInt(hole/2)]) < 0; hole = parseInt(hole / 2)) {
         this.array[hole] = this.array[parseInt(hole / 2)];
     }
     this.array[hole] = x;
@@ -72,10 +72,10 @@ BinaryHeap.prototype.percolateDown = function(hole) {
 
     for(; hole * 2 <= this.currentSize; hole = child) {
         child = hole * 2;
-        if(child != this.currentSize && this.array[child + 1] < this.array[child]) {
+        if(child != this.currentSize && compare(this.array[child + 1], this.array[child]) < 0) {
             child++;
         }
-        if(this.array[child] < tmp) {
+        if(compare(this.array[child], tmp) < 0) {
             this.array[hole] = this.array[child];
         }
         else {
@@ -100,45 +100,16 @@ BinaryHeap.prototype.toArrayAndEmpty = function() {
     return arr;
 };
 
-/*
-var bh = new BinaryHeap([7,3,1,5,6]);
-console.log(bh.toArrayAndEmpty())
-*/
+function compare(a, b) {
+    if (a == null || b == null) return true;
 
-/*
-var bh = new BinaryHeap();
+    var type = a.constructor;
 
-bh.add(6);
-bh.add(1);
-bh.add(3);
-bh.add(4);
-bh.add(2);
-bh.add(5);
-
-//console.log("---" + bh.element() + "---");
-
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-*/
-
-
-
-/*
-bh.add(1);
-bh.add(5);
-bh.add(7);
-bh.add(2);
-bh.add(6);
-bh.add(3);
-
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-console.log(bh.remove());
-*/
+    switch (type) {
+        case Path:
+            return a.compareTo(b);
+            break;
+        default:
+            return a - b;
+    }
+}
