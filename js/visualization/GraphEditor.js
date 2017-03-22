@@ -187,9 +187,9 @@ function restart() {
             .text(function (d, i) { return d.cost });
 
     // remove old link labels
-    linklabels.exit().remove();
+    linklabels.data(links).exit().remove();
 
-    linklabels.merge(l);
+    linklabels = linklabels.data(links).merge(l);
 
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
