@@ -6,6 +6,7 @@ $(document).ready(function(){
     $('#file-input').on('change', readUploadedFile);
 
     var uploadedObject = getCookie('uploadedVariable');
+    console.log(uploadedObject);
     if (uploadedObject != '') {
         deleteCookie('uploadedVariable');
         processUploadedObject(JSON.parse(uploadedObject));

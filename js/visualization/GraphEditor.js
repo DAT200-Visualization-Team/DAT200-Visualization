@@ -21,8 +21,8 @@ var nodes = [
 ],
   lastNodeId = 2,
   links = [
-    { source: nodes[0], target: nodes[1], left: false, right: true, cost: 1 },
-    { source: nodes[1], target: nodes[2], left: false, right: true, cost: 1 }
+    { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
+    { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
   ];
 
 var force = d3.forceSimulation()
@@ -170,8 +170,11 @@ function restart() {
 
     path = path.merge(p);
 
+    // linklabels (link) group
+    linklabels = linklabels.data(links);
+
     // add new link labels
-    var l = linklabels.data(links).enter().append('text')
+    var l = linklabels.enter().append('text')
         .style("pointer-events", "none")
         .style("font-size", "30px")
         .style("fill", "#b72121")
@@ -187,9 +190,9 @@ function restart() {
             .text(function (d, i) { return d.cost });
 
     // remove old link labels
-    linklabels.data(links).exit().remove();
+    linklabels.exit().remove();
 
-    linklabels = linklabels.data(links).merge(l);
+    linklabels = linklabels.merge(l);
 
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
@@ -272,7 +275,7 @@ function restart() {
           if (link) {
               link[direction] = true;
           } else {
-              link = { source: source, target: target, left: false, right: false, cost: 1 };
+              link = { source: source, target: target, left: false, right: false, cost: Math.floor(Math.random() * 10 + 1) };
               link[direction] = true;
               links.push(link);
           }
