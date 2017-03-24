@@ -216,7 +216,12 @@
         "header": "FibCalculator.prototype.recursiveFib = function (n) {",
         "lines": [ "    if (this.oldNumbers[n - 1] != 0) return this.oldNumbers[n - 1];", "    if (n === 1) return 1;", "    if (n === 2) return 1;", "     ", "    this.oldNumbers[n - 1] = this.recursiveFib(n - 1) + this.recursiveFib(n - 2);", "    return this.oldNumbers[n - 1];", "};" ]
       }
-
+    },
+    "graph": {
+      "dijkstra": {
+        "header": "Graph.prototype.dijkstra = function (startName) {",
+        "lines": [ "    var pq = new BinaryHeap();", "     ", "    var start = this.vertexMap[startName];", "    if (start === undefined || start === null) {", "        throw { name: \"NoSuchElementException\", message: \"Start vertex not found\" };", "    }", "    this.clearAll();", "    pq.add(new Path(start, 0));", "    start.dist = 0;", "     ", "    var nodesSeen = 0;", "    while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {", "        var vrec = pq.remove();", "        var v = vrec.dest;", "        if (v.scratch !== 0) { // already processed v", "            continue;", "        }", "        v.scratch = 1;", "        nodesSeen++;", "         ", "        for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {", "            var e = itr.next();", "            var w = e.dest;", "            var cvw = e.cost;", "             ", "            if (cvw < 0) {", "                throw { name: \"GraphException\", message: \"Graph has negative edges\" };", "            }", "             ", "            if (w.dist > v.dist + cvw) {", "                w.dist = v.dist + cvw;", "                w.prev = v;", "                pq.add(new Path(w, w.dist));", "            }", "        }", "    }", "};" ]
+      }
     }
   }
 }

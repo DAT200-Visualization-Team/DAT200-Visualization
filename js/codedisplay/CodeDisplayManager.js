@@ -25,7 +25,7 @@ CodeDisplayManager.prototype.loadFunctions = function () {
         for(var j = 0; j < this.currentClass[arguments[i]].lines.length; j++)
             $("#" + arguments[i]).append(this.makeHighlightSpan(this.currentClass[arguments[i]].lines[j]));
 
-        $("#code-text").append("}</span></span>\n\n");
+        $("#code-text").append("\n\n");
     }
 
     hljs.initHighlighting.called = false;
@@ -66,4 +66,14 @@ CodeDisplayManager.prototype.getVelocityFramesForHighlight = function (index, hi
         { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 1 }, o: { duration: highlightTime / 2, delay: initialDelay } },
         { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 0 }, o: { duration: highlightTime / 2 } }
     ];
+}
+
+CodeDisplayManager.prototype.getMultipleVelocityFrameHighlights = function (indexArray, highlightTime, initialDelay) {
+    var frames = [];
+
+    for (var i = 0; i < indexArray.length; i++) {
+        frames = frames.concat(this.getVelocityFramesForHighlight(indexArray[i], highlightTime, initialDelay));
+    }
+
+    return frames;
 }
