@@ -17,7 +17,6 @@ function bubbleSort(array) {
         commands.push("markAsSorted(" + newN + ");");
     }
 
-    console.log(commands);
     $(document).trigger("sort", commands.join('!'));
 
     return array;
