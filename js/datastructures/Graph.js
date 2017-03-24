@@ -49,11 +49,16 @@ Graph.prototype.printPath = function(destName) {
     }
 };
 
+var commands = [];
+
 Graph.prototype.getPathInner = function(dest, pathMap) {
-    if(dest.prev !== null) {
+    if (dest.prev !== null) {
         this.getPathInner(dest.prev, pathMap);
+        commands.push({ name: "colorFast", data: { vertices: [dest.prev, dest] } });
     }
     pathMap[dest.name] = dest.dist;
+    //if(dest.prev != null)
+        
     return pathMap;
 };
 
@@ -69,11 +74,17 @@ Graph.prototype.getPath = function(destName) {
     else {
         var pathMap = this.getPathInner(w, pathMap);
     }
+
+
+
+    //Make sure the unit tests don't fail from a non-existing function
+    if (typeof executeCommands == "function")
+        executeCommands(commands);
+
     return pathMap;
 };
 
 Graph.prototype.dijkstra = function (startName) {
-    var commands = [];
     commands.push({ name: "highlightLines", data: {lines: [0, 2, 3]} })
     var pq = new BinaryHeap();
 
@@ -128,10 +139,6 @@ Graph.prototype.dijkstra = function (startName) {
                 commands.push({ name: "highlightLines", data: { lines: [20] } });
         }
     }
-
-    //Make sure the unit tests don't fail from a non-existing function
-    if(typeof executeCommands == "function")
-        executeCommands(commands);
 };
 
 Graph.prototype.negative = function(startName) { // also called the Bellman-Ford algorithm
