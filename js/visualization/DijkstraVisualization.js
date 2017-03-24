@@ -10,11 +10,10 @@ var lineColors = {
     currentPath: '#255eba',
     pendingPath: '#d8d10a',
     slowPath: '#cc181b',
-    quickPath: '#1ece21',
+    fastPath: '#1ece21',
 }
 
 function addPathColorFrame(path, color, time) {
-    console.log(path, color, time);
     loadingSequence.push({ e: path, p: { fill: color, stroke: color }, o: { duration: time } });
 };
 
@@ -37,7 +36,6 @@ function getLinkElement(a, b) {
         return (l.source.id == a && l.target.id == b) || (l.source.id == b && l.target.id == a);
     });
 
-    console.log(link);
     if(link != null)
         return $(('#linkpath' + link[0].index));
     return null;
@@ -64,6 +62,11 @@ function executeCommands(commands) {
                 var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
                 if (path != null)
                     addPathColorFrame(path, lineColors.slowPath, animationTime);
+                break;
+            case 'colorFast':
+                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+                if (path != null)
+                    addPathColorFrame(path, lineColors.fastPath, animationTime * 5);
                 break;
             case 'highlightLines':
                 loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(commands[i].data.lines, animationTime));
