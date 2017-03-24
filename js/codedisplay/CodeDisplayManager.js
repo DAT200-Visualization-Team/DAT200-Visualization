@@ -14,6 +14,10 @@ function CodeDisplayManager(language, algorithmOrDataStructure) {
         success: function (data) {
             self.codeRoot = data;
             self.currentClass = data[language][algorithmOrDataStructure];
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
         }
     });
 }
@@ -21,7 +25,7 @@ function CodeDisplayManager(language, algorithmOrDataStructure) {
 CodeDisplayManager.prototype.loadFunctions = function () {
     $("#code-text").empty();
     for (var i = 0; i < arguments.length; i++) {
-        $("#code-text").append("<span id='" + arguments[i] + "'>" + this.currentClass[arguments[i]].header + "\n")
+        $("#code-text").append("<span id='" + arguments[i] + "'>" + this.currentClass[arguments[i]].header + "\n");
         for(var j = 0; j < this.currentClass[arguments[i]].lines.length; j++)
             $("#" + arguments[i]).append(this.makeHighlightSpan(this.currentClass[arguments[i]].lines[j]));
 
@@ -66,4 +70,4 @@ CodeDisplayManager.prototype.getVelocityFramesForHighlight = function (index, hi
         { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 1 }, o: { duration: highlightTime / 2, delay: initialDelay } },
         { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 0 }, o: { duration: highlightTime / 2 } }
     ];
-}
+};
