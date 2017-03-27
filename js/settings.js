@@ -55,6 +55,12 @@ function readUploadedFile() {
 }
 
 function redirectToCorrectPageForUpload(object) {
+    if (object.hasOwnProperty('graph')) {
+        setCookie('uploadedVariable', JSON.stringify(object), 1);
+        window.location.reload();
+        return;
+    }
+
     $.ajax({
         url: './js/templateHelpers/categoryData.json',
         dataType: 'json',
@@ -70,11 +76,14 @@ function redirectToCorrectPageForUpload(object) {
 
             for(var i = 0; i < types.length; i++) {
                 if (Object.keys(object)[0].toLowerCase() == types[i]) {
-                    document.location.href = './' + types[i] + '.html';
-
-                    setCookie('uploadedVariable', JSON.stringify(object), 1);
+                    saveAndRedirect(types[i], JSON.stringify(object));
                 }
             }
         }
     });
+}
+
+function saveAndRedirect(pageName, object) {
+    document.location.href = './' + pageName + '.html';
+    setCookie('uploadedVariable', JSON.stringify(object), 1)
 }

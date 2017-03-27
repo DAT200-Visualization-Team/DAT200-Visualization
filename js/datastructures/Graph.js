@@ -85,12 +85,12 @@ Graph.prototype.getPath = function(destName) {
 };
 
 Graph.prototype.dijkstra = function (startName) {
-    commands.push({ name: "highlightLines", data: {lines: [0, 2, 3]} })
+    commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     var pq = new BinaryHeap();
 
     var start = this.vertexMap[startName];
     if (start === undefined || start === null) {
-        commands.push({ name: "highlightLines", data: { lines: [4] } })
+        commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
     commands.push({ name: "highlightLines", data: { lines: [6, 7, 8, 10] } });
@@ -141,40 +141,53 @@ Graph.prototype.dijkstra = function (startName) {
     }
 };
 
-Graph.prototype.negative = function(startName) { // also called the Bellman-Ford algorithm
+Graph.prototype.negative = function (startName) { // also called the Bellman-Ford algorithm
+    commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     this.clearAll();
-
+    
     var start = this.vertexMap[startName];
-    if(start === undefined || null) {
+    if (start == null) {
+        commands.push({ name: "highlightLines", data: { lines: [4] } })
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
-
+    commands.push({ name: "highlightLines", data: { lines: [7, 8, 9, 10] } });
     var q = new LinkedList();
     q.addLast(start);
     start.dist = 0;
     start.scratch++;
-
-    while(!q.isEmpty()) {
+    
+    while (!q.isEmpty()) {
+        commands.push({ name: "highlightLines", data: { lines: [12, 13, 14] } });
         var v = q.removeFirst();
-        if(v.scratch++ > 2 * Object.keys(this.vertexMap).length) {
-            //throw {name: "GraphException", message: "Negative cycle detected"};
-            throw new Error("Negative cycle detected");
+        if (v.scratch++ > 2 * Object.keys(this.vertexMap).length) {
+            commands.push({ name: "highlightLines", data: { lines: [15] } });
+            throw {name: "GraphException", message: "Negative cycle detected"};
         }
-
-        for(var itr = v.adj.iterator(0); itr.hasNext(); ) {
+        
+        for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
+            commands.push({ name: "highlightLines", data: { lines: [18, 19, 20, 21, 23] } });
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
-
-            if(w.dist > v.dist + cvw) {
+            
+            commands.push({ name: "colorCurrent", data: { vertices: [v, w] } });
+            if (w.dist > v.dist + cvw) {
+                commands.push({ name: "highlightLines", data: { lines: [24, 25, 27] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 // Enqueue only if not already on the queue
-                if(w.scratch++ % 2 === 0) {
+                if (w.scratch++ % 2 === 0) {
+                    commands.push({ name: "highlightLines", data: { lines: [28] } })
+                    commands.push({ name: "colorPending", data: { vertices: [v, w] } });
                     q.addLast(w);
                 } else {
+                    commands.push({ name: "highlightLines", data: { lines: [29, 30] } })
+                    commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
                     w.scratch--; // undo the enqueue increment
                 }
+            }
+            else {
+                commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
             }
         }
     }

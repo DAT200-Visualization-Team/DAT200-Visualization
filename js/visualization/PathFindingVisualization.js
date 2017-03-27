@@ -3,8 +3,7 @@ var graph;
 var animationTime = 200;
 
 var codeDisplayManager = new CodeDisplayManager('javascript', 'graph');
-codeDisplayManager.loadFunctions('dijkstra');
-codeDisplayManager.changeFunction('dijkstra');
+var currentAlgorithm;
 
 var lineColors = {
     currentPath: '#255eba',
@@ -12,6 +11,21 @@ var lineColors = {
     slowPath: '#cc181b',
     fastPath: '#1ece21',
 }
+
+$(document).ready(function () {
+    switch (window.location.pathname) {
+        case '/dijkstra.html':
+            codeDisplayManager.loadFunctions('dijkstra');
+            codeDisplayManager.changeFunction('dijkstra');
+            currentAlgorithm = 'dijkstra';
+            break;
+        case '/bellmanford.html':
+            codeDisplayManager.loadFunctions('bellmanford');
+            codeDisplayManager.changeFunction('bellmanford');
+            currentAlgorithm = 'bellmanford';
+            break;
+    }
+});
 
 function addPathColorFrame(path, color, time) {
     loadingSequence.push({ e: path, p: { fill: color, stroke: color }, o: { duration: time } });
@@ -80,14 +94,14 @@ function executeCommands(commands) {
 }
 
 $('#download-button, #download-button-mobile').on('click', function () {
-    var dijkstra = {};
-    dijkstra.nodes = nodes;
-    dijkstra.links = links;
-    downloadObjectJson(dijkstra, 'dijkstra');
+    var graph = {};
+    graph.nodes = nodes;
+    graph.links = links;
+    downloadObjectJson(graph, 'graph');
 });
 
 function processUploadedObject(object) {
-    nodes = object.dijkstra.nodes;
-    links = object.dijkstra.links;
+    nodes = object.graph.nodes;
+    links = object.graph.links;
     restart()
 }
