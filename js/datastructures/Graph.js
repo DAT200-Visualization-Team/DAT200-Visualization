@@ -75,8 +75,6 @@ Graph.prototype.getPath = function(destName) {
         var pathMap = this.getPathInner(w, pathMap);
     }
 
-
-
     //Make sure the unit tests don't fail from a non-existing function
     if (typeof executeCommands == "function")
         executeCommands(commands);

@@ -27,9 +27,26 @@ $(document).ready(function () {
     }
 });
 
+function performPathFinding(algorithm, start, end) {
+    loadingSequence = [];
+    resetLinkColors();
+    buildGraph();
+
+    if (algorithm === 'bellmanford')
+        graph.negative(start);
+    else
+        graph.dijkstra(start);
+
+    graph.getPath(end);
+}
+
 function addPathColorFrame(path, color, time) {
     loadingSequence.push({ e: path, p: { fill: color, stroke: color }, o: { duration: time } });
 };
+
+function resetLinkColors() {
+    d3.selectAll('.link').transition().duration(1000).style('stroke', '#000000');
+}
 
 function playAnimation() {
     $.Velocity.RunSequence(loadingSequence);
@@ -53,10 +70,6 @@ function getLinkElement(a, b) {
     if(link != null)
         return $(('#linkpath' + link[0].index));
     return null;
-}
-
-function clearSequence() {
-    loadingSequence = [];
 }
 
 function executeCommands(commands) {
