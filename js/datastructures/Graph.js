@@ -114,7 +114,9 @@ Graph.prototype.dijkstra = function (startName) {
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
-            commands.push({ name: "colorCurrent", data: { vertices: [v, w]} });
+
+            if (w != v.prev)
+                commands.push({ name: "colorCurrent", data: { vertices: [v, w]} });
 
             if (cvw < 0) {
                 commands.push({ name: "highlightLines", data: { lines: [26] } });
@@ -130,7 +132,8 @@ Graph.prototype.dijkstra = function (startName) {
                 commands.push({ name: "colorPending", data: { vertices: [v, w] } });
             }
             else {
-                commands.push({ name: "colorSlow", data: { vertices: [v, w], totalCost: v.dist + cvw } });
+                if (w != v.prev)
+                    commands.push({ name: "colorSlow", data: { vertices: [v, w], totalCost: v.dist + cvw } });
             }
 
             if(!itr.hasNext())
@@ -168,7 +171,8 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
             var w = e.dest;
             var cvw = e.cost;
             
-            commands.push({ name: "colorCurrent", data: { vertices: [v, w] } });
+            if (w != v.prev)
+                commands.push({ name: "colorCurrent", data: { vertices: [v, w] } });
             if (w.dist > v.dist + cvw) {
                 commands.push({ name: "highlightLines", data: { lines: [24, 25, 27] } });
                 w.dist = v.dist + cvw;
@@ -180,12 +184,12 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
                     q.addLast(w);
                 } else {
                     commands.push({ name: "highlightLines", data: { lines: [29, 30] } })
-                    commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
                     w.scratch--; // undo the enqueue increment
                 }
             }
             else {
-                commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
+                if(w != v.prev)
+                    commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
             }
         }
     }
