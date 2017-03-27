@@ -19,7 +19,9 @@ var xPosPegA = 0;
 var xPosPegB = 0;
 var xPosPegC = 0;
 
-var animationTime = 1000;
+var baseAnimationTime = 1000;
+var animationTime = baseAnimationTime; // can be adjusted by user
+
 
 var codeDisplayManager;
 
