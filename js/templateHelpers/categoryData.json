@@ -90,6 +90,21 @@
           "name": "Queue"
         }
       ]
+    },
+    {
+      "id": "otheralgorithms",
+      "name": "Other algorithms",
+      "image": "http://www.computerhope.com/jargon/a/algorithm.jpg",
+      "subCategories": [
+        {
+          "id": "towerofhanoi",
+          "name": "Tower of Hanoi"
+        },
+        {
+          "id": "fibonacci",
+          "name": "Fibonacci"
+        }
+      ]
     }
   ]
 }

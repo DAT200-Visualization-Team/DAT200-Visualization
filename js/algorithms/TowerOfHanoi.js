@@ -45,8 +45,7 @@ function doHanoi() {
     var from = $("#from").val().toString();
     var to = $("#to").val().toString();
     var speed = parseInt($("#speed").val());
-
-    animationTime /= speed;
+    animationTime = baseAnimationTime / speed;
 
     var arr = ["A", "B", "C"].filter(function(value) {
         return from !== value && to !== value;
