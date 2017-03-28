@@ -10,6 +10,16 @@ var svg = d3.select('#graphics')
   .attr('height', height)
   .attr('text-rendering', 'optimizeLegibility');
 
+$('#graphics').resize(function () {
+    width = $('#graphics').width();
+    height = $('#graphics').height();
+    svg.attr('width', width);
+    svg.attr('height', height);
+    force.force('center', d3.forceCenter(width / 2, height / 2))
+    force.alpha(0.05).restart();
+});
+
+
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
