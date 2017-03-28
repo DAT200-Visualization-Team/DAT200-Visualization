@@ -31,8 +31,8 @@ var force = d3.forceSimulation()
     .force('charge', d3.forceManyBody().strength(-500))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collide', d3.forceCollide(function (d) { return d.r; }).iterations(16))
-    .force("y", d3.forceY(0))
-    .force("x", d3.forceX(0))
+    .force('y', d3.forceY(0))
+    .force('x', d3.forceX(0))
     .on('tick', tick);
 
 // define arrow markers for graph links
@@ -65,26 +65,8 @@ var drag_line = svg.append('svg:path')
 
 // handles to link and node element groups
 var path = svg.append('svg:g').selectAll('path'),
+    linklabels = svg.append('svg:g').selectAll('text'),
     circle = svg.append('svg:g').selectAll('g');
-
-linklabels = svg.selectAll(".linklabel")
-        .data(links)
-        .enter()
-        .append('text')
-        .style("pointer-events", "none")
-        .style("font-size", "30px")
-        .style("fill", "#b72121")
-        .style("alignment-baseline", "baseline")
-        .style("dominant-baseline", "baseline");
-
-linklabels.append('textPath')
-        .attr('startOffset', '50%')
-        .attr('href', function (d, i) { return '#linkpath' + i })
-        .style("pointer-events", "none")
-        .style("text-anchor", "middle")
-        .style("alignment-baseline", "baseline")
-        .style("dominant-baseline", "baseline")
-        .text(function (d, i) { return d.cost });
 
 
 // mouse event vars
@@ -92,7 +74,8 @@ var selected_node = null,
     selected_link = null,
     mousedown_link = null,
     mousedown_node = null,
-    mouseup_node = null;
+    mouseup_node = null,
+    selected_label = null;
 
 function resetMouseVars() {
     mousedown_node = null;
@@ -122,18 +105,19 @@ function tick() {
         return 'translate(' + d.x + ',' + d.y + ')';
     });
 
-    linklabels.attr('transform', function (d, i) {
-        if (d.target.x < d.source.x) {
-            bbox = this.getBBox();
-            rx = bbox.x + bbox.width / 2;
-            ry = bbox.y + bbox.height / 2;
-            return 'rotate(180 ' + rx + ' ' + ry + ')';
-        }
-        else {
-            return 'rotate(0)';
-        }
-    });
-
+    if (linklabels != null) {
+        linklabels.attr('transform', function (d, i) {
+            if (d.target.x < d.source.x) {
+                bbox = this.getBBox();
+                rx = bbox.x + bbox.width / 2;
+                ry = bbox.y + bbox.height / 2;
+                return 'rotate(180 ' + rx + ' ' + ry + ')';
+            }
+            else {
+                return 'rotate(0)';
+            }
+        });
+    }
 }
 
 // update graph (called when needed)
@@ -150,7 +134,7 @@ function restart() {
     // add new links
     var p = path.enter().append('svg:path')
       .attr('class', 'link')
-      .attr('id', function(d, i){return "linkpath" + i})
+      .attr('id', function(d, i){return 'linkpath' + i})
       .classed('selected', function (d) { return d === selected_link; })
       .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
       .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; })
@@ -175,19 +159,64 @@ function restart() {
 
     // add new link labels
     var l = linklabels.enter().append('text')
-        .style("pointer-events", "none")
-        .style("font-size", "30px")
-        .style("fill", "#b72121")
-        .style("alignment-baseline", "baseline")
-        .style("dominant-baseline", "baseline")
+        .style('pointer-events', 'all')
+        .style('font-size', '30px')
+        .style('fill', '#b72121')
+        .style('alignment-baseline', 'baseline')
+        .style('dominant-baseline', 'baseline')
         .append('textPath')
             .attr('startOffset', '50%')
             .attr('href', function (d, i) { return '#linkpath' + i })
-            .style("pointer-events", "none")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "baseline")
-            .style("dominant-baseline", "baseline")
-            .text(function (d, i) { return d.cost });
+            .style('pointer-events', 'all')
+            .style('text-anchor', 'middle')
+            .style('alignment-baseline', 'baseline')
+            .style('dominant-baseline', 'baseline')
+            .text(function (d, i) { return d.cost })
+            .on('mousedown', function (d) {
+                var windowPosition = d3.mouse(this);
+                selected_label = d;
+
+                windowPosition[0] += 50;
+                windowPosition[1] += 50;
+
+                var container = d3.select('body')
+                    .append('div')
+                    .attr('id', 'inputcontainer')
+                    .style('position', 'absolute')
+                    .style('left', windowPosition[0] + 'px')
+                    .style('top', windowPosition[1] + 'px')
+                    .style('width', '100px')
+                    .append('form');
+
+                container.append('input')
+                    .attr('id', 'costinput')
+                    .attr('type', 'text');
+
+                container.append('input')
+                    .attr('type', 'submit')
+                    .style('display', 'none');
+
+                container.on('submit', function () {
+                    console.log();
+                    d3.event.preventDefault();
+                    var value = d3.select('#costinput').property('value');
+                    console.log(value);
+
+                    if (isNaN(value) || !/\S/.test(value)) {
+                        window.alert('The cost can only be a number');
+                    }
+                    else {
+                        d.cost = value;
+                        restart();
+                    }
+
+                    selected_label = null;
+                    d3.select('#inputcontainer').remove();
+                });
+            });
+
+    //Update cost
+    linklabels.text(function (d) { return d.cost });
 
     // remove old link labels
     linklabels.exit().remove();
@@ -312,7 +341,7 @@ function mousedown() {
     // because :active only works in WebKit?
     svg.classed('active', true);
 
-    if (d3.event.ctrlKey || mousedown_node || mousedown_link) return;
+    if (d3.event.ctrlKey || mousedown_node || mousedown_link || selected_label != null) return;
 
     // insert new node at point
     var point = d3.mouse(this),
@@ -361,6 +390,7 @@ function spliceLinksForNode(node) {
 var lastKeyDown = -1;
 
 function keydown() {
+    if (selected_label != null) return;
     d3.event.preventDefault();
     if (lastKeyDown !== -1) return;
     lastKeyDown = d3.event.keyCode;
@@ -442,7 +472,7 @@ function keyup() {
 
     // ctrl
     if (d3.event.keyCode === 17) {
-        circle.on(".drag", null);
+        circle.on('.drag', null);
         svg.classed('ctrl', false);
     }
 }
