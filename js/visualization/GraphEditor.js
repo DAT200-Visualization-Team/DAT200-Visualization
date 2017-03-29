@@ -23,16 +23,9 @@ $('#graphics').resize(function () {
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
-var nodes = [
-    { id: 0, reflexive: false },
-    { id: 1, reflexive: true },
-    { id: 2, reflexive: false }
-],
+var nodes = [],
   lastNodeId = 2,
-  links = [
-    { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
-    { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
-  ];
+  links = [];
 
 function processUploadedObject(object) {
     mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
@@ -98,6 +91,8 @@ function resetMouseVars() {
 
 // update force layout (called automatically each iteration)
 function tick() {
+    if (nodes == null || nodes.length == 0) return;
+
     // draw directed edges with proper padding from node centers
     path.attr('d', function (d) {
         var deltaX = d.target.x - d.source.x,
@@ -146,7 +141,7 @@ function restart() {
     // add new links
     var p = path.enter().append('svg:path')
       .attr('class', 'link')
-      .attr('id', function(d, i){return 'linkpath' + i})
+      .attr('id', function (d, i) { return 'linkpath' + i })
       .classed('selected', function (d) { return d === selected_link; })
       .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
       .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; })
@@ -365,7 +360,7 @@ function mousedown() {
     node.x = point[0];
     node.y = point[1];
     nodes.push(node);
-    
+
     restart();
 }
 
@@ -507,15 +502,12 @@ function mapNodeReferences(nodeData, linkData) {
                 links[i].target = nodes[j];
             if (nodes[i].id > highestId) highestId = nodes[i].id;
         }
-
-        console.log(links[i].source.x);
     }
 
     lastNodeId = highestId;
 }
 
 function processUploadedObject(object) {
-    console.log(object.graphdata.nodes)
     mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
     restart();
 }
@@ -525,6 +517,22 @@ $('#download-button, #download-button-mobile').on('click', function () {
     graphdata.nodes = nodes;
     graphdata.links = links;
     downloadObjectJson(graphdata, 'graphdata');
+});
+
+$(document).ready(function () {
+    if (nodes.length == null || nodes.length == 0) {
+        nodes = [
+            { id: 0, reflexive: false },
+            { id: 1, reflexive: true },
+            { id: 2, reflexive: false }
+        ]
+
+        links = [
+            { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
+            { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
+        ];
+        restart();
+    }
 });
 
 // app starts here
