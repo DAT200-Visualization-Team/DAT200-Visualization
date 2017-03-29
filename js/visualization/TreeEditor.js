@@ -1,19 +1,19 @@
 //http://bl.ocks.org/NPashaP/7683252
 
 /*
-** This program is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
  # Change Log
@@ -66,9 +66,10 @@ function tree() {
     };
 
     tree.addLeaf = function (_) {
+        //console.log(_);
         function addLeaf(t) {
             if (t.v == _) {
-                if(t.c.length >= 2) return;
+                if (t.c.length >= 2) return;
                 t.c.push({v: tree.size++, l: '?', p: {}, c: []});
                 return;
             }
@@ -76,6 +77,56 @@ function tree() {
         }
 
         addLeaf(tree.vis);
+        reposition(tree.vis);
+        if (tree.glabels.length != 0) {
+            tree.glabels = [];
+            relabel(
+                {
+                    lbl: d3.range(0, tree.size).map(function (d) {
+                        return '?';
+                    })
+                });
+            d3.select("#labelnav").style('visibility', 'hidden');
+        }
+        redraw();
+    };
+
+    tree.removeLeaf = function (_) {
+        function removeLeaf(t) {
+            if (t.v == _) {
+                console.log("match.com");
+                if (t.c.length === 0) {
+                    console.log('removable');
+                    var all = tree.getVertices();
+                    var f;
+                    all.forEach(function(d) {
+                        if(d.v === _) {
+                            console.log("found parent v: " + d.f.v);
+                            f = d.f.v;
+                            return;
+                        }
+                    });
+                    //The following code does not support remove when parent is v=0
+                    //because of tree.vis.c.forEach
+                    tree.vis.c.forEach(function(d) {
+                        if(d.v === f) {
+                            console.log("Iterated to parent (" + d.v + ") and ready to remove c subarray");
+                            //console.log(d.c);
+                            if(d.c[0].v === _) {
+                                console.log("removed" + d.c.shift());
+                            }
+                            else if(d.c[1].v === _) {
+                                console.log("removed" + d.c.pop());
+                            }
+                            return;
+                        }
+                    });
+                }
+            }
+            t.c.forEach(removeLeaf);
+        }
+
+        removeLeaf(tree.vis);
         reposition(tree.vis);
         if (tree.glabels.length != 0) {
             tree.glabels = [];
@@ -146,10 +197,11 @@ function tree() {
             return d.f.p.y;
         }).attr('r', vRad)
             .on('click', function (d) {
-                //console.log(getLeafCount(tree.getVertices()[d.v]));
-                //console.log(tree.getVertices()[d.v], d);
-                //console.log(getChildrenCount(d));
-                return tree.addLeaf(d.v);
+                if (d3.event.shiftKey) {
+                    //console.log("shiftKey held");
+                    return tree.removeLeaf(d.v);
+                }
+                else return tree.addLeaf(d.v);
             })
             .transition().duration(500).attr('cx', function (d) {
             return d.p.x;
@@ -176,8 +228,11 @@ function tree() {
             .text(function (d) {
                 return d.l;
             }).on('click', function (d) {
-                //console.log(getLeafCount(tree.getVertices()[d.v]));
-                return tree.addLeaf(d.v);
+                if (d3.event.shiftKey) {
+                    //console.log("shiftKey held");
+                    return tree.removeLeaf(d.v);
+                }
+                else return tree.addLeaf(d.v);
             })
             .transition().duration(500)
             .attr('x', function (d) {
@@ -188,7 +243,6 @@ function tree() {
     };
 
     getLeafCount = function (_) {
-        //console.log(_);
         if (_.c.length == 0) return 1;
         else return _.c.map(getLeafCount).reduce(function (a, b) {
             return a + b;
@@ -209,7 +263,7 @@ function tree() {
 
     initialize = function () {
 
-        d3.select(".body").append("svg").attr("width", svgW).attr("height", svgH).attr('id', 'treesvg');
+        d3.select(".body").append("svg").attr("width", svgW).attr("height", svgH).attr('id', 'treesvg').attr('class', 'noselect');
 
         d3.select("#treesvg").append('g').attr('id', 'g_lines').selectAll('line').data(tree.getEdges()).enter().append('line')
             .attr('x1', function (d) {
@@ -231,7 +285,6 @@ function tree() {
             return d.p.y;
         }).attr('r', vRad)
             .on('click', function (d) {
-                //console.log(getLeafCount(this));
                 return tree.addLeaf(d.v);
             });
 
@@ -244,7 +297,6 @@ function tree() {
                 return d.l;
             })
             .on('click', function (d) {
-                //console.log(getLeafCount(this));
                 return tree.addLeaf(d.v);
             });
 
