@@ -153,6 +153,7 @@ function tree() {
     redraw = function () {
         var edges = d3.select("#g_lines").selectAll('line').data(tree.getEdges());
 
+        //Velger alle #g_lines og setter verdiene på koordinatene etter hva de er i tree.getEdges
         edges.transition().duration(500)
             .attr('x1', function (d) {
                 return d.p1.x;
@@ -165,6 +166,7 @@ function tree() {
             return d.p2.y;
         });
 
+        //Setter inn en ny linje som er hentet fra tree.getEdges
         edges.enter().append('line')
             .attr('x1', function (d) {
                 return d.p1.x;
@@ -185,12 +187,14 @@ function tree() {
 
         var circles = d3.select("#g_circles").selectAll('circle').data(tree.getVertices());
 
+        //Velger alle #g_circles og setter verdiene på koordinatene etter hva de er i tree.getVertices
         circles.transition().duration(500).attr('cx', function (d) {
             return d.p.x;
         }).attr('cy', function (d) {
             return d.p.y;
         });
 
+        //Setter inn en sirkel som er hentet fra tree.getVertices, og når man trykker på denne vil den nye noden lages
         circles.enter().append('circle').attr('cx', function (d) {
             return d.f.p.x;
         }).attr('cy', function (d) {
@@ -276,7 +280,6 @@ function tree() {
             }).attr('y2', function (d) {
             return d.p2.y;
         });
-        //console.log(d3.select("#treesvg").data(tree.getEdges()).enter().append('line'));
 
         d3.select("#treesvg").append('g').attr('id', 'g_circles').selectAll('circle').data(tree.getVertices()).enter()
             .append('circle').attr('cx', function (d) {
@@ -298,16 +301,6 @@ function tree() {
             })
             .on('click', function (d) {
                 return tree.addLeaf(d.v);
-            });
-
-        d3.select("#treesvg").append('g').attr('id', 'g_elabels').selectAll('text').data(tree.getEdges()).enter().append('text')
-            .attr('x', function (d) {
-                return (d.p1.x + d.p2.x) / 2 + (d.p1.x < d.p2.x ? 8 : -8);
-            }).attr('y', function (d) {
-                return (d.p1.y + d.p2.y) / 2;
-            })
-            .text(function (d) {
-                return tree.glabels.length == 0 ? '' : Math.abs(d.l1 - d.l2);
             });
 
 
