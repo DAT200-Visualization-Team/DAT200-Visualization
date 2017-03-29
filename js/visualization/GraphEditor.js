@@ -16,7 +16,7 @@ $('#graphics').resize(function () {
     svg.attr('width', width);
     svg.attr('height', height);
     force.force('center', d3.forceCenter(width / 2, height / 2))
-    force.alpha(0.05).restart();
+    force.alpha(0.02).restart();
 });
 
 // set up initial nodes and links
@@ -33,6 +33,11 @@ var nodes = [
     { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
     { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
   ];
+
+function processUploadedObject(object) {
+    mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
+    restart();
+}
 
 var force = d3.forceSimulation()
     .nodes(nodes)
@@ -342,7 +347,7 @@ function restart() {
     force.force('link').links(links);
 
     // set the graph in motion
-    force.alpha(0.05).restart();
+    force.alpha(0.02).restart();
 }
 
 function mousedown() {
@@ -487,6 +492,34 @@ function keyup() {
         svg.classed('ctrl', false);
     }
 }
+
+function mapNodeReferences(nodeData, linkData) {
+    nodes = nodeData;
+    links = [];
+    for (var i = 0; i < linkData.length; i++) {
+        var linkObject = { source: null, target: null, left: linkData[i].left, right: linkData[i].right, cost: linkData[i].cost, index: linkData[i].index };
+
+        for (var j = 0; j < nodes.length; j++) {
+            if (linkData[i].source.id === nodes[j].id)
+                linkObject.source = nodes[j];
+            if (linkData[i].target.id === nodes[j].id)
+                linkObject.target = nodes[j];
+        }
+        links.push(linkObject);
+    }
+}
+
+function processUploadedObject(object) {
+    mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
+    restart();
+}
+
+$('#download-button, #download-button-mobile').on('click', function () {
+    var graphData = {};
+    graphdata.nodes = nodes;
+    graphdata.links = links;
+    downloadObjectJson(graphdata, 'graphdata');
+});
 
 // app starts here
 svg.on('mousedown', mousedown)

@@ -55,7 +55,7 @@ function readUploadedFile() {
 }
 
 function redirectToCorrectPageForUpload(object) {
-    if (object.hasOwnProperty('graph')) {
+    if (object.hasOwnProperty('graphdata')) {
         setCookie('uploadedVariable', JSON.stringify(object), 1);
         window.location.reload();
         return;
