@@ -5,10 +5,10 @@ $(document).ready(function(){
     $('select').material_select();
     $('#file-input').on('change', readUploadedFile);
 
-    var uploadedObject = getCookie('uploadedVariable');
+    var uploadedObject = localStorage.getItem('tmpVariable');
 
-    if (uploadedObject != '') {
-        deleteCookie('uploadedVariable');
+    if (uploadedObject != null) {
+        localStorage.removeItem('tmpVariable');
         processUploadedObject(JSON.parse(uploadedObject));
     }
 });
@@ -56,7 +56,7 @@ function readUploadedFile() {
 
 function redirectToCorrectPageForUpload(object) {
     if (object.hasOwnProperty('graphdata')) {
-        setCookie('uploadedVariable', JSON.stringify(object), 1);
+        localStorage.setItem('tmpVariable', JSON.stringify(object));
         window.location.reload();
         return;
     }
@@ -85,5 +85,5 @@ function redirectToCorrectPageForUpload(object) {
 
 function saveAndRedirect(pageName, object) {
     document.location.href = './' + pageName + '.html';
-    setCookie('uploadedVariable', JSON.stringify(object), 1)
+    localStorage.setItem('tmpVariable', JSON.stringify(object));
 }

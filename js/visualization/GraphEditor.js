@@ -500,7 +500,7 @@ function mapNodeReferences(nodeData, linkData) {
                 links[i].source = nodes[j];
             if (linkData[i].target.id === nodes[j].id)
                 links[i].target = nodes[j];
-            if (nodes[i].id > highestId) highestId = nodes[i].id;
+            if (nodes[j].id > highestId) highestId = nodes[i].id;
         }
     }
 
@@ -521,6 +521,7 @@ $('#download-button, #download-button-mobile').on('click', function () {
 
 $(document).ready(function () {
     if (nodes.length == null || nodes.length == 0) {
+
         nodes = [
             { id: 0, reflexive: false },
             { id: 1, reflexive: true },
@@ -535,12 +536,10 @@ $(document).ready(function () {
     }
 });
 
-// app starts here
+// assign event handlers
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
-
-restart();
