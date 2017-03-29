@@ -4,25 +4,25 @@
       "constructor": {
         "header": "function Stack() {",
         "lines": [
-          "  this.arrayList = new ArrayList();"
+          "  this.arrayList = new ArrayList();", "}"
         ]
       },
       "isEmpty": {
         "header": "Stack.prototype.isEmpty = function () {",
         "lines": [
-          "  return this.arrayList.size() === 0;"
+          "  return this.arrayList.size() === 0;", "}"
         ]
       },
       "makeEmpty": {
         "header": "Stack.prototype.makeEmpty = function () {",
         "lines": [
-          "  this.arrayList.clear();"
+          "  this.arrayList.clear();", "}"
         ]
       },
       "push": {
         "header": "Stack.prototype.push = function (element) {",
         "lines": [
-          "  this.arrayList.add(element);"
+          "  this.arrayList.add(element);", "}"
         ]
       },
       "top": {
@@ -30,7 +30,8 @@
         "lines": [
           "  if (this.isEmpty())",
           "    throw { name: 'UnderflowException', message: 'ArrayList is empty' };",
-          "  return this.arrayList.get(this.arrayList.size() - 1);"
+          "  return this.arrayList.get(this.arrayList.size() - 1);",
+          "}"
         ]
       },
       "pop": {
@@ -38,7 +39,8 @@
         "lines": [
           "  if(this.isEmpty())",
           "    throw { name: 'UnderflowException', message: 'ArrayList is empty' };",
-          "  return this.arrayList.removeAtPos(this.arrayList.size() - 1);"
+          "  return this.arrayList.removeAtPos(this.arrayList.size() - 1);",
+          "}"
         ]
       }
     },
@@ -49,13 +51,15 @@
           "  this.theArray = [];",
           "  this.currentSize = 0;",
           "  this.front = 0;",
-          "  this.back = -1;"
+          "  this.back = -1;",
+          "}"
         ]
       },
       "isEmpty": {
         "header": "Queue.prototype.isEmpty = function() {",
         "lines": [
-          "  return this.currentSize === 0;"
+          "  return this.currentSize === 0;",
+          "}"
         ]
       },
       "makeEmpty": {
@@ -63,7 +67,8 @@
         "lines": [
           "  this.currentSize = 0;",
           "  this.front = 0;",
-          "  this.back = -1;"
+          "  this.back = -1;",
+          "}"
         ]
       },
       "increment": {
@@ -73,7 +78,8 @@
           "  if(x === this.theArray.length) {",
           "      x = 0;",
           "  }",
-          "  return x;"
+          "  return x;",
+          "}"
         ]
       },
       "enqueue": {
@@ -84,7 +90,8 @@
           "  }",
           "  this.back = this.increment(this.back);",
           "  this.theArray[this.back] = x;",
-          "  this.currentSize++;"
+          "  this.currentSize++;",
+          "}"
         ]
       },
       "dequeue": {
@@ -96,7 +103,8 @@
           "  this.currentSize--;",
           "  var returnVal = this.theArray[this.front];",
           "  this.front = this.increment(this.front);",
-          "  return returnVal;"
+          "  return returnVal;",
+          "}"
         ]
       },
       "getFront": {
@@ -105,7 +113,8 @@
           "  if(this.isEmpty()) {",
           "      throw {name: 'UnderflowException', message: 'Queue is empty (getFront)'};",
           "  }",
-          "  return this.theArray[this.front];"
+          "  return this.theArray[this.front];",
+          "}"
         ]
       },
       "doubleQueue": {
@@ -117,7 +126,8 @@
           "  }",
           "  this.theArray = newArray;",
           "  this.front = 0;",
-          "  this.back = this.currentSize - 1;"
+          "  this.back = this.currentSize - 1;",
+          "}"
         ]
       }
     },
@@ -129,7 +139,8 @@
           "        return;",
           "    hanoi(disks - 1, from, temp, to);",
           "    console.log(\"Moving disc \" + disks + \" from \" + from + \" to \" + to);",
-          "    hanoi(disks - 1, temp, to, from);"
+          "    hanoi(disks - 1, temp, to, from);",
+          "}"
         ]
       }
     },
