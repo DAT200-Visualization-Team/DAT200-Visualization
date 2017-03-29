@@ -496,26 +496,32 @@ function keyup() {
 function mapNodeReferences(nodeData, linkData) {
     nodes = nodeData;
     links = [];
+    var highestId = 0;
     for (var i = 0; i < linkData.length; i++) {
-        var linkObject = { source: null, target: null, left: linkData[i].left, right: linkData[i].right, cost: linkData[i].cost, index: linkData[i].index };
+        links.push({ source: null, target: null, left: linkData[i].left, right: linkData[i].right, cost: linkData[i].cost, index: linkData[i].index });
 
         for (var j = 0; j < nodes.length; j++) {
             if (linkData[i].source.id === nodes[j].id)
-                linkObject.source = nodes[j];
+                links[i].source = nodes[j];
             if (linkData[i].target.id === nodes[j].id)
-                linkObject.target = nodes[j];
+                links[i].target = nodes[j];
+            if (nodes[i].id > highestId) highestId = nodes[i].id;
         }
-        links.push(linkObject);
+
+        console.log(links[i].source.x);
     }
+
+    lastNodeId = highestId;
 }
 
 function processUploadedObject(object) {
+    console.log(object.graphdata.nodes)
     mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
     restart();
 }
 
 $('#download-button, #download-button-mobile').on('click', function () {
-    var graphData = {};
+    var graphdata = {};
     graphdata.nodes = nodes;
     graphdata.links = links;
     downloadObjectJson(graphdata, 'graphdata');
