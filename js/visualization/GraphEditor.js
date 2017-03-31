@@ -114,7 +114,7 @@ function tick() {
     });
 
     if (linklabels != null) {
-        linklabels.attr('transform', function (d, i) {
+        d3.selectAll('.label').attr('transform', function (d, i) {
             if (d.target.x < d.source.x) {
                 bbox = this.getBBox();
                 rx = bbox.x + bbox.width / 2;
@@ -166,18 +166,15 @@ function restart() {
 
     // add new link labels
     var l = linklabels.enter().append('text')
+        .attr('class', 'label')
         .style('pointer-events', 'all')
         .style('font-size', '30px')
         .style('fill', '#b72121')
-        .style('alignment-baseline', 'baseline')
-        .style('dominant-baseline', 'baseline')
         .append('textPath')
             .attr('startOffset', '50%')
             .attr('href', function (d, i) { return '#linkpath' + i })
             .style('pointer-events', 'all')
             .style('text-anchor', 'middle')
-            .style('alignment-baseline', 'baseline')
-            .style('dominant-baseline', 'baseline')
             .text(function (d, i) { return d.cost })
             .on('mousedown', function (d) {
                 if (selected_label != null) return;
