@@ -16,23 +16,21 @@ $('#graphics').resize(function () {
     svg.attr('width', width);
     svg.attr('height', height);
     force.force('center', d3.forceCenter(width / 2, height / 2))
-    force.alpha(0.05).restart();
+    force.alpha(0.02).restart();
 });
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
-var nodes = [
-    { id: 0, reflexive: false },
-    { id: 1, reflexive: true },
-    { id: 2, reflexive: false }
-],
+var nodes = [],
   lastNodeId = 2,
-  links = [
-    { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
-    { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
-  ];
+  links = [];
+
+function processUploadedObject(object) {
+    mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
+    restart();
+}
 
 var force = d3.forceSimulation()
     .nodes(nodes)
@@ -93,6 +91,8 @@ function resetMouseVars() {
 
 // update force layout (called automatically each iteration)
 function tick() {
+    if (nodes == null || nodes.length == 0) return;
+
     // draw directed edges with proper padding from node centers
     path.attr('d', function (d) {
         var deltaX = d.target.x - d.source.x,
@@ -114,7 +114,7 @@ function tick() {
     });
 
     if (linklabels != null) {
-        linklabels.attr('transform', function (d, i) {
+        d3.selectAll('.label').attr('transform', function (d, i) {
             if (d.target.x < d.source.x) {
                 bbox = this.getBBox();
                 rx = bbox.x + bbox.width / 2;
@@ -141,7 +141,7 @@ function restart() {
     // add new links
     var p = path.enter().append('svg:path')
       .attr('class', 'link')
-      .attr('id', function(d, i){return 'linkpath' + i})
+      .attr('id', function (d, i) { return 'linkpath' + i })
       .classed('selected', function (d) { return d === selected_link; })
       .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
       .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; })
@@ -166,18 +166,16 @@ function restart() {
 
     // add new link labels
     var l = linklabels.enter().append('text')
+        .attr('class', 'label')
         .style('pointer-events', 'all')
         .style('font-size', '30px')
         .style('fill', '#b72121')
-        .style('alignment-baseline', 'baseline')
-        .style('dominant-baseline', 'baseline')
+        .style('font-family', 'Roboto')
         .append('textPath')
             .attr('startOffset', '50%')
             .attr('href', function (d, i) { return '#linkpath' + i })
             .style('pointer-events', 'all')
             .style('text-anchor', 'middle')
-            .style('alignment-baseline', 'baseline')
-            .style('dominant-baseline', 'baseline')
             .text(function (d, i) { return d.cost })
             .on('mousedown', function (d) {
                 if (selected_label != null) return;
@@ -342,7 +340,7 @@ function restart() {
     force.force('link').links(links);
 
     // set the graph in motion
-    force.alpha(0.05).restart();
+    force.alpha(0.02).restart();
 }
 
 function mousedown() {
@@ -360,7 +358,7 @@ function mousedown() {
     node.x = point[0];
     node.y = point[1];
     nodes.push(node);
-    
+
     restart();
 }
 
@@ -488,12 +486,58 @@ function keyup() {
     }
 }
 
-// app starts here
+function mapNodeReferences(nodeData, linkData) {
+    nodes = nodeData;
+    links = [];
+    var highestId = 0;
+    for (var i = 0; i < linkData.length; i++) {
+        links.push({ source: null, target: null, left: linkData[i].left, right: linkData[i].right, cost: linkData[i].cost, index: linkData[i].index });
+
+        for (var j = 0; j < nodes.length; j++) {
+            if (linkData[i].source.id === nodes[j].id)
+                links[i].source = nodes[j];
+            if (linkData[i].target.id === nodes[j].id)
+                links[i].target = nodes[j];
+            if (nodes[j].id > highestId) highestId = nodes[i].id;
+        }
+    }
+
+    lastNodeId = highestId;
+}
+
+function processUploadedObject(object) {
+    mapNodeReferences(object.graphdata.nodes, object.graphdata.links);
+    restart();
+}
+
+$('#download-button, #download-button-mobile').on('click', function () {
+    var graphdata = {};
+    graphdata.nodes = nodes;
+    graphdata.links = links;
+    downloadObjectJson(graphdata, 'graphdata');
+});
+
+$(document).ready(function () {
+    if (nodes.length == null || nodes.length == 0) {
+
+        nodes = [
+            { id: 0, reflexive: false },
+            { id: 1, reflexive: true },
+            { id: 2, reflexive: false }
+        ]
+
+        links = [
+            { source: nodes[0], target: nodes[1], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) },
+            { source: nodes[1], target: nodes[2], left: false, right: true, cost: Math.floor(Math.random() * 10 + 1) }
+        ];
+        restart();
+    }
+});
+
+// assign event handlers
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
   .on('mouseup', mouseup);
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
-
-restart();

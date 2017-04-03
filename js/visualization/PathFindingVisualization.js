@@ -38,6 +38,7 @@ function performPathFinding(algorithm, start, end) {
         graph.dijkstra(start);
 
     graph.getPath(end);
+    playAnimation();
 }
 
 function addPathColorFrame(path, color, time) {
@@ -103,18 +104,4 @@ function executeCommands(commands) {
                 break;
         }
     }
-    playAnimation();
-}
-
-$('#download-button, #download-button-mobile').on('click', function () {
-    var graph = {};
-    graph.nodes = nodes;
-    graph.links = links;
-    downloadObjectJson(graph, 'graph');
-});
-
-function processUploadedObject(object) {
-    nodes = object.graph.nodes;
-    links = object.graph.links;
-    restart()
 }
