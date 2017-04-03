@@ -18,9 +18,9 @@
   }
    
   .link {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1.5px;
+    fill: none !important;
+    stroke: #ccc !important;
+    stroke-width: 1.5px !important;
   }
 
   .templink {
