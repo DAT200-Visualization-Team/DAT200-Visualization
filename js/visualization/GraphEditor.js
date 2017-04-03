@@ -170,6 +170,7 @@ function restart() {
         .style('pointer-events', 'all')
         .style('font-size', '30px')
         .style('fill', '#b72121')
+        .style('font-family', 'Roboto')
         .append('textPath')
             .attr('startOffset', '50%')
             .attr('href', function (d, i) { return '#linkpath' + i })
