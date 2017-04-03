@@ -25,6 +25,8 @@ OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
+// This is based on an upgrade of the tree at http://bl.ocks.org/robschmuecker/7880033 to d3 v4, which is found at
+// https://jsfiddle.net/Tokker/mwm1sxhh/20/ (03.04.2017)
 
 // Get JSON data
 treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData) {
@@ -41,13 +43,14 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     // Misc. variables
     var i = 0;
     var duration = 750;
+
     var root = d3.hierarchy(treeData, function (d) { return d.children; });
+
     // size of the diagram
     var viewerWidth = $(document).width();
     var viewerHeight = $(document).height();
 
     var treemap;
-    //var tree = d3.tree().size([viewerHeight, viewerWidth]);
 
     // A recursive helper function for performing some setup by walking through all nodes
     function visit(parent, visitFn, childrenFn) {
@@ -66,16 +69,8 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     visit(treeData, function (d) {
         totalNodes++;
         maxLabelLength = Math.max(d.name.length, maxLabelLength);
-    },
-							      function (d) { return d.children && d.children.length > 0 ? d.children : null; });
-    // sort the tree according to the node names
-    function sortTree() {
-        //tree.sort(function(a, b) {
-        //    return b.name.toLowerCase() < a.name.toLowerCase() ? 1 : -1;
-        //});
-    }
-    // Sort the tree initially incase the JSON isn't in a sorted order.
-    sortTree();
+    }, function (d) { return d.children && d.children.length > 0 ? d.children : null; });
+
     // TODO: Pan function, can be better implemented.
     function pan(domNode, direction) {
         var speed = panSpeed;
@@ -116,7 +111,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         x = x * t.k + viewerWidth / 2;
         y = y * t.k + viewerHeight / 2;
         //d3.select('g').transition().duration(duration).attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-        d3.select('g').transition().duration(duration).call(zoomListener.transform, d3.zoomIdentity.translate(x, y).scale(t.k));
+        d3.select('svg').transition().duration(duration).call(zoomListener.transform, d3.zoomIdentity.translate(x, y).scale(t.k));
         //zoomListener.scale(scale);
         //zoomListener.translate([x, y]);
     }
@@ -132,20 +127,22 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
             if (a.id != draggingNode.id) return 1; // a is not the hovered element, send "a" to the back
             else return -1; // a is the hovered element, bring "a" to the front
         });
+
         // if nodes has children, remove the links and nodes
         if (nodes.length > 1) {
             // remove link paths
             links = tree.links(nodes);
             nodePaths = svgGroup.selectAll("path.link").data(links, function (d) { return d.id; }).remove();
+
             // remove child nodes
             nodesExit = svgGroup.selectAll("g.node").data(nodes, function (d) { return d.id; })
-						                                        .filter(function (d, i) {
-						                                            if (d.id == draggingNode.id) {
-						                                                return false;
-						                                            }
-						                                            return true;
-						                                        }).remove();
-        }
+				.filter(function (d, i) {
+					if (d.id == draggingNode.id) {
+						return false;
+					}
+					return true;
+				}).remove();
+}
         // remove parent link
         parentLink = tree.links(tree.nodes(draggingNode.parent));
         svgGroup.selectAll('path.link').filter(function (d, i) {
@@ -160,9 +157,9 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
 
     // define the baseSvg, attaching a class for styling and the zoomListener
     var baseSvg = d3.select("#tree-container").append("svg").attr("width", viewerWidth)
-                                                            .attr("height", viewerHeight)
-                                                            .attr("class", "overlay")
-                                                            .call(zoomListener);
+        .attr("height", viewerHeight)
+        .attr("class", "overlay")
+        .call(zoomListener);
     /*
         // Define the drag listeners for drag/drop behaviour of nodes.
         dragListener = d3.drag()
@@ -257,7 +254,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         }
     */
     // Helper functions for collapsing and expanding nodes.
-
     function collapse(d) {
         if (d.children) {
             d._children = d.children;
@@ -317,21 +313,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         link.exit().remove();
     };
 
-    /*
-// Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
-function centerNode(source) {
-    scale = zoomListener.scale();
-    x = -source.y0;
-    y = -source.x0;
-    x = x * scale + viewerWidth / 2;
-    y = y * scale + viewerHeight / 2;
-    d3.select('g').transition().duration(duration).attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-    zoomListener.scale(scale);
-    zoomListener.translate([x, y]);
-} */
-
     // Toggle children function
-
     function toggleChildren(d) {
         if (d.children) {
             d._children = d.children;
@@ -344,7 +326,6 @@ function centerNode(source) {
     }
 
     // Toggle children on click.
-
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
@@ -352,15 +333,7 @@ function centerNode(source) {
         centerNode(d);
     }
 
-    // Erzeugen geschwungene Linie vom Eltern- zum Kind-Knoten
     function diagonal(s, d) {
-        /* The original from d3noob is not working in IE11!
-        //https://bl.ocks.org/d3noob
-        path = `M ${s.y} ${s.x}
-                C ${(s.y + d.y) / 2} ${s.x},
-                ${(s.y + d.y) / 2} ${d.x},
-                ${d.y} ${d.x}`
-        */
         if (s != null &&
            d != null) {
             var path = "M " + s.y + " " + s.x
@@ -389,11 +362,12 @@ function centerNode(source) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line  
-        // Baum-Layout erzeugen und die Größen zuweisen
+        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
+
         treemap = d3.tree().size([newHeight, viewerWidth]);
-        // Berechnung x- und y-Positionen pro Knoten
+
         var treeData = treemap(root);
+
         // Compute the new tree layout.
         var nodes = treeData.descendants(),
 		        links = treeData.descendants().slice(1);
@@ -405,8 +379,10 @@ function centerNode(source) {
             // Normalize for fixed-depth by commenting out below line
             // d.y = (d.depth * 500); //500px per level.
         });
+
         // Update the nodes…
         node = svgGroup.selectAll("g.node").data(nodes, function (d) { return d.id || (d.id = ++i); });
+
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")//.call(dragListener)
                                     .attr("class", "node")
@@ -436,8 +412,10 @@ function centerNode(source) {
         node.select('text').attr("x", function (d) { return d.children || d._children ? -10 : 10; })
                            .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
                            .text(function (d) { return d.data.name; });
+
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle").attr("r", 4.5).style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+
         // Transition nodes to their new position.
         var nodeUpdate = nodeEnter.merge(node);
         nodeUpdate.transition().duration(duration).attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });

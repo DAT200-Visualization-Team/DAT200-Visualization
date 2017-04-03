@@ -36,3 +36,7 @@
   .ghostCircle, .activeDrag .ghostCircle{
        display: none;
   }
+
+  html{
+      overflow: hidden;
+  }
