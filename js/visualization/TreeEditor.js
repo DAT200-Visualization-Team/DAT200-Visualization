@@ -31,10 +31,17 @@
 
 function tree() {
     var svgW = 958, svgH = 460, vRad = 12, tree = {cx: 300, cy: 30, w: 40, h: 70};
-    tree.vis = [{v: 1, l: '?', d: 'r', p: {x: tree.cx, y: tree.cy}, f: {}, c: []}];
-    tree.id = 1;
+    tree.id = 0;
+    tree.vis = [{v: tree.id, l: tree.id, d: 'r', p: {x: tree.cx, y: tree.cy}, f: {}, c: []}];
     tree.glabels = [];
     tree.incX = 500, tree.incY = 30, tree.incS = 20;
+
+    tree.getVerticeById = function (id) {
+        for(var i = 0; i < tree.vis.length; i++)
+            if (tree.vis[i].v == id) return tree.vis[i];
+
+        return -1;
+    };
 
     tree.getVertices = function () {
         return tree.vis;
@@ -60,19 +67,20 @@ function tree() {
 
     tree.addLeaf = function (_, d) {
         var insertable = true;
+
         function addLeaf(n) {
             n.forEach(function (t) {
                 if (t.v == _) {
                     if (t.c.length >= 2) insertable = false;
-                    t.c.forEach(function(c) {
-                        if(c.d == d) insertable = false;
+                    t.c.forEach(function (c) {
+                        if (c.d == d) insertable = false;
                     });
 
-                    if(insertable) {
+                    if (insertable) {
                         t.c.push({v: ++tree.id, d: d, p: {}});
                         tree.vis.push({
                             v: tree.id,
-                            l: '?', d: d, p: {},
+                            l: tree.id, d: d, p: {},
                             f: {v: t.v, d: t.d, p: {x: t.p.x, y: t.p.y}},
                             c: []
                         });
@@ -89,7 +97,7 @@ function tree() {
 
     tree.removeLeaf = function (_) {
         function removeLeaf(n) {
-            n.forEach(function(t) {
+            n.forEach(function (t) {
                 if (t.v == _) {
                     if (t.c.length === 0) {
                         var parentV = t.f.v;
@@ -104,25 +112,16 @@ function tree() {
                 }
             });
         }
-        if(tree.size == 1) return;
+
+        if (tree.vis.length == 1) return;
         removeLeaf(tree.vis);
         reposition(tree.vis);
         redraw();
     };
 
-    relabel = function (lbl) {
-        function relbl(t) {
-            t.l = lbl.lbl[t.v];
-            t.c.forEach(relbl);
-        }
-
-        relbl(tree.vis);
-    };
-
     redraw = function () {
-        var edges = d3.select("#g_lines").selectAll('line').data(tree.getEdges());
+        var edges = d3.select("#g_lines").selectAll('line').data(tree.getEdges(), function(d) {return d.v2});
 
-        // Velger alle #g_lines og setter verdiene på koordinatene etter hva de er i tree.getEdges
         edges.transition().duration(500)
             .attr('x1', function (d) {
                 return d.p1.x;
@@ -135,7 +134,6 @@ function tree() {
             return d.p2.y;
         });
 
-        // Setter inn en ny linje som er hentet fra tree.getEdges
         var e = edges.enter().append('line')
             .attr('x1', function (d) {
                 return d.p1.x;
@@ -158,24 +156,23 @@ function tree() {
         edges = edges.merge(e);
 
 
-        var circles = d3.select("#g_circles").selectAll('circle').data(tree.getVertices());
+        var circles = d3.select("#g_circles").selectAll('circle').data(tree.getVertices(), function(d) {return d.v});
 
-        // Velger alle #g_circles og setter verdiene på koordinatene etter hva de er i tree.getVertices
         circles.transition().duration(500).attr('cx', function (d) {
             return d.p.x;
         }).attr('cy', function (d) {
             return d.p.y;
         });
 
-        // Setter inn en sirkel som er hentet fra tree.getVertices, og når man trykker på denne vil den nye noden lages
         var c = circles.enter().append('circle').attr('cx', function (d) {
             return d.f.p.x;
         }).attr('cy', function (d) {
             return d.f.p.y;
         }).attr('r', vRad)
             .on('click', function (d) {
+                console.log(d.v);
                 if (d3.event.shiftKey) return tree.removeLeaf(d.v);
-                else if(d3.event.altKey) return tree.addLeaf(d.v, 'right');
+                else if (d3.event.altKey) return tree.addLeaf(d.v, 'right');
                 else return tree.addLeaf(d.v, 'left');
             })
             .transition().duration(500).attr('cx', function (d) {
@@ -185,12 +182,13 @@ function tree() {
             });
 
         circles.exit().remove();
+        //console.log(d3.selectAll("circle"));
+
         circles = circles.merge(c);
 
 
-        var labels = d3.select("#g_labels").selectAll('text').data(tree.getVertices());
+        var labels = d3.select("#g_labels").selectAll('text').data(tree.getVertices(), function(d) {return d.v});
 
-        // Velger alle #g_labels og setter verdien etter hva de er i tree.getVertices
         labels.text(function (d) {
             return d.l;
         }).transition().duration(500)
@@ -202,7 +200,6 @@ function tree() {
                 }
             );
 
-        // Setter inn label som er hentet fra tree.getVertices, og når man trykker på denne vil den nye noden lages
         var l = labels.enter().append('text').attr('x', function (d) {
             return d.f.p.x;
         }).attr('y', function (d) {
@@ -212,7 +209,7 @@ function tree() {
                 return d.l;
             }).on('click', function (d) {
                 if (d3.event.shiftKey) return tree.removeLeaf(d.v);
-                else if(d3.event.altKey) return tree.addLeaf(d.v, 'right');
+                else if (d3.event.altKey) return tree.addLeaf(d.v, 'right');
                 else return tree.addLeaf(d.v, 'left');
             })
             .transition().duration(500)
@@ -226,51 +223,48 @@ function tree() {
         labels = labels.merge(l);
     };
 
-    // Simply returns the number of leafs
-    getLeafCount = function (_) {
+    getLeafCount = function (v) {
         var counter = 0;
 
-        function getLfCnt(n) {
-            if (n.c.length == 0) {
+        function getLfCnt(s) {
+            if (s.c.length == 0)
                 counter++;
-            }
-            n.c.forEach(function (t) {
-                tree.vis.forEach(function (s) {
-                    if (s == t)
-                        getLfCnt(t);
+            else {
+                s.c.forEach(function (i) {
+                    getLfCnt(tree.getVerticeById(i.v));
                 });
-            });
+            }
         }
 
-        getLfCnt(_);
+        v = tree.getVerticeById(v);
+        if(v.c.length == 0) return 1;
+        v.c.forEach(function (i) {
+            getLfCnt(tree.getVerticeById(i.v));
+        });
+
         return counter;
     };
 
     reposition = function (v) {
-        v.forEach(function(d) {
-            if(d.d == 'r') return;
-            if(d.p == null || jQuery.isEmptyObject(d.p)) {
-                if (d.d == 'right') d.p.x = d.f.p.x + 50;
-                else d.p.x = d.f.p.x - 50;
-                d.p.y = d.f.p.y + 50;
-            }
-            tree.vis.forEach(function (s) {
-                s.c.forEach(function (o) {
-                    if (o.v == d.v) {
-                        o.p.x = d.p.x;
-                        o.p.y = d.p.y;
-                    }
-                });
+        function repos(v) {
+            var lC = getLeafCount(v.v), left = v.p.x - tree.w * (lC - 1) / 2;
+            v.c.forEach(function (d) {
+                var vc = d;
+                d = tree.getVerticeById(d.v);
+                var w = tree.w * getLeafCount(d.v);
+                left += w;
+                d.p = {x: left - (w + tree.w) / 2, y: v.p.y + tree.h};
+                vc.p = d.p;
+                repos(d);
             });
-        });
+        }
+        repos(v[0]);
     };
 
     initialize = function () {
 
-        // Initialiserer SVG-et
         d3.select(".body").append("svg").attr("width", svgW).attr("height", svgH).attr('id', 'treesvg').attr('class', 'noselect');
 
-        // Legger til linjene i SVG-et
         d3.select("#treesvg").append('g').attr('id', 'g_lines').selectAll('line').data(tree.getEdges()).enter().append('line')
             .attr('x1', function (d) {
                 return d.p1.x;
@@ -283,7 +277,6 @@ function tree() {
             return d.p2.y;
         });
 
-        // Legger til linjene i SVG-et
         d3.select("#treesvg").append('g').attr('id', 'g_circles').selectAll('circle').data(tree.getVertices()).enter()
             .append('circle').attr('cx', function (d) {
             return d.p.x;
@@ -292,11 +285,10 @@ function tree() {
         }).attr('r', vRad)
             .on('click', function (d) {
                 if (d3.event.shiftKey) return tree.removeLeaf(d.v);
-                else if(d3.event.altKey) return tree.addLeaf(d.v, 'right');
+                else if (d3.event.altKey) return tree.addLeaf(d.v, 'right');
                 else return tree.addLeaf(d.v, 'left');
             });
 
-        // Legger til labelene i SVG-et
         d3.select("#treesvg").append('g').attr('id', 'g_labels').selectAll('text').data(tree.getVertices()).enter().append('text')
             .attr('x', function (d) {
                 return d.p.x;
@@ -307,13 +299,13 @@ function tree() {
             })
             .on('click', function (d) {
                 if (d3.event.shiftKey) return tree.removeLeaf(d.v);
-                else if(d3.event.altKey) return tree.addLeaf(d.v, 'right');
+                else if (d3.event.altKey) return tree.addLeaf(d.v, 'right');
                 else return tree.addLeaf(d.v, 'left');
 
             });
 
-        tree.addLeaf(1);
-        tree.addLeaf(1, 'right');
+        tree.addLeaf(0);
+        tree.addLeaf(0, 'right');
     };
     initialize();
 
