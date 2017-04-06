@@ -21,6 +21,8 @@ var blockMargin = 30;
 var cmd = [];
 var currentCmd = 0;
 
+var lineData;
+
 //PH - Code TODO get code from another source
 var codeContent = [
     "",
@@ -106,6 +108,23 @@ var hashFunctionBlock = drawingArea.append("g")
     .attr("height", blockHeight)
     .attr("x", width - arrElementWidth - keyWidth - blockWidth - blockMargin)
     .attr("fill", "cornflowerblue");
+
+var arrow = drawingArea.append("path")
+    .attr("class", "arrow");
+
+function updateArrow(index) {
+    //The data for our line
+    var lineData = [{ "x": 0,   "y": height/2},
+        { "x": width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin,  "y": height/2},
+        { "x": width - arrElementWidth,  "y": index * (arrElementHeight + 5)}];
+
+    var lineFunction = d3.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .interpolate("linear");
+
+    arrow.attr("d", lineFunction(lineData));
+}
 
 $( document ).ready(function() {
     initCode();
