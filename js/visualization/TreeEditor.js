@@ -237,6 +237,7 @@ function tree() {
         }
 
         v = tree.getVerticeById(v);
+        if(v.c.length == 0) return 1;
         v.c.forEach(function (i) {
             getLfCnt(tree.getVerticeById(i.v));
         });
@@ -245,35 +246,19 @@ function tree() {
     };
 
     reposition = function (v) {
-        /*function repos(v) {
+        function repos(v) {
             var lC = getLeafCount(v.v), left = v.p.x - tree.w * (lC - 1) / 2;
             v.c.forEach(function (d) {
+                var vc = d;
                 d = tree.getVerticeById(d.v);
                 var w = tree.w * getLeafCount(d.v);
                 left += w;
                 d.p = {x: left - (w + tree.w) / 2, y: v.p.y + tree.h};
+                vc.p = d.p;
                 repos(d);
             });
         }
-        repos(v[0]);*/
-
-        v.forEach(function (d) {
-            if (d.d == 'r') return;
-            if (d.p == null || jQuery.isEmptyObject(d.p)) {
-                if (d.d == 'right') d.p.x = d.f.p.x + 50;
-                else d.p.x = d.f.p.x - 50;
-                d.p.y = d.f.p.y + 50;
-            }
-            tree.vis.forEach(function (s) {
-                s.c.forEach(function (o) {
-                    if (o.v == d.v) {
-                        o.p.x = d.p.x;
-                        o.p.y = d.p.y;
-                    }
-                });
-            });
-        });
-
+        repos(v[0]);
     };
 
     initialize = function () {
@@ -319,8 +304,8 @@ function tree() {
 
             });
 
-        /*tree.addLeaf(1);
-         tree.addLeaf(1, 'right');*/
+        tree.addLeaf(0);
+        tree.addLeaf(0, 'right');
     };
     initialize();
 
