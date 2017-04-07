@@ -113,8 +113,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
   
         // Below calculations are taken and adapted from the private function
         // transform/decompose.js of D3's module d3-interpolate.
-        var {a, b, c, d, e, f} = matrix;   // ES6, if this doesn't work, use below assignment
-        // var a=matrix.a, b=matrix.b, c=matrix.c, d=matrix.d, e=matrix.e, f=matrix.f; // ES5
+        var a=matrix.a, b=matrix.b, c=matrix.c, d=matrix.d, e=matrix.e, f=matrix.f; // ES5
         var scaleX, scaleY, skewX;
         if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
         if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;
@@ -136,7 +135,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         if (panTimer) {
             clearTimeout(panTimer);
             translateCoords = getTransformation(svgGroup.attr("transform"));
-            console.log(translateCoords);
             if (direction == 'left' || direction == 'right') {
                 translateX = direction == 'left' ? translateCoords.translateX + speed : translateCoords.translateX - speed;
                 translateY = translateCoords.translateY;
@@ -147,7 +145,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
             scaleX = translateCoords.scaleX;
             scaleY = translateCoords.scaleY;
             scale = d3.zoomTransform(svgGroup.node);
-            console.log(scale);
             svgGroup.transition().attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale.k + ")");
             d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")");
             panTimer = setTimeout(function () {
@@ -279,23 +276,18 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
             if (selectedNode) {
                 // now remove the element from the parent, and insert it into the new elements children
                 var parent = d.parent;
-                parent.children.splice(d.parent.children.indexOf(d), 1)
                 parent.data.children.splice(d.parent.data.children.indexOf(d.data), 1)
                 d.parent = selectedNode;
                 
-                if(d.parent.children == null) d.parent.children = [];
                 if(d.parent.data.children == null) d.parent.data.children = [];
 
-                d.parent.children.push(d);
                 d.parent.data.children.push(d.data);
 
                 // Make sure that the node being added to is expanded so the user can see added node is correctly moved
                 expand(selectedNode);
-                console.log(root);
                 root.sort(function (a, b) {
                     return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase)
                 });
-
                 endDrag();
             } else {
                 endDrag();
@@ -311,7 +303,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         updateTempConnector();
         if (draggingNode !== null) {
             root = d3.hierarchy(root.data, function (d) { return d.children; });
-            console.log(root);
             update(root);
             centerNode(draggingNode);
             draggingNode = null;
@@ -529,4 +520,15 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     // Layout the tree initially and center on the root node.
     update(root);
     centerNode(root);
+
+    // Make file browser resizable and draggable
+    $('#browser-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
+    $('#browser-window').draggable({ containment: 'document' });
+
+
 });
+
+function toggleBrowserHiding() {
+    //event.stopPropagation();
+    $('#browser-window').toggle(200);
+}
