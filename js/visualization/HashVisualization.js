@@ -21,6 +21,8 @@ var blockMargin = 30;
 var cmd = [];
 var currentCmd = 0;
 
+var lineData;
+
 //PH - Code TODO get code from another source
 var codeContent = [
     "",
@@ -106,6 +108,69 @@ var hashFunctionBlock = drawingArea.append("g")
     .attr("height", blockHeight)
     .attr("x", width - arrElementWidth - keyWidth - blockWidth - blockMargin)
     .attr("fill", "cornflowerblue");
+
+// define arrow markers for graph links
+drawingArea.append('defs').append('marker')
+    .attr('id', 'end-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 6)
+    .attr('markerWidth', 3)
+    .attr('markerHeight', 3)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#000');
+
+drawingArea.append('defs').append('marker')
+    .attr('id', 'start-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 4)
+    .attr('markerWidth', 3)
+    .attr('markerHeight', 3)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M10,-5L0,0L10,5')
+    .attr('fill', '#000');
+
+var arrow = drawingArea.append("path")
+    .attr("class", "arrow")
+    .attr("fill", "none")
+    .attr("stroke", "red")
+    .attr("stroke-width", "4")
+    .style('marker-start','url(#end-arrow)');
+
+//var arrowHead = drawingArea.append("path")
+//    .attr("d", d3.symbol()
+//        .type(d3.symbolTriangle)
+//        .size(100))
+//    .attr("stroke", "red")
+//    .attr("fill", "red")
+//    .attr("opacity", "0")
+//   .attr("transform", "rotate(90)");
+
+function updateArrow(index) {
+    //The data for our line
+    var lineData = [{ "x": arrElementWidth,   "y": height/2 + arrElementHeight/2},
+        { "x": width + 30 - blockWidth - arrElementWidth - keyWidth - blockMargin,  "y": height/2 + arrElementHeight/2},
+        { "x": width - 30 - arrElementWidth - keyWidth - blockMargin,  "y": index * (arrElementHeight+5) + arrElementHeight/2},
+        { "x": width - arrElementWidth - keyWidth - keyMargin,  "y": index * (arrElementHeight+5) + arrElementHeight/2}];
+
+    var lineFunction = d3.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; });
+        //.interpolate("linear");
+
+    arrow.transition()
+        .duration(500)
+        .attr("d", lineFunction(lineData));
+    //arrowHead
+    //    .attr("opacity", "1")
+    //    .transition()
+    //    .duration(500)
+    //    .attr("transform", "translate(" + (width - arrElementWidth - keyWidth - keyMargin) + "," + (index * (arrElementHeight+5) + arrElementHeight/2) + ") rotate(90)" );
+        //.attr("x", width - arrElementWidth - keyWidth - keyMargin)
+        //.attr("y", index * (arrElementHeight+5) + arrElementHeight/2)
+}
 
 $( document ).ready(function() {
     initCode();
