@@ -54,8 +54,8 @@ html {
     background-color: #b3d6ff;
     width: 40vw;
     height: 40vh;
-    min-width: 100px;
-    min-height: 100px;
+    min-width: 200px;
+    min-height: 200px;
     display: none;
 }
 
@@ -86,5 +86,31 @@ html {
 }
 
 #content li * {
-    padding: 0 16px 16px 16px;
+    padding: 0 8px 8px 8px;
+}
+
+.selected {
+    background-color: rgba(66, 134, 244, 0.4);
+    border-radius: 15px;
+}
+
+.folder-entry {
+    margin: 5px;
+    padding: 0;
+    width: 8vw;
+}
+
+.folder-entry a {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.folder-entry p {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5em;
+    height: 3em;
+    overflow: hidden;
 }
