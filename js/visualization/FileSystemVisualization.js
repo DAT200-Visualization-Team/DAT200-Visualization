@@ -59,25 +59,15 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     var folderCounter = 0;
     var fileCounter = 0;
 
-    function addNode(currentNode, newNode, parentName) {
-        if (currentNode == null)
-            currentNode = newNode;
-        else {
-            if (currentNode.name == parentName) {
-                if (currentNode.children)
-                    currentNode.children.push(newNode);
-                else
-                    currentNode.children = [newNode];
-            }
-            else {
-                if (currentNode.children) {
-                    for (var i = 0; i < currentNode.children.length; i++) {
-                        addNode(currentNode.children[i], newNode, parentName);
-                    }
-                }
-            }
-        }
-        return root;
+    function addNode(node) {
+        if (currentFolder.data.children == null)
+            currentFolder.data.children = [];
+
+        currentFolder.data.children.push(node);
+    }
+
+    function deleteNode(index) {
+        currentFolder.data.children.splice(index, 1);
     }
 
     // A recursive helper function for performing some setup by walking through all nodes
@@ -525,7 +515,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     function createNewFolder() {
         var folderName = 'New Folder' + (++folderCounter);
         var folder = { name: folderName };
-        var s = addNode(treeData, folder, currentFolder.data.name);
+        addNode(folder);
         root = d3.hierarchy(treeData, function (d) { return d.children; });
         update(root);
         centerNode(nodes.filter(function (d) { if (d.data.name == folderName) return true; })[0]);
@@ -534,20 +524,24 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     function createNewFile() {
         var fileName = 'New File' + (++fileCounter);
         var file = { name: fileName, size: Math.random() * 10000 };
-        var s = addNode(treeData, file, currentFolder.data.name);
+        addNode(file);
         root = d3.hierarchy(treeData, function (d) { return d.children; });
         update(root);
         centerNode(nodes.filter(function (d) { if (d.data.name == fileName) return true; })[0]);
     }
 
     function deleteCurrentFile() {
-
+        deleteNode(0);
+        root = d3.hierarchy(treeData, function (d) { return d.children; });
+        update(root);
+        centerNode(currentFolder);
     }
 
     function displayChildren(treeNodes) {
 
-        var entry = d3.select('#content').selectAll('li').data(treeNodes, function (d) { if (d != null) return d.id; })
-            .enter().append('li')
+        var entry = d3.select('#content').selectAll('li').data(treeNodes, function (d) { if (d != null) return d.id; });
+            
+        var e = entry.enter().append('li')
                 .attr('class', 'left')
                 .append('div')
                     .attr('class', 'folder-entry')
@@ -559,19 +553,19 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
                         selectedFolder.attr('class', 'folder-entry selected');
                     });
 
-        entry.append('a')
+        e.append('a')
             .attr('href', '#')
             .append('i')
             .attr('class', 'material-icons medium')
             .html(function (d) { return d.data.size ? 'description' : 'folder'; });
 
-        entry.append('p')
+        e.append('p')
             .attr('contenteditable', 'true')
             .html(function (d) { return d.data.name; });
 
         entry.exit().remove();
 
-        entry = entry.merge(entry);
+        entry = entry.merge(e);
     }
 
     function filterToCurrentFolder(d) {
@@ -595,7 +589,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     $('#browser-window').draggable({ containment: 'document', handle: '#controls' });
 
     // Register event handlers with the different buttons
-    $('#back-button').click(moveToParentFolder);
+    $('#back-button').click(moveToParentFolder);    
     $('#new-folder-button').click(createNewFolder);
     $('#add-file-button').click(createNewFile);
     $('#delete-element-button').click(deleteCurrentFile);
