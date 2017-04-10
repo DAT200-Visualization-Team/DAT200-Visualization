@@ -37,6 +37,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     // variables for drag/drop
     var selectedNode = null;
     var draggingNode = null;
+    var selectedFolder = null;
     // panning variables
     var panSpeed = 200;
     var panBoundary = 20; // Within 20px from edges will pan when dragging.
@@ -53,6 +54,23 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     var viewerHeight = $(document).height();
 
     var treemap;
+
+    var currentFolder = root.children[0];
+    var folderCounter = 0;
+    var fileCounter = 0;
+
+    function addNode(node) {
+        if (currentFolder.data.children == null)
+            currentFolder.data.children = [];
+
+        currentFolder.data.children.push(node);
+    }
+
+    function deleteNode() {
+        var index = currentFolder.data.children.indexOf(selectedFolder.data);
+        currentFolder.data.children.splice(index, 1);
+        selectedNode = null;
+    }
 
     // A recursive helper function for performing some setup by walking through all nodes
     function visit(parent, visitFn, childrenFn) {
@@ -73,26 +91,58 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         maxLabelLength = Math.max(d.name.length, maxLabelLength);
     }, function (d) { return d.children && d.children.length > 0 ? d.children : null; });
 
-    // TODO: Pan function, can be better implemented.
+    // returns the transform of an object, a functionality which was removed in d3.js v4
+    // Implementation by user "altocumulus" in the answer at http://stackoverflow.com/questions/38224875/replacing-d3-transform-in-d3-v4
+    // (accessed 06.04.2017)
+    function getTransformation(transform) {
+        // Create a dummy g for calculation purposes only. This will never
+        // be appended to the DOM and will be discarded once this function 
+        // returns.
+        var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+        // Set the transform attribute to the provided string value.
+        g.setAttributeNS(null, "transform", transform);
+
+        // consolidate the SVGTransformList containing all transformations
+        // to a single SVGTransform of type SVG_TRANSFORM_MATRIX and get
+        // its SVGMatrix. 
+        var matrix = g.transform.baseVal.consolidate().matrix;
+
+        // Below calculations are taken and adapted from the private function
+        // transform/decompose.js of D3's module d3-interpolate.
+        var a = matrix.a, b = matrix.b, c = matrix.c, d = matrix.d, e = matrix.e, f = matrix.f; // ES5
+        var scaleX, scaleY, skewX;
+        if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
+        if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;
+        if (scaleY = Math.sqrt(c * c + d * d)) c /= scaleY, d /= scaleY, skewX /= scaleY;
+        if (a * d < b * c) a = -a, b = -b, skewX = -skewX, scaleX = -scaleX;
+        return {
+            translateX: e,
+            translateY: f,
+            rotate: Math.atan2(b, a) * Math.PI / 180,
+            skewX: Math.atan(skewX) * Math.PI / 180,
+            scaleX: scaleX,
+            scaleY: scaleY
+        };
+    }
+
     function pan(domNode, direction) {
         var speed = panSpeed;
         if (panTimer) {
             clearTimeout(panTimer);
-            translateCoords = d3.transform(svgGroup.attr("transform"));
+            translateCoords = getTransformation(svgGroup.attr("transform"));
             if (direction == 'left' || direction == 'right') {
-                translateX = direction == 'left' ? translateCoords.translate[0] + speed : translateCoords.translate[0] - speed;
-                translateY = translateCoords.translate[1];
+                translateX = direction == 'left' ? translateCoords.translateX + speed : translateCoords.translateX - speed;
+                translateY = translateCoords.translateY;
             } else if (direction == 'up' || direction == 'down') {
-                translateX = translateCoords.translate[0];
-                translateY = direction == 'up' ? translateCoords.translate[1] + speed : translateCoords.translate[1] - speed;
+                translateX = translateCoords.translateX;
+                translateY = direction == 'up' ? translateCoords.translateY + speed : translateCoords.translateY - speed;
             }
-            scaleX = translateCoords.scale[0];
-            scaleY = translateCoords.scale[1];
-            scale = zoomListener.scale();
-            svgGroup.transition().attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale + ")");
+            scaleX = translateCoords.scaleX;
+            scaleY = translateCoords.scaleY;
+            scale = d3.zoomTransform(svgGroup.node);
+            svgGroup.transition().attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale.k + ")");
             d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")");
-            zoomListener.scale(zoomListener.scale());
-            zoomListener.translate([translateX, translateY]);
             panTimer = setTimeout(function () {
                 pan(domNode, speed, direction);
             }, 50);
@@ -143,9 +193,9 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
             svgGroup.selectAll("g.node").data(nodes, function (d) { return d.id; })
 				.filter(function (d, i) {
 				    if (draggingNode.descendants().map(function (d) { return d.id }).indexOf(d.id) != -1 && d != draggingNode) {
-						return true;
-					}
-					return false;
+				        return true;
+				    }
+				    return false;
 				}).remove();
         }
         // remove parent link
@@ -167,7 +217,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
 
     // Define the drag listeners for drag/drop behaviour of nodes.
     dragListener = d3.drag()
-        .on("start", function(d) {
+        .on("start", function (d) {
             if (d == root) {
                 return;
             }
@@ -176,7 +226,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
             d3.event.sourceEvent.stopPropagation();
             // it's important that we suppress the mouseover event on the node being dragged. Otherwise it will absorb the mouseover event and the underlying node will not detect it d3.select(this).attr('pointer-events', 'none');
         })
-        .on("drag", function(d) {
+        .on("drag", function (d) {
             if (d == root) {
                 return;
             }
@@ -184,65 +234,62 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
                 domNode = this;
                 initiateDrag(d, domNode);
             }
-    
+
             // get coords of mouseEvent relative to svg container to allow for panning
             relCoords = d3.mouse($('svg').get(0));
             if (relCoords[0] < panBoundary) {
                 panTimer = true;
                 pan(this, 'left');
             } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
-    
+
                 panTimer = true;
                 pan(this, 'right');
             } else if (relCoords[1] < panBoundary) {
                 panTimer = true;
                 pan(this, 'up');
-            } else if (relCoords[1] > ($('svg').height() - panBoundary)) {
+            } else if (relCoords[1] > ($('svg').height() - panBoundary - 60)) {
                 panTimer = true;
                 pan(this, 'down');
             } else {
                 try {
                     clearTimeout(panTimer);
                 } catch (e) {
-    
+
                 }
             }
-    
+
             d.x0 += d3.event.dy;
             d.y0 += d3.event.dx;
 
             var node = d3.select(this);
             node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")");
             updateTempConnector();
-        }).on("end", function(d) {
+        }).on("end", function (d) {
             if (d == root) {
                 return;
             }
             domNode = this;
             if (selectedNode) {
                 // now remove the element from the parent, and insert it into the new elements children
-                var index = draggingNode.parent.children.indexOf(draggingNode);
-                if (index > -1) {
-                    draggingNode.parent.children.splice(index, 1);
-                }
-                if (typeof selectedNode.children != null || typeof selectedNode._children != null) {
-                    if (selectedNode.children != null) {
-                        selectedNode.children.push(draggingNode);
-                    } else {
-                        selectedNode._children.push(draggingNode);
-                    }
-                } else {
-                    selectedNode.children = [];
-                    selectedNode.children.push(draggingNode);
-                }
+                var parent = d.parent;
+                parent.data.children.splice(d.parent.data.children.indexOf(d.data), 1)
+                d.parent = selectedNode;
+
+                if (d.parent.data.children == null) d.parent.data.children = [];
+
+                d.parent.data.children.push(d.data);
+
                 // Make sure that the node being added to is expanded so the user can see added node is correctly moved
                 expand(selectedNode);
+                root.sort(function (a, b) {
+                    return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase)
+                });
                 endDrag();
             } else {
                 endDrag();
             }
         });
-    
+
     function endDrag() {
         selectedNode = null;
         d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
@@ -251,9 +298,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', '');
         updateTempConnector();
         if (draggingNode !== null) {
-            console.log(treeData);
-            treeData.children.push({ children: [{ name: 500 }, { name: 501 }], name: 502 });
-            root = d3.hierarchy(treeData, function (d) { return d.children; });
+            root = d3.hierarchy(root.data, function (d) { return d.children; });
             update(root);
             centerNode(draggingNode);
             draggingNode = null;
@@ -371,7 +416,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
 
         treemap = d3.tree().size([newHeight, viewerWidth]);
-
         var treeData = treemap(root);
 
         // Compute the new tree layout.
@@ -389,10 +433,11 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         // Update the nodes…
         node = svgGroup.selectAll("g.node").data(nodes, function (d) { return d.id || (d.id = ++i); });
 
+        displayChildren(nodes.filter(filterToCurrentFolder));
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g").call(dragListener)
                                     .attr("class", "node")
-                                    .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                                    .attr("transform", function (d) { return "translate(" + (source.y0 || 0) + "," + (source.x0 || 0) + ")"; })
                                     .on('click', click);
         nodeEnter.append("circle").attr('class', 'nodeCircle')
                                   .attr("r", 4.5)
@@ -403,15 +448,15 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
                                 .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
                                 .text(function (d) { return d.data.name; })
                                 .style("fill-opacity", 0);
-        
+
         // phantom node to give us mouseover in a radius around it
         nodeEnter.append("circle").attr('class', 'ghostCircle')
                                   .attr("r", 30)
                                   .attr("opacity", 0.2) // change this to zero to hide the target area
                                   .style("fill", "red")
                                   .attr('pointer-events', 'mouseover')
-                                  .on("mouseover", function(node) { overCircle(node); })
-                                  .on("mouseout", function(node) { outCircle(node); });
+                                  .on("mouseover", function (node) { overCircle(node); })
+                                  .on("mouseout", function (node) { outCircle(node); });
 
         // Update the text to reflect whether node has children or not.
         node.select('text').attr("x", function (d) { return d.children || d._children ? -10 : 10; })
@@ -440,7 +485,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         var linkEnter = link.enter().insert("path", "g")
             .attr("class", "link")
             .attr("d", function (d) {
-                var o = { x: source.x0, y: source.y0 };
+                var o = { x: source.x0 || 0, y: source.y0 || 0 };
                 return diagonal(o, o);
             });
 
@@ -462,6 +507,76 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         });
     }
 
+    function moveToParentFolder() {
+        if (currentFolder.data.name == root.data.name) return;
+        currentFolder = currentFolder.parent;
+        $('#content').empty();
+        displayChildren(nodes.filter(filterToCurrentFolder))
+    }
+
+    function createNewFolder() {
+        var folderName = 'New Folder' + (++folderCounter);
+        var folder = { name: folderName };
+        addNode(folder);
+        root = d3.hierarchy(treeData, function (d) { return d.children; });
+        update(root);
+        centerNode(nodes.filter(function (d) { if (d.data.name == folderName) return true; })[0]);
+    }
+
+    function createNewFile() {
+        var fileName = 'New File' + (++fileCounter);
+        var file = { name: fileName, size: Math.random() * 10000 };
+        addNode(file);
+        root = d3.hierarchy(treeData, function (d) { return d.children; });
+        update(root);
+        centerNode(nodes.filter(function (d) { if (d.data.name == fileName) return true; })[0]);
+    }
+
+    function deleteCurrentFile() {
+        if (selectedFolder == null) return;
+        deleteNode();
+        root = d3.hierarchy(treeData, function (d) { return d.children; });
+        update(root);
+        centerNode(currentFolder);
+    }
+
+    function displayChildren(treeNodes) {
+        console.log(treeNodes);
+
+        var entry = d3.select('#content').selectAll('li').data(treeNodes, function (d) { if (d != null) return d.id; });
+            
+        var e = entry.enter().append('li')
+                .attr('class', 'left')
+                .append('div')
+                    .attr('class', 'folder-entry')
+                    .on('mousedown', function (d) {
+                        if (selectedFolder != null)
+                            selectedFolder.attr('class', 'folder-entry');
+
+                        selectedFolder = d3.select(this);
+                        selectedFolder.attr('class', 'folder-entry selected');
+                    });
+
+        e.append('a')
+            .attr('href', '#')
+            .append('i')
+            .attr('class', 'material-icons medium')
+            .html(function (d) { return d.data.size ? 'description' : 'folder'; });
+
+        e.append('p')
+            .attr('contenteditable', 'true')
+            .html(function (d) { return d.data.name; });
+
+        entry.exit().remove();
+
+        entry = entry.merge(e);
+    }
+
+    function filterToCurrentFolder(d) {
+        if (d.parent != null && d.parent.data.name == currentFolder.data.name)
+            return true;
+    }
+
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     var svgGroup = baseSvg.append("g");
 
@@ -472,4 +587,18 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     // Layout the tree initially and center on the root node.
     update(root);
     centerNode(root);
+
+    // Make file browser resizable and draggable
+    $('#browser-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
+    $('#browser-window').draggable({ containment: 'document', handle: '#controls' });
+
+    // Register event handlers with the different buttons
+    $('#back-button').click(moveToParentFolder);    
+    $('#new-folder-button').click(createNewFolder);
+    $('#add-file-button').click(createNewFile);
+    $('#delete-element-button').click(deleteCurrentFile);
 });
+
+function toggleBrowserHiding() {
+    $('#browser-window').toggle(200);
+}

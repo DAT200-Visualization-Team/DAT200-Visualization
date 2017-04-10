@@ -1,42 +1,116 @@
-	.node {
-    cursor: pointer;
-  }
+/*#### File tree style ####*/
+#tree-container {
+    position: relative;
+}
 
-  .overlay{
-      background-color:#EEE;
-  }
-   
-  .node circle {
+.node {
+    cursor: pointer;
+}
+
+.overlay {
+    background-color: #EEE;
+}
+
+.node circle {
     fill: #fff;
     stroke: steelblue;
     stroke-width: 1.5px;
-  }
-   
-  .node text {
-    font-size:10px; 
-    font-family:sans-serif;
-  }
-   
-  .link {
+}
+
+.node text {
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.link {
     fill: none !important;
     stroke: #ccc !important;
     stroke-width: 1.5px !important;
-  }
+}
 
-  .templink {
+.templink {
     fill: none;
     stroke: red;
     stroke-width: 3px;
-  }
+}
 
-  .ghostCircle.show{
-      display:block;
-  }
+.ghostCircle.show {
+    display: block;
+}
 
-  .ghostCircle, .activeDrag .ghostCircle{
-       display: none;
-  }
+.ghostCircle, .activeDrag .ghostCircle {
+    display: none;
+}
 
-  html{
-      overflow: hidden;
-  }
+html {
+    overflow: hidden;
+}
+
+/*#### File browser style ####*/
+#browser-window {
+    position: absolute;
+    top: 30%;
+    left: 2%;
+    background-color: #b3d6ff;
+    width: 40vw;
+    height: 40vh;
+    min-width: 200px;
+    min-height: 200px;
+    display: none;
+}
+
+#controls {
+    width: 100%;
+    background-color: #526475;
+}
+
+#controls ul {
+    padding: 2px;
+    margin: 2px;
+}
+
+#controls ul li {
+    float: left;
+}
+
+#controls ul li:last-child {
+    float: right;
+}
+
+#content-container {
+    position: relative;
+    float: left;
+    overflow-y: auto;
+    width: 100%;
+    height: 80%;
+}
+
+#content li * {
+    padding: 0 8px 8px 8px;
+}
+
+.selected {
+    background-color: rgba(66, 134, 244, 0.4);
+    border-radius: 15px;
+}
+
+.folder-entry {
+    margin: 5px;
+    padding: 0;
+    width: 8vw;
+}
+
+.folder-entry a {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.folder-entry p {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5em;
+    height: 3em;
+    overflow: hidden;
+}
