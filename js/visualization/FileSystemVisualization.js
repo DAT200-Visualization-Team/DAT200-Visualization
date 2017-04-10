@@ -66,8 +66,10 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         currentFolder.data.children.push(node);
     }
 
-    function deleteNode(index) {
+    function deleteNode() {
+        var index = currentFolder.data.children.indexOf(selectedFolder.data);
         currentFolder.data.children.splice(index, 1);
+        selectedNode = null;
     }
 
     // A recursive helper function for performing some setup by walking through all nodes
@@ -531,13 +533,15 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     }
 
     function deleteCurrentFile() {
-        deleteNode(0);
+        if (selectedFolder == null) return;
+        deleteNode();
         root = d3.hierarchy(treeData, function (d) { return d.children; });
         update(root);
         centerNode(currentFolder);
     }
 
     function displayChildren(treeNodes) {
+        console.log(treeNodes);
 
         var entry = d3.select('#content').selectAll('li').data(treeNodes, function (d) { if (d != null) return d.id; });
             
@@ -569,7 +573,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     }
 
     function filterToCurrentFolder(d) {
-        if (d.parent == currentFolder)
+        if (d.parent != null && d.parent.data.name == currentFolder.data.name)
             return true;
     }
 
