@@ -59,22 +59,20 @@ html {
     display: none;
 }
 
+.no-space{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 #controls {
     width: 100%;
     background-color: #526475;
-}
-
-#controls ul {
-    padding: 2px;
-    margin: 2px;
+    margin-bottom: 0 !important;
+    padding-top: 7px;
 }
 
 #controls ul li {
-    float: left;
-}
-
-#controls ul li:last-child {
-    float: right;
+    display: inline-block;
 }
 
 #content-container {

@@ -55,7 +55,7 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
 
     var treemap;
 
-    var currentFolder = root.children[0];
+    var currentFolder = root;
     var folderCounter = 0;
     var fileCounter = 0;
 
@@ -510,8 +510,9 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     function moveToParentFolder() {
         if (currentFolder.data.name == root.data.name) return;
         currentFolder = currentFolder.parent;
+        centerNode(currentFolder);
         $('#content').empty();
-        displayChildren(nodes.filter(filterToCurrentFolder))
+        displayChildren(nodes.filter(filterToCurrentFolder));
     }
 
     function createNewFolder() {
@@ -519,6 +520,9 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         var folder = { name: folderName };
         addNode(folder);
         root = d3.hierarchy(treeData, function (d) { return d.children; });
+        root.sort(function (a, b) {
+            return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase)
+        });
         update(root);
         centerNode(nodes.filter(function (d) { if (d.data.name == folderName) return true; })[0]);
     }
@@ -528,6 +532,9 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
         var file = { name: fileName, size: Math.random() * 10000 };
         addNode(file);
         root = d3.hierarchy(treeData, function (d) { return d.children; });
+        root.sort(function (a, b) {
+            return a.data.name.toLowerCase().localeCompare(b.data.name.toLowerCase)
+        });
         update(root);
         centerNode(nodes.filter(function (d) { if (d.data.name == fileName) return true; })[0]);
     }
@@ -541,7 +548,6 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
     }
 
     function displayChildren(treeNodes) {
-        console.log(treeNodes);
 
         var entry = d3.select('#content').selectAll('li').data(treeNodes, function (d) { if (d != null) return d.id; });
             
@@ -549,12 +555,19 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
                 .attr('class', 'left')
                 .append('div')
                     .attr('class', 'folder-entry')
-                    .on('mousedown', function (d) {
+                    .on('click', function (d) {
                         if (selectedFolder != null)
                             selectedFolder.attr('class', 'folder-entry');
 
                         selectedFolder = d3.select(this);
                         selectedFolder.attr('class', 'folder-entry selected');
+                    })
+                    .on('dblclick', function (d) {
+                        centerNode(d);
+                        if (d.data.size != null) return;
+                        selectedFolder = null;
+                        currentFolder = d;
+                        update(root);
                     });
 
         e.append('a')
@@ -565,11 +578,30 @@ treeJSON = d3.json("./js/visualization/filetree.json", function (error, treeData
 
         e.append('p')
             .attr('contenteditable', 'true')
-            .html(function (d) { return d.data.name; });
+            .html(function (d) { return d.data.name; })
+            .on('keypress', function (d) {
+                if (d3.event.keyCode == 13) {
+                    d3.event.preventDefault();
+                    
+                    document.activeElement.blur();
+                    return false;
+                }
+            })
+            .on('blur', function (d) {                
+                var text = this.innerText;
+                if (text.length == 0 || /^\s*$/.test(text)) {
+                    this.innerText = d.data.name;
+                    return;
+                }
+                d.data.name = text;
+                update(root);
+            });
 
         entry.exit().remove();
 
         entry = entry.merge(e);
+
+        d3.select('#current-folder-text').node().innerText = currentFolder.data.name;
     }
 
     function filterToCurrentFolder(d) {
