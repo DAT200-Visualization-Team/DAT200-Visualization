@@ -17,13 +17,9 @@ function initialize() {
     }
 }
 
-function updateDrawingArea() {
-    $(".treeEditor").html($(".treeEditor").html());
-}
-
 function createMarker() {
-    $(".treeEditor svg").append("<g class='markers'><circle id='marker' cx='0' cy='0' r='14' opacity='0'></g>");
-    updateDrawingArea();
+    d3.select("#treesvg").append('g').attr('class', 'markers')
+        .append('circle').attr('id', 'marker').attr('cx', 0).attr('cy', 0).attr('r', 14).attr('opacity', 0);
 }
 
 function moveMarker(cx, cy) {
