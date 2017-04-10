@@ -246,7 +246,7 @@ function tree() {
     };
 
     reposition = function (v) {
-        function repos(v) {
+        /*function repos(v) {
             var lC = getLeafCount(v.v), left = v.p.x - tree.w * (lC - 1) / 2;
             v.c.forEach(function (d) {
                 var vc = d;
@@ -258,6 +258,26 @@ function tree() {
                 repos(d);
             });
         }
+        repos(v[0]);*/
+
+        function repos(v) {
+            var lC = getLeafCount(v.v),
+                left = v.p.x;
+
+            v.c.forEach(function (d) {
+                var vc = d;
+                d = tree.getVerticeById(d.v);
+
+                var w = 0;
+                if(d.d == 'right') { w += 15 * lC }
+                if(d.d == 'left') { w -= 15 * lC }
+
+                d.p = {x: left + w, y: v.p.y + tree.h};
+                vc.p = d.p;
+                repos(d);
+            });
+        }
+
         repos(v[0]);
     };
 
@@ -304,8 +324,8 @@ function tree() {
 
             });
 
-        tree.addLeaf(0);
-        tree.addLeaf(0, 'right');
+        //tree.addLeaf(0);
+        //tree.addLeaf(0, 'right');
     };
     initialize();
 

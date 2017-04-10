@@ -30,10 +30,12 @@ BinaryNode.prototype.setElement = function (x) {
 
 BinaryNode.prototype.setLeft = function (t) {
     this.left = t;
+    return this.left;
 };
 
 BinaryNode.prototype.setRight = function (t) {
     this.right = t;
+    return this.right;
 };
 
 BinaryNode.prototype.duplicate = function () {
