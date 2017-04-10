@@ -283,7 +283,7 @@ function tree() {
 
     initialize = function () {
 
-        d3.select(".body").append("svg").attr("width", svgW).attr("height", svgH).attr('id', 'treesvg').attr('class', 'noselect');
+        d3.select(".treeEditor").append("svg").attr("width", svgW).attr("height", svgH).attr('id', 'treesvg').attr('class', 'noselect');
 
         d3.select("#treesvg").append('g').attr('id', 'g_lines').selectAll('line').data(tree.getEdges()).enter().append('line')
             .attr('x1', function (d) {

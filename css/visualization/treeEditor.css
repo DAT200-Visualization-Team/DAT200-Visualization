@@ -23,9 +23,6 @@ line{
 #treesvg g text:hover, #treesvg g circle:hover{
     cursor:pointer;
 }
-#navdiv{
-    background:#555;
-}
 #treesvg{
     border:1px solid grey;
 }
@@ -38,8 +35,9 @@ line{
 #g_labels text{
     text-anchor:middle;
 }
-#g_elabels text{
-    text-anchor:middle;
-    fill:red;
-    font-weight:bold;
+
+#marker {
+    fill: none;
+    stroke: red;
+    stroke-width: 3px;
 }
