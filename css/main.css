@@ -204,9 +204,47 @@ pre {
     background-image: url();
 }
 
+/* ==========================================================================
+   Common command interface
+   ========================================================================== */
 
+#command-widget {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    height: 60vh;
+}
 
+#expand-tab {
+    position: relative;
+    left: 0;
+    top: 100%;
+    width: 15px;
+    height: 45px;
+    max-width: 15px;
+    max-height: 45px;
+}
 
+#command-items-wrapper {
+    position: relative;
+    left: 20%;
+    display: table-cell;
+    vertical-align: bottom;
+    height: 60vh;
+}
+
+#command-items-content {
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.command-item {
+    background-color: rgba(244, 67, 54, 0.8);
+    height: 5vh;
+    width: 10vw;
+    padding-left: 6px;
+    border-bottom: 1px solid lavender;
+}
 
 /* ==========================================================================
    Helper classes
