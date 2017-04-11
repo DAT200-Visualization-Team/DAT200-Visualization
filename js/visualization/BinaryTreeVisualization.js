@@ -1,13 +1,14 @@
 var animationTime = 1000;
 var bt;
+var treeGUI = new tree();
 
-function initialize() {
-    bt = new BinaryTree(tree.vis[0].v);
+function init() {
+    bt = new BinaryTree(treeGUI.vis[0].v);
     setChildren(bt.getRoot());
 
     function setChildren(binaryNode) {
         var child;
-        tree.vis.forEach(function(i) {
+        treeGUI.vis.forEach(function(i) {
             if(i.f.v === binaryNode.element) {
                 if(i.d == 'left') child = binaryNode.setLeft(new BinaryNode(i.v));
                 else child = binaryNode.setRight(new BinaryNode(i.v));
@@ -27,7 +28,6 @@ function moveMarker(cx, cy) {
     return { e: marker, p: { translateX: cx, translateY: cy, opacity: 1 }, o: { duration: animationTime,/*, sequenceQueue: false*/ delay: 50} };
 }
 
-
 function visualizePreOrder() {
     var res = [];
     var loadingSequence = [];
@@ -43,7 +43,7 @@ function visualizePreOrder() {
     createMarker();
 
     for(var i = 0; i < res.length; i++) {
-        tree.vis.forEach(function(y) {
+        treeGUI.vis.forEach(function(y) {
             if (y.v === res[i]) {
                 loadingSequence.push(moveMarker(y.p.x, y.p.y));
             }
@@ -68,7 +68,7 @@ function visualizeInOrder() {
     createMarker();
 
     for(var i = 0; i < res.length; i++) {
-        tree.vis.forEach(function(y) {
+        treeGUI.vis.forEach(function(y) {
             if (y.v === res[i]) {
                 loadingSequence.push(moveMarker(y.p.x, y.p.y));
             }
@@ -93,7 +93,7 @@ function visualizePostOrder() {
     createMarker();
 
     for(var i = 0; i < res.length; i++) {
-        tree.vis.forEach(function(y) {
+        treeGUI.vis.forEach(function(y) {
             if (y.v === res[i]) {
                 loadingSequence.push(moveMarker(y.p.x, y.p.y));
             }
