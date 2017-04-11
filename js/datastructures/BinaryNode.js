@@ -30,10 +30,12 @@ BinaryNode.prototype.setElement = function (x) {
 
 BinaryNode.prototype.setLeft = function (t) {
     this.left = t;
+    return this.left; //Added for the sake of visualization
 };
 
 BinaryNode.prototype.setRight = function (t) {
     this.right = t;
+    return this.right; //Added for the sake of visualization
 };
 
 BinaryNode.prototype.duplicate = function () {
@@ -50,14 +52,14 @@ BinaryNode.prototype.duplicate = function () {
 BinaryNode.prototype.printPreOrder = function () {
     console.log(this.element);
     if (this.left != null)
-        this.left.printPreOrder()
+        this.left.printPreOrder();
     if (this.right != null)
         this.right.printPreOrder();
 };
 
 BinaryNode.prototype.printPostOrder = function () {
     if (this.left != null)
-        this.left.printPostOrder()
+        this.left.printPostOrder();
     if (this.right != null)
         this.right.printPostOrder();
     console.log(this.element);
@@ -65,7 +67,7 @@ BinaryNode.prototype.printPostOrder = function () {
 
 BinaryNode.prototype.printInOrder = function () {
     if (this.left != null)
-        this.left.printInOrder()
+        this.left.printInOrder();
     console.log(this.element);
     if (this.right != null)
         this.right.printInOrder();
