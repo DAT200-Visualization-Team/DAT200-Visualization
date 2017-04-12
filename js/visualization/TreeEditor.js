@@ -29,10 +29,11 @@
  (-/+) Restructured and changed variable names
  */
 
-function tree() {
+function tree(rootLbl) {
     var svgW = 958, svgH = 460, vRad = 12, tree = {cx: 300, cy: 30, w: 40, h: 70};
     tree.id = 0;
-    tree.vis = [{v: tree.id, l: tree.id, d: 'r', p: {x: tree.cx, y: tree.cy}, f: {}, c: []}];
+    if (rootLbl == null) rootLbl = tree.id;
+    tree.vis = [{v: tree.id, l: rootLbl, d: 'r', p: {x: tree.cx, y: tree.cy}, f: {}, c: []}];
     tree.glabels = [];
     tree.incX = 500, tree.incY = 30, tree.incS = 20;
 
@@ -65,7 +66,9 @@ function tree() {
         });
     };
 
-    tree.addLeaf = function (_, d) {
+    tree.addLeaf = function (_, d, l) {
+        tree.id++;
+        if (l == null) l = tree.id;
         var insertable = true;
 
         function addLeaf(n) {
@@ -77,10 +80,10 @@ function tree() {
                     });
 
                     if (insertable) {
-                        t.c.push({v: ++tree.id, d: d, p: {}});
+                        t.c.push({v: tree.id, d: d, p: {}});
                         tree.vis.push({
                             v: tree.id,
-                            l: tree.id, d: d, p: {},
+                            l: l, d: d, p: {},
                             f: {v: t.v, d: t.d, p: {x: t.p.x, y: t.p.y}},
                             c: []
                         });
@@ -170,7 +173,6 @@ function tree() {
             return d.f.p.y;
         }).attr('r', vRad)
             .on('click', function (d) {
-                console.log(d.v);
                 if (d3.event.shiftKey) return tree.removeLeaf(d.v);
                 else if (d3.event.altKey) return tree.addLeaf(d.v, 'right');
                 else return tree.addLeaf(d.v, 'left');
@@ -327,8 +329,8 @@ function tree() {
         //tree.addLeaf(0);
         //tree.addLeaf(0, 'right');
     };
-    initialize();
 
+    initialize();
     return tree;
 }
-var tree = tree();
+//var tree = tree();
