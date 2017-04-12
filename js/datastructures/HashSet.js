@@ -1,4 +1,4 @@
-const DEFAULT_TABLE_SIZE = 10;
+const DEFAULT_TABLE_SIZE = 101;
 var cmd = [];
 
 function HashSet(other) {
