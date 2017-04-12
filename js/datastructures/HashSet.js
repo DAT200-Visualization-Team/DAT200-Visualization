@@ -1,4 +1,5 @@
-const DEFAULT_TABLE_SIZE = 101;
+const DEFAULT_TABLE_SIZE = 10;
+var cmd = [];
 
 function HashSet(other) {
     this.currentSize = 0;
@@ -42,6 +43,7 @@ HashSet.prototype.remove = function (x) {
         return false;
 
     this.array[currentPos].isActive = false;
+    cmd.push("removeElement(" + currentPos + ")");
     this.currentSize--;
     this.modCount++;
 
@@ -59,6 +61,7 @@ HashSet.prototype.clear = function () {
 };
 
 HashSet.prototype.add = function (x) {
+    cmd.push("add('" + x.toString() + "')");
     var currentPos = this.findPos(x);
 
     if (this.isActive(this.array, currentPos))
@@ -67,6 +70,7 @@ HashSet.prototype.add = function (x) {
     if (this.array[currentPos] == null)
         this.occupied++;
     this.array[currentPos] = new HashEntry(x, true);
+    cmd.push("replaceElement(" + currentPos + ")");
     this.currentSize++;
     this.modCount++;
 
@@ -83,6 +87,7 @@ HashSet.prototype.rehash = function () {
     this.allocateArray(nextPrime(4 * this.size()));
     this.currentSize = 0;
     this.occupied = 0;
+    cmd.push("clearTable()");
 
     // Copy table over
     for (var i = 0; i < oldArray.length; i++)
@@ -93,6 +98,8 @@ HashSet.prototype.rehash = function () {
 HashSet.prototype.findPos = function (x) {
     var offset = 1;
     var currentPos = (x == null) ? 0 : Math.abs(getHashCode(x) % this.array.length);
+    cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", 0)");
+    cmd.push("updateArrow(" + currentPos + ")");
 
     while (this.array[currentPos] != null) {
         if (x == null) {
@@ -103,6 +110,8 @@ HashSet.prototype.findPos = function (x) {
             break;
 
         currentPos += offset; // Compute ith probe
+        cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", " + offset + ")");
+        cmd.push("updateArrow(" + currentPos + ")");
         offset += 2;
         if (currentPos >= this.array.length) // Implement the mod
             currentPos -= this.array.length;
@@ -113,7 +122,7 @@ HashSet.prototype.findPos = function (x) {
 
 HashSet.prototype.allocateArray = function (arraySize) {
     this.array = new Array(arraySize)
-}
+};
 
 HashSet.prototype.iterator = function () {
     var expectedModCount = this.modCount;

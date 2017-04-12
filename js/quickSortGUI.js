@@ -1,4 +1,4 @@
-var data = [50, 40, 300, 20, 10];
+var data = [40, 30, 20, 10, 80, 60];
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
@@ -62,13 +62,13 @@ var pivotMarkerLeft = barChart.append("svg");
     markPivot(0, "left");
 
 //Pivot marker Left
-var pivotMarkerRight = barChart.append("svg");
+/*var pivotMarkerRight = barChart.append("svg");
     pivotMarkerRight.append("polygon")
     .attr("fill", "yellow")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30");
-    markPivot(data.length - 1, "right");
+    markPivot(data.length - 1, "right");*/
 
 $( document ).ready(function() {
     initCode();
@@ -148,6 +148,16 @@ function swap(a, b) {
         .transition()
         .duration(500)
         .attr('x', oldBar1Text_X);
+}
+
+function colorPartition(from, to) {
+    var selector = "";
+    for(var i = from; i <= to; i++) {
+        if(i != from) selector += ", ";
+        selector = selector + ".element" + i;
+    }
+    barChart.selectAll("rect").filter(selector)
+        .attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
 }
 
 function highlight(a, b, color) {
