@@ -15,8 +15,6 @@ function initStack(arrayList) {
     if (arrayList == null || !(arrayList.constructor.name === 'ArrayList')) {
         arrayList = new ArrayList([1, 2, 3, 4, 5]);
     }
-
-    animatePushes(arrayList.theItems);
 }
 
 function pushElement(value) {

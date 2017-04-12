@@ -223,19 +223,23 @@ pre {
     height: 45px;
     max-width: 15px;
     max-height: 45px;
+    margin: 0 !important;
 }
 
 #command-items-wrapper {
-    position: relative;
-    left: 20%;
+    position: absolute;
+    left: 25px;
+    top: 86.5%;
     display: table-cell;
     vertical-align: bottom;
     height: 60vh;
 }
 
 #command-items-content {
+    position: relative;
     max-height: 60vh;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .command-item {
