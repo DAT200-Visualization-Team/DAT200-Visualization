@@ -1,4 +1,6 @@
 var data = ["", "", "", "", "", "", "", "", "", "", ""];
+var table = new HashSet();
+//var data = table.array;
 
 //Array size
 var arrElementWidth = 150;
@@ -18,7 +20,7 @@ var blockHeight = data.length * (arrElementHeight + 5);
 var blockMargin = 30;
 
 //Animation
-var cmd = [];
+//var cmd = [];
 var currentCmd = 0;
 
 var lineData;
@@ -59,7 +61,23 @@ var drawingArea = d3.select(".drawingArea")
 var bucket = drawingArea.append("g");
 var keys = drawingArea.append("g");
 
-//Create unsorted array
+//Hash function
+var hashFunctionBlock = drawingArea.append("g");
+
+hashFunctionBlock.append("rect")
+    .attr("width", blockWidth)
+    .attr("height", blockHeight)
+    .attr("x", width - arrElementWidth - keyWidth - blockWidth - blockMargin)
+    .attr("fill", "cornflowerblue");
+
+hashFunctionBlock.append("text")
+    .attr("width", blockWidth)
+    .attr("height", blockHeight)
+    .attr("y", blockHeight-10)
+    .attr("x", width + 10 - arrElementWidth - keyWidth - blockWidth - blockMargin)
+    .text("");
+
+//buckets
 bucket.selectAll("rect")
     .data(data)
     .enter()
@@ -82,6 +100,7 @@ bucket.selectAll("text")
     .attr("height", arrElementHeight)
     .attr("class", function(d, index) { return "element" + index; });
 
+//Keys
 keys.selectAll("rect")
     .data(data)
     .enter()
@@ -90,7 +109,8 @@ keys.selectAll("rect")
     .attr("y", function(d, index) { return index * (arrElementHeight + 5); })
     .attr("height", arrElementHeight)
     .attr("width", keyWidth)
-    .attr("fill", "rgb(0, 127, 127)");
+    .attr("fill", "rgb(0, 127, 127)")
+    .attr("class", function(d, index) { return "key" + index } );
 
 keys.selectAll("text")
     .data(data)
@@ -102,13 +122,6 @@ keys.selectAll("text")
     .attr("width", keyWidth)
     .attr("height", arrElementHeight);
 
-var hashFunctionBlock = drawingArea.append("g")
-    .append("rect")
-    .attr("width", blockWidth)
-    .attr("height", blockHeight)
-    .attr("x", width - arrElementWidth - keyWidth - blockWidth - blockMargin)
-    .attr("fill", "cornflowerblue");
-
 // define arrow markers for graph links
 drawingArea.append('defs').append('marker')
     .attr('id', 'end-arrow')
@@ -119,36 +132,18 @@ drawingArea.append('defs').append('marker')
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#000');
-
-drawingArea.append('defs').append('marker')
-    .attr('id', 'start-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 4)
-    .attr('markerWidth', 3)
-    .attr('markerHeight', 3)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M10,-5L0,0L10,5')
-    .attr('fill', '#000');
+    .attr('fill', 'red');
 
 var arrow = drawingArea.append("path")
     .attr("class", "arrow")
     .attr("fill", "none")
     .attr("stroke", "red")
     .attr("stroke-width", "4")
-    .style('marker-start','url(#end-arrow)');
-
-//var arrowHead = drawingArea.append("path")
-//    .attr("d", d3.symbol()
-//        .type(d3.symbolTriangle)
-//        .size(100))
-//    .attr("stroke", "red")
-//    .attr("fill", "red")
-//    .attr("opacity", "0")
-//   .attr("transform", "rotate(90)");
+    .attr("opacity", "0")
+    .style('marker-end','url(#end-arrow)');
 
 function updateArrow(index) {
+    unhighlightKey();
     //The data for our line
     var lineData = [{ "x": arrElementWidth,   "y": height/2 + arrElementHeight/2},
         { "x": width + 30 - blockWidth - arrElementWidth - keyWidth - blockMargin,  "y": height/2 + arrElementHeight/2},
@@ -158,18 +153,19 @@ function updateArrow(index) {
     var lineFunction = d3.line()
         .x(function(d) { return d.x; })
         .y(function(d) { return d.y; });
-        //.interpolate("linear");
 
     arrow.transition()
-        .duration(500)
-        .attr("d", lineFunction(lineData));
-    //arrowHead
-    //    .attr("opacity", "1")
-    //    .transition()
-    //    .duration(500)
-    //    .attr("transform", "translate(" + (width - arrElementWidth - keyWidth - keyMargin) + "," + (index * (arrElementHeight+5) + arrElementHeight/2) + ") rotate(90)" );
-        //.attr("x", width - arrElementWidth - keyWidth - keyMargin)
-        //.attr("y", index * (arrElementHeight+5) + arrElementHeight/2)
+        .duration(1000)
+        .attr("d", lineFunction(lineData))
+        .attr("opacity", "1");
+
+    highlightKey(index);
+}
+
+function getElementHeigth(length) {
+    if(length <= 10) return 40;
+
+    return height / length-5;
 }
 
 $( document ).ready(function() {
@@ -194,24 +190,29 @@ function clearHighlight(array) {
 }
 
 function add(value) {
-    drawingArea.append("rect")
+    hideHash();
+
+    bucket.append("rect")
         .attr("width", arrElementWidth)
         .attr("height", arrElementHeight)
-        .attr("fill", "rgb(0, 127, 127)")
+        .attr("fill", "BlueViolet")
         .attr("opacity", "0")
         .attr("class", "newElement")
         .attr("y", height/2);
 
-    drawingArea.append("text")
+    bucket.append("text")
         .attr("width", arrElementWidth)
         .attr("height", arrElementHeight)
         .attr("x", arrElementWidth/2)
         .attr("y", height/2 + 2*arrElementHeight/3)
-        .text(value)
+        .text( function() {
+            if(arrElementHeight > 15) return value;
+            return "";
+        })
         .attr("opacity", "0")
         .attr("class", "newElement");
 
-    drawingArea.selectAll(".newElement").transition()
+    bucket.selectAll(".newElement").transition()
         .duration(1000)
         .attr("opacity", "1");
 }
@@ -230,33 +231,90 @@ function moveToHashFunctionBlock() {
         .attr("x", width + 10 - blockWidth - arrElementWidth/2 - keyWidth - blockMargin);
 }
 
-function checkIfKeyFree(index) {
-    drawingArea.selectAll(".newElement")
-        .transition()
-        .duration(1000)
-        //.attr(width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin)
-        .attr("y", index * (arrElementHeight + 5));
-        //.attr("transform", "translate(" + (width - blockWidth - arrElementWidth - keyWidth - blockMargin) + ", " + (index * (arrElementHeight + 5))  + ")" );
-}
-
 function replaceElement(index) {
-    bucket.selectAll(".element" + index).remove();
+    bucket.selectAll(".element" + index)
+        .transition()
+        .delay(1000)
+        .duration(0)
+        .remove();
 
     drawingArea.selectAll(".newElement").filter("rect")
+        .attr("class", "element" + index)
         .transition()
         .duration(1000)
         .attr("x", width - arrElementWidth)
-        .attr("y", index * (arrElementHeight + 5))
-        .attr("class", index + "element");
+        .attr("y", index * (arrElementHeight + 5));
+
 
     drawingArea.selectAll(".newElement").filter("text")
+        .attr("class", "element" + index)
         .transition()
         .duration(1000)
         .attr("x", width - arrElementWidth/2)
-        .attr("y", 2*arrElementHeight/3 + index * (arrElementHeight+5))
-        .attr("class", index + "element");
+        .attr("y", 2*arrElementHeight/3 + index * (arrElementHeight+5));
 
     drawingArea.selectAll(".newElement").classed(".newElement", false);
+}
+
+function highlightKey(index) {
+    keys.selectAll("rect").filter(":nth-child(" + (index+1) + ")")
+        .transition()
+        .duration(500)
+        .attr("stroke", "red");
+}
+
+function unhighlightKey() {
+    keys.selectAll("rect")
+        .transition()
+        .duration(1000)
+        .attr("stroke", "none")
+}
+
+function removeElement(index) {
+    bucket.selectAll("rect").filter(".element" + index)
+        .transition()
+        .duration(1000)
+        .attr("stroke", "red")
+        .attr("stroke-width", "2");
+}
+
+function displayHash(hashValue, length, offset) {
+    hashFunctionBlock.selectAll("text")
+        .transition()
+        .duration(500)
+        .attr("fill", "red")
+        .text( function() {
+            if(offset == 0) {
+                return "Abs(" + hashValue + " % " + length + ") = " + Math.abs(hashValue % length);
+            }
+            return "Abs(" + hashValue + " % " + length + ") + " + offset + " = " + (Math.abs(hashValue % length) + offset);
+        })
+        .transition()
+        .duration(500)
+        .attr("fill", "black");
+}
+
+function clearTable() {
+    updateTable();
+    //bucket.selectAll("rect")
+    //    .transition()
+    //    .duration(1000)
+    //    .attr("stroke", "none");
+    //bucket.selectAll("text")
+    //    .transition()
+    //    .duration(1000)
+    //    .text("");
+
+}
+
+function hideHash() {
+    hashFunctionBlock.selectAll("text")
+        .text("");
+}
+
+function run() {
+    eval(cmd[currentCmd]);
+    currentCmd++;
 }
 
 function runCommand() {
@@ -281,7 +339,7 @@ function runCommand() {
 
 function play() {
     setTimeout(function(){
-        runCommand();
+        run();
         //Run next command if there is one
         if(currentCmd < cmd.length) play();
     }, 1000);
@@ -314,5 +372,65 @@ function unHighlightCode() {
         .transition()
         .duration(500)
         .style("background-color", "transparent");
+}
+
+function updateTable() {
+    //var data = ["", "", "", "", ""];
+    var data = table.array;
+    arrElementHeight = getElementHeigth(data.length);
+    console.log(data.length);
+
+    bucket.selectAll("rect")
+        .remove();
+    bucket.selectAll("text")
+        .remove();
+    keys.selectAll("rect")
+        .remove();
+    keys.selectAll("text")
+        .remove();
+
+    bucket.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("svg:rect")
+        .attr("x", function(d, index) { return width - arrElementWidth; })
+        .attr("y", function(d, index) { return index * (arrElementHeight + 5); })
+        .attr("height", arrElementHeight)
+        .attr("width", arrElementWidth)
+        .attr("fill", "rgb(0, 127, 127)")
+        .attr("class", function(d, index) { return "element" + index; });
+
+    bucket.selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d) { return ""; })
+        .attr("x", function(d, index) { return width - arrElementWidth/2; })
+        .attr("y", function(d, index) { return 2*arrElementHeight/3 + index * (arrElementHeight+5); })
+        .attr("width", arrElementWidth)
+        .attr("height", arrElementHeight)
+        .attr("class", function(d, index) { return "element" + index; });
+
+//Keys
+    keys.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("svg:rect")
+        .attr("x", function(d, index) { return width - arrElementWidth - keyWidth - keyMargin; })
+        .attr("y", function(d, index) { return index * (arrElementHeight + 5); })
+        .attr("height", arrElementHeight)
+        .attr("width", keyWidth)
+        .attr("fill", "rgb(0, 127, 127)")
+        .attr("class", function(d, index) { return "key" + index } );
+
+    keys.selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d, index) { return index; })
+        .attr("x", function(d, index) { return width + keyWidth/2 - arrElementWidth - keyWidth - keyMargin; })
+        .attr("y", function(d, index) { return 2*arrElementHeight/3 + index * (arrElementHeight+5); })
+        .attr("width", keyWidth)
+        .attr("height", arrElementHeight);
 }
 

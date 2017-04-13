@@ -1,4 +1,4 @@
-var data = [50, 40, 300, 20, 10];
+var data = [12, 23, 33, 43, 44, 55, 64, 76, 77];
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
@@ -26,15 +26,15 @@ var codeContent = [
 var code = d3.select("#code-text");
 var barChart = d3.select(".drawingArea")
     .append("svg:svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", width + 200)
+    .attr("height", height + 200);
 
 
 barChart.selectAll("rect")
     .data(data)
     .enter()
     .append("svg:rect")
-    .attr("x", function(d, index) { return index * (width / data.length); })
+    .attr("x", function(d, index) { return index * (width / data.length) + 100; })
     .attr("y", function(d) { return height - d - 50; })
     .attr("height", function(d) { return d; })
     .attr("width", barWidth)
@@ -47,7 +47,7 @@ barChart.selectAll("text")
     .enter()
     .append("text")
     .text(function(d) { return d; })
-    .attr("x", function(d, index) { return index * (width / data.length) + barWidth / 4; })
+    .attr("x", function(d, index) { return index * (width / data.length) + barWidth / 4 + 100; })
     .attr("y", height - 30 )
     .attr("width", barWidth)
     .attr("class", function(d, i) { return "element" + i});
@@ -62,13 +62,13 @@ var pivotMarkerLeft = barChart.append("svg");
     markPivot(0, "left");
 
 //Pivot marker Left
-var pivotMarkerRight = barChart.append("svg");
+/*var pivotMarkerRight = barChart.append("svg");
     pivotMarkerRight.append("polygon")
     .attr("fill", "yellow")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30");
-    markPivot(data.length - 1, "right");
+    markPivot(data.length - 1, "right");*/
 
 $( document ).ready(function() {
     initCode();
@@ -119,7 +119,7 @@ function markPivot(a, pivot) {
     }
     currentPivot.transition()
         .duration(500)
-        .attr('x', a * (width / data.length) + 7) //TODO make sure centered!
+        .attr('x', a * (width / data.length) + 100 + 7) //TODO make sure centered!
         .attr('y', height - 35);
 }
 
@@ -148,6 +148,68 @@ function swap(a, b) {
         .transition()
         .duration(500)
         .attr('x', oldBar1Text_X);
+}
+
+function colorPartition(from, to, direction) {
+    var selector = "";
+    for(var i = from; i <= to; i++) {
+        if(i != from) selector += ", ";
+        selector = selector + ".element" + i;
+    }
+    barChart.selectAll("rect").filter(selector)
+        .transition()
+        .duration(500)
+        .attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
+        .each( function(d, index) {
+            //console.log(d3.select(this));
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .attr("transform", function(d, index) {
+                    var element = d3.select(this);
+                    //console.log(element.attr("transform"));
+                    console.log(element);
+                    var currentTranslation = getTranslate(element);
+                    var y = parseInt(currentTranslation[1]);
+                    var x = parseInt(currentTranslation[0]);
+                    y = y + 50;
+                    if(direction == "left") {
+                        x = x - 50;
+                    } else if(direction == "right") {
+                        x = x + 50;
+                    }
+                    return "translate(" + x + ", " + y + ")";
+                });
+/*        .attr("transform", function(d, index) {
+            var element = barChart.selectAll("rect").filter(".element" + index);
+            //console.log(element.attr("transform"));
+            console.log(element);
+            var currentTranslation = getTranslate(element);
+            var y = parseInt(currentTranslation[1]);
+            var x = parseInt(currentTranslation[0]);
+            y = y + 50;
+            if(direction == "left") {
+                x = x - 50;
+            } else {
+                x = x + 50;
+            }
+            return "translate(" + x + ", " + y + ")";
+        });*/
+        });
+}
+
+function getTranslate(element) {
+    var transformString = element.attr("transform");
+    console.log(transformString);
+    if(transformString != "" && transformString != null) {
+        var res = transformString.substring(transformString.indexOf("(")+1, transformString.indexOf(")")).split(",");
+        //console.log(res);
+        if(res[0] == null) res[0] = 0;
+        if(res[1] == null) res[1] = 0;
+        //console.log(res);
+        return res;
+    }
+    return [0, 0];
 }
 
 function highlight(a, b, color) {

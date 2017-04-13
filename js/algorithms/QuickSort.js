@@ -21,7 +21,7 @@ QuickSort.prototype.quickSort = function(low, high) {
         this.a = insertionSort(this.a);
     }
     else {
-        var middle = Math.floor(parseInt(low + high) / 2);
+/*        var middle = Math.floor(parseInt(low + high) / 2);
         if (this.a[middle] < this.a[low]) {
             this.a = swapReferences(this.a, low, middle);
             commands.push("swap(" + low + ", " + middle + ");");
@@ -36,14 +36,14 @@ QuickSort.prototype.quickSort = function(low, high) {
         }
 
         this.a = swapReferences(this.a, middle, high - 1);
-        commands.push("swap(" + middle + ", " + (high - 1) + ");");
+        commands.push("swap(" + middle + ", " + (high - 1) + ");");*/
         var pivot = this.a[high - 1];
 
         var i, j;
         for (i = low, j = high - 1; ;) {
-            while (this.a[++i] < pivot && commands.push("markPivot(" + (i) + ", 'left');")) {
+            while (this.a[++i] < pivot /*&& commands.push("markPivot(" + (i) + ", 'left');" )*/) {
             }
-            while (pivot < this.a[--j] && commands.push("markPivot(" + (j) + ", 'right');")) {
+            while (pivot < this.a[--j] /*&& commands.push("markPivot(" + (j) + ", 'right');")*/) {
             }
             if (i >= j)
                 break;
