@@ -157,7 +157,7 @@ textarea {
 }
 
 #graphics {
-    width: 50%;
+    width: calc(50% - 3px);
     height: 100%;
     border-right: solid;
     border-color: #F44336;
@@ -216,26 +216,37 @@ pre {
 }
 
 #expand-tab {
-    position: relative;
-    left: 0;
-    top: 100%;
+    display: table-cell;
+    vertical-align: bottom;
     width: 15px;
-    height: 45px;
+    height: 60vh;
     max-width: 15px;
     max-height: 45px;
+    overflow: hidden;
+}
+
+#expand-tab a {
+    height: 45px;
 }
 
 #command-items-wrapper {
-    position: relative;
-    left: 20%;
     display: table-cell;
     vertical-align: bottom;
     height: 60vh;
+    padding-left: 10px;
+    padding-top: 1px;
 }
 
 #command-items-content {
+    display: table;
     max-height: 60vh;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#command-items-content:last-child {
+    border: none;
+    margin-bottom: 0;
 }
 
 .command-item {

@@ -42,5 +42,22 @@ $.ajax({
             $("#download-button").parent().remove();
             $("#download-button-mobile").parent().remove();
         }
+        else {
+            var filteredData = filterDataToSubCategory(data, currentFile.split('.')[0]);
+            var commandHtml = render("commandTemplate", filteredData);
+            $("body").append(commandHtml);
+        }
     }
 });
+
+function filterDataToSubCategory(data, current) {
+    var categories = data.categories;
+
+    for (var i = 0; i < categories.length; i++) {
+        var subCategories = categories[i].subCategories;
+        for (var j = 0; j < subCategories.length; j++) {
+            if (subCategories[j].id == current)
+                return subCategories[j];
+        }
+    }
+}

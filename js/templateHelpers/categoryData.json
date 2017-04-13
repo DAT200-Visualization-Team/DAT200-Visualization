@@ -83,7 +83,35 @@
       "subCategories": [
         {
           "id": "stack",
-          "name": "Stack"
+          "name": "Stack",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "initStack",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder":  "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Push",
+              "function": "pushElement",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Data",
+                  "placeholder":  "123"
+                }
+              ]
+            },
+            {
+              "name": "Pop",
+              "function": "popElement"
+            }
+          ]
         },
         {
           "id": "queue",
