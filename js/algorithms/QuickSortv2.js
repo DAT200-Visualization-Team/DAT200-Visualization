@@ -19,10 +19,10 @@ QuickSort.prototype.quickSort = function(low, high) {
         var p = this.partition(low, high);
        //commands.push("console.log('pivot: " + p + "')" );
         //commands.push("console.log('split from: " + low + ", to: " + p + " ')" );
-        commands.push("colorPartition(" + low + ", " + p + ")");
+        commands.push("colorPartition(" + low + ", " + p + ", 'left')");
         this.quickSort(low, p);
         //commands.push("console.log('split from: " + (p+1) + ", to: " + high + " ')" );
-        commands.push("colorPartition(" + (p+1) + ", " + high + ")");
+        commands.push("colorPartition(" + (p+1) + ", " + high + ", 'right')");
         this.quickSort(p + 1, high);
 
     }
