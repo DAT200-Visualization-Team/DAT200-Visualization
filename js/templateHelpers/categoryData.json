@@ -91,7 +91,8 @@
               "arguments": [
                 {
                   "type": "array",
-                  "name": "Data"
+                  "name": "Data",
+                  "placeholder":  "1,2,3..."
                 }
               ]
             },
@@ -100,8 +101,9 @@
               "function": "pushElement",
               "arguments": [
                 {
-                  "type": "value",
-                  "name": "Data"
+                  "type": "string",
+                  "name": "Data",
+                  "placeholder":  "123"
                 }
               ]
             },

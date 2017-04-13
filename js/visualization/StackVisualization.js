@@ -5,16 +5,15 @@ $(document).ready(function () {
     if (stack == null) {
         stack = new Stack();
         codeDisplayManager = new CodeDisplayManager("javascript", "stack");
-        initStack();
+        initStack([1,2,3]);
     }
 });
 
-function initStack(arrayList) {
+function initStack(array) {
     $('#stack').empty();
+    console.log(array);
 
-    if (arrayList == null || !(arrayList.constructor.name === 'ArrayList')) {
-        arrayList = new ArrayList([1, 2, 3, 4, 5]);
-    }
+    animatePushes(array);
 }
 
 function pushElement(value) {
