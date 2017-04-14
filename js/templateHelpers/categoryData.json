@@ -1,8 +1,8 @@
 {
   "categories": [
     {
-      "id": "lists",
-      "name": "Lists",
+      "id": "collections",
+      "name": "Collections",
       "image": "http://kriblikrably.com/wp-content/themes/shopperpress/thumbs/list.png",
       "subCategories": [
         {
@@ -12,6 +12,42 @@
         {
           "id": "linkedlist",
           "name": "Linked List"
+        },
+        {
+          "id": "stack",
+          "name": "Stack",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "initStack",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Push",
+              "function": "pushElement",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Data",
+                  "placeholder": "123"
+                }
+              ]
+            },
+            {
+              "name": "Pop",
+              "function": "popElement"
+            }
+          ]
+        },
+        {
+          "id": "queue",
+          "name": "Queue"
         }
       ]
     },
@@ -22,7 +58,24 @@
       "subCategories": [
         {
           "id": "insertionsort",
-          "name": "Insertion Sort"
+          "name": "Insertion Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         },
         {
           "id": "mergesort",
@@ -30,11 +83,53 @@
         },
         {
           "id": "bubblesort",
-          "name": "Bubble Sort"
+          "name": "Bubble Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         },
         {
           "id": "quicksort",
           "name": "Quick Sort"
+        },
+        {
+          "id": "shellsort",
+          "name": "Shell Sort"
+        },
+        {
+          "id": "countingsort",
+          "name": "Counting Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         }
       ]
     },
@@ -50,10 +145,6 @@
         {
           "id": "binarysearchtree",
           "name": "Binary Search Tree"
-        },
-        {
-          "id": "binarysearchtreewithrank",
-          "name": "Binary Search Tree With Rank"
         },
         {
           "id": "avltree",
@@ -77,51 +168,8 @@
       ]
     },
     {
-      "id": "stacks",
-      "name": "Stacks",
-      "image": "https://msdnshared.blob.core.windows.net/media/TNBlogsFS/BlogFileStorage/blogs_msdn/ericlippert/WindowsLiveWriter/TheStackIsAnImplementationDetail_C978/Stack_4.jpg",
-      "subCategories": [
-        {
-          "id": "stack",
-          "name": "Stack",
-          "commands": [
-            {
-              "name": "Create",
-              "function": "initStack",
-              "arguments": [
-                {
-                  "type": "array",
-                  "name": "Data",
-                  "placeholder":  "1,2,3..."
-                }
-              ]
-            },
-            {
-              "name": "Push",
-              "function": "pushElement",
-              "arguments": [
-                {
-                  "type": "string",
-                  "name": "Data",
-                  "placeholder":  "123"
-                }
-              ]
-            },
-            {
-              "name": "Pop",
-              "function": "popElement"
-            }
-          ]
-        },
-        {
-          "id": "queue",
-          "name": "Queue"
-        }
-      ]
-    },
-    {
-      "id": "otheralgorithms",
-      "name": "Other algorithms",
+      "id": "other",
+      "name": "Other",
       "image": "http://www.computerhope.com/jargon/a/algorithm.jpg",
       "subCategories": [
         {
@@ -130,7 +178,28 @@
         },
         {
           "id": "fibonacci",
-          "name": "Fibonacci"
+          "name": "Fibonacci",
+          "commands": [
+            {
+              "name": "Iterative",
+              "function": "runIterativeFib",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "n",
+                  "placeholder": "Integer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practicaldijkstra",
+          "name": "Practical Dijkstra"
+        },
+        {
+          "id": "filetree",
+          "name":  "File Tree"
         }
       ]
     }
