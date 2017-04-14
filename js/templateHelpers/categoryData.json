@@ -23,7 +23,7 @@
               "arguments": [
                 {
                   "type": "array",
-                  "name": "Data",
+                  "name": "arrayValues",
                   "placeholder": "1,2,3..."
                 }
               ]
@@ -34,7 +34,7 @@
               "arguments": [
                 {
                   "type": "string",
-                  "name": "Data",
+                  "name": "pushValue",
                   "placeholder": "123"
                 }
               ]
@@ -47,7 +47,35 @@
         },
         {
           "id": "queue",
-          "name": "Queue"
+          "name": "Queue",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "initQueue",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "arrayValues",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Enqueue",
+              "function": "enqueue",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "enqueueValue",
+                  "placeholder": "123"
+                }
+              ]
+            },
+            {
+              "name": "Dequeue",
+              "function": "dequeue"
+            }
+          ]
         }
       ]
     },
@@ -108,7 +136,24 @@
         },
         {
           "id": "shellsort",
-          "name": "Shell Sort"
+          "name": "Shell Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         },
         {
           "id": "countingsort",
@@ -140,7 +185,21 @@
       "subCategories": [
         {
           "id": "binarytree",
-          "name": "Binary Tree"
+          "name": "Binary Tree",
+          "commands": [
+            {
+              "name": "Pre Order",
+              "function": "visualizePreOrder"
+            },
+            {
+              "name": "In Order",
+              "function": "visualizeInOrder"
+            },
+            {
+              "name": "Post Order",
+              "function": "visualizePostOrder"
+            }
+          ]
         },
         {
           "id": "binarysearchtree",
@@ -159,11 +218,47 @@
       "subCategories": [
         {
           "id": "dijkstra",
-          "name": "Dijkstra"
+          "name": "Dijkstra",
+          "commands": [
+            {
+              "name": "Shortest Path",
+              "function": "performCurrentPathfinding",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Start",
+                  "placeholder": "2"
+                },
+                {
+                  "type": "int",
+                  "name": "End",
+                  "placeholder": "0"
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "bellmanford",
-          "name": "Bellman-Ford"
+          "name": "Bellman-Ford",
+          "commands": [
+            {
+              "name": "Shortest Path",
+              "function": "performCurrentPathfinding",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Start",
+                  "placeholder": "Start"
+                },
+                {
+                  "type": "int",
+                  "name": "End",
+                  "placeholder": "End"
+                }
+              ]
+            }
+          ]
         }
       ]
     },

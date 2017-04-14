@@ -28,7 +28,8 @@ function moveMarker(cx, cy) {
     return { e: marker, p: { translateX: cx, translateY: cy, opacity: 1 }, o: { duration: animationTime,/*, sequenceQueue: false*/ delay: 50} };
 }
 
-function visualizePreOrder() {
+function visualizePreOrder() {
+    init();
     var res = [];
     var loadingSequence = [];
     function preOrder(node) {
@@ -53,7 +54,8 @@ function visualizePreOrder() {
     $.Velocity.RunSequence(loadingSequence);
 }
 
-function visualizeInOrder() {
+function visualizeInOrder() {
+    init();
     var res = [];
     var loadingSequence = [];
     function inOrder(node) {
@@ -78,7 +80,8 @@ function visualizeInOrder() {
     $.Velocity.RunSequence(loadingSequence);
 }
 
-function visualizePostOrder() {
+function visualizePostOrder() {
+    init();
     var res = [];
     var loadingSequence = [];
     function postOrder(node) {
