@@ -43,17 +43,17 @@ function createArray(array) {
     texts = texts.data(data);
 
     var r = rects.enter();
-    
+
     r.append("rect")
         .attr("x", function (d, index) { return index * (width / data.length); })
         .attr("y", function (d) { return height - d - 20; })
         .attr("height", function (d) { return d; })
         .attr("width", barWidth)
         .attr("class", function (d, i) { return "element" + i })
-        .attr("fill", function (d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+        .attr("fill", "red");
 
     var t = texts.enter();
-    
+
     t.append("text").text(function (d) { return d; })
         .attr("x", function (d, index) { return index * (width / data.length) + barWidth / 4; })
         .attr("y", height)
@@ -141,12 +141,23 @@ function highlight(a, b, color) {
         .attr("fill", color);
 }
 
+function markAsSorted(a) {
+    var selector = ".element" + a;
+    if(a == 0) selector = "*";
+
+    barChart.selectAll("rect").filter(selector)
+        .transition()
+        .duration(500)
+        .attr("fill", "rgb(255,0,127)")
+        .attr("class", "sorted");
+}
+
 function clearHighlight() {
-    barChart.selectAll("rect")
+    barChart.selectAll("rect").filter(":not(.sorted)")
         .data(data)
         .transition()
         .duration(500)
-        .attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+        .attr("fill", function(d) { return "rgb(255, 0, 0)"; });
 }
 
 function play() {

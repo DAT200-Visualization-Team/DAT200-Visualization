@@ -1,4 +1,4 @@
-var data = [12, 23, 33, 43, 44, 55, 64, 76, 77];
+var data = [60, 30, 90, 70, 80];
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
@@ -69,6 +69,17 @@ var pivotMarkerLeft = barChart.append("svg");
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30");
     markPivot(data.length - 1, "right");*/
+
+//Panning
+var pan = d3.zoom()
+    .on("zoom", panning);
+
+barChart.call(pan);
+
+function panning() {
+    //barChart.attr("transform", "translate(" + d3.event.transform.x + ", " + d3.event.transform.y + ")");
+    barChart.attr("transform", d3.event.transform);
+}
 
 $( document ).ready(function() {
     initCode();
@@ -156,10 +167,9 @@ function colorPartition(from, to, direction) {
         if(i != from) selector += ", ";
         selector = selector + ".element" + i;
     }
-    barChart.selectAll("rect").filter(selector)
+    barChart.selectAll("*").filter(selector)
         .transition()
         .duration(500)
-        .attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
         .each( function(d, index) {
             //console.log(d3.select(this));
             d3.select(this)
@@ -180,33 +190,21 @@ function colorPartition(from, to, direction) {
                     }
                     return "translate(" + x + ", " + y + ")";
                 });
-/*        .attr("transform", function(d, index) {
-            var element = barChart.selectAll("rect").filter(".element" + index);
-            //console.log(element.attr("transform"));
-            console.log(element);
-            var currentTranslation = getTranslate(element);
-            var y = parseInt(currentTranslation[1]);
-            var x = parseInt(currentTranslation[0]);
-            y = y + 50;
-            if(direction == "left") {
-                x = x - 50;
-            } else {
-                x = x + 50;
-            }
-            return "translate(" + x + ", " + y + ")";
-        });*/
         });
+
+    barChart.selectAll("*").filter(selector)
+        .transition()
+        .duration(500)
+        .selectAll("rect")
+        .attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)");
 }
 
 function getTranslate(element) {
     var transformString = element.attr("transform");
-    console.log(transformString);
     if(transformString != "" && transformString != null) {
         var res = transformString.substring(transformString.indexOf("(")+1, transformString.indexOf(")")).split(",");
-        //console.log(res);
         if(res[0] == null) res[0] = 0;
         if(res[1] == null) res[1] = 0;
-        //console.log(res);
         return res;
     }
     return [0, 0];
@@ -228,8 +226,8 @@ function clearHighlight() {
     barChart.selectAll("rect")
         .data(data)
         .transition()
-        .duration(500)
-        .attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+        .duration(500);
+        //.attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
 }
 
 function play() {

@@ -123,7 +123,7 @@ function markAsSorted(a) {
         .attr("class", "sorted");
 }
 
-function swap(a, b, lastElement) {
+function swap(a, b) {
     var bar1 = barChart.selectAll("rect").filter(".element" + a);
     var bar2 = barChart.selectAll("rect").filter(".element" + b);
     var bar1Text = barChart.selectAll("text").filter(".element" + a);
