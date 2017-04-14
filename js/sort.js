@@ -39,7 +39,7 @@ barChart.selectAll("rect")
     .attr("height", function(d) { return d; })
     .attr("width", barWidth)
     .attr("class", function(d, i) { return "element" + i})
-    .attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+    .attr("fill", "red");
 
 
 barChart.selectAll("text")
@@ -153,12 +153,23 @@ function highlight(a, b, color) {
         .attr("fill", color);
 }
 
+function markAsSorted(a) {
+    var selector = ".element" + a;
+    if(a == 0) selector = "*";
+
+    barChart.selectAll("rect").filter(selector)
+        .transition()
+        .duration(500)
+        .attr("fill", "rgb(255,0,127)")
+        .attr("class", "sorted");
+}
+
 function clearHighlight() {
-    barChart.selectAll("rect")
+    barChart.selectAll("rect").filter(":not(.sorted)")
         .data(data)
         .transition()
         .duration(500)
-        .attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+        .attr("fill", function(d) { return "rgb(255, 0, 0)"; });
 }
 
 function play() {
