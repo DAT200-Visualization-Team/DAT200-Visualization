@@ -1,4 +1,5 @@
 function handleFunctionSubmit(functionName, formElement) {
+    console.log("Submit");
     event.preventDefault();
     var argumentValuesArray = [];
     var allInputs = formElement.find(':input');
@@ -6,6 +7,7 @@ function handleFunctionSubmit(functionName, formElement) {
     for (var i = 0; i < allInputs.length; i++) {
         var type = allInputs[i].getAttribute('data-type');
         var value = allInputs[i].value;
+        console.log(value);
 
         switch (type) {
             case 'array':
