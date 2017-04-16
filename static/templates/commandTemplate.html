@@ -16,16 +16,16 @@
                     </div>
                 </a>
                 {{#if this.arguments}}
-                <div class="command-item white-text" style="display: none; margin: 0; height: 50%; max-height: 5vh;">
+                <div class="command-item white-text" style="display: none; margin: 0; height: 50%; max-height: 5vh; width: 100% !important;">
                     <div class="valign-wrapper" style="width: 100%; height: 100%;">
-                    <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))">
-                        {{#each this.arguments}}
-                        <div style="height: 50%; overflow: hidden; padding: 0; display: inline-block;  width: 50%;">
-                            <input placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}" style="height: 11px; font-size: 11px; line-height:1; margin: 0; padding: 0;">
-                        </div>                 
-                        {{/each}}
-                        <input type="submit" value="Go" style="display: none;"/>
-                    </form>
+                        <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))" style="width: 100%;">
+                            {{#each this.arguments}}
+                            <div style="height: 50%; overflow: hidden; padding: 0; display: inline-block;  width: 5vw;">
+                                <input placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}" style="height: 10px; font-size: 10px; line-height:1; margin: 0; padding: 0;">
+                            </div>                 
+                            {{/each}}
+                            <input type="submit" value="Go" style="display: none;"/>
+                        </form>
                     </div>
                 </div>
                 {{/if}}

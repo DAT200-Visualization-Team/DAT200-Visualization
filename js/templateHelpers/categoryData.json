@@ -227,12 +227,12 @@
                 {
                   "type": "int",
                   "name": "Start",
-                  "placeholder": "2"
+                  "placeholder": "Start"
                 },
                 {
                   "type": "int",
                   "name": "End",
-                  "placeholder": "0"
+                  "placeholder": "End"
                 }
               ]
             }
