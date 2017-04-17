@@ -72,8 +72,9 @@ var drag_line = svg.append('svg:path')
 
 // handles to link and node element groups
 var path = svg.append('svg:g').selectAll('path'),
-    linklabels = svg.append('svg:g').selectAll('text'),
-    circle = svg.append('svg:g').selectAll('g');
+    linkLabel = svg.append('svg:g').selectAll('text'),
+    circle = svg.append('svg:g').selectAll('g')
+    currentCostLabel = svg.append('svg:g').selectAll('text');
 
 // mouse event vars
 var selected_node = null,
@@ -113,7 +114,11 @@ function tick() {
         return 'translate(' + d.x + ',' + d.y + ')';
     });
 
-    if (linklabels != null) {
+    currentCostLabel.attr('transform', function (d) {
+        return 'translate(' + (d.x + 10) + ',' + (d.y - 10) + ')';
+    });
+
+    if (linkLabel != null) {
         d3.selectAll('.label').attr('transform', function (d, i) {
             if (d.target.x < d.source.x) {
                 bbox = this.getBBox();
@@ -161,11 +166,11 @@ function restart() {
 
     path = path.merge(p);
 
-    // linklabels (link) group
-    linklabels = linklabels.data(links);
+    // linkLabel (link) group
+    linkLabel = linkLabel.data(links);
 
     // add new link labels
-    var l = linklabels.enter().append('text')
+    var l = linkLabel.enter().append('text')
         .attr('class', 'label')
         .style('pointer-events', 'all')
         .style('font-size', '30px')
@@ -224,13 +229,13 @@ function restart() {
                 d3.select('#costinput').node().focus();
             });
 
-    //Update cost
-    linklabels.text(function (d) { return d.cost });
+    // update cost
+    linkLabel.text(function (d) { return d.cost });
 
     // remove old link labels
-    linklabels.exit().remove();
+    linkLabel.exit().remove();
 
-    linklabels = linklabels.merge(l);
+    linkLabel = linkLabel.merge(l);
 
     // circle (node) group
     // NB: the function arg is crucial here! nodes are known by id, not by index!
@@ -336,6 +341,25 @@ function restart() {
     circle.exit().remove();
     circle = circle.merge(g);
 
+    // currentCostLabel (node) group
+    currentCostLabel = currentCostLabel.data(nodes, function (d) { return d.id; });
+
+    // add new current cost labels
+    var c = currentCostLabel.enter().append('text')
+        .attr('class', 'current-cost-label')
+        .style('pointer-events', 'none')
+        .style('font-size', '30px')
+        .style('fill', '#4286f4')
+        .style('font-family', 'Roboto')
+        .text(function (d) { return d.currentCost });
+
+    // update existing labels to display current cost
+    currentCostLabel.text(function (d) { return d.currentCost; });
+
+    // remove old labels
+    currentCostLabel.exit().remove();
+    currentCostLabel = currentCostLabel.merge(c);
+
     force.nodes(nodes);
     force.force('link').links(links);
 
@@ -351,7 +375,7 @@ function mousedown() {
 
     // insert new node at point
     var point = d3.mouse(this),
-        node = { id: ++lastNodeId, reflexive: false };
+        node = { id: ++lastNodeId, reflexive: false, currentCost: "\u221E" };
     node.x = point[0];
     node.y = point[1];
     nodes.push(node);
@@ -518,9 +542,9 @@ $(document).ready(function () {
     if (nodes.length == null || nodes.length == 0) {
 
         nodes = [
-            { id: 0, reflexive: false },
-            { id: 1, reflexive: true },
-            { id: 2, reflexive: false }
+            { id: 0, reflexive: false, currentCost: '\u221E' },
+            { id: 1, reflexive: true, currentCost: '\u221E' },
+            { id: 2, reflexive: false, currentCost: '\u221E' }
         ]
 
         links = [
