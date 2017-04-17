@@ -37,7 +37,7 @@ function visRotateWithLeftChild(k) {
 }
 
 function visRotateWithRightChild(k) {
-    
+
 }
 
 function visDoubleRotateWithLeftChild() {
