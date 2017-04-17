@@ -96,6 +96,8 @@ Graph.prototype.dijkstra = function (startName) {
     pq.add(new Path(start, 0));
     start.dist = 0;
 
+    commands.push({ name: "setCurrentCost", data: { id: start.name, newCost: start.dist } });
+
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
         commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
@@ -128,6 +130,7 @@ Graph.prototype.dijkstra = function (startName) {
                 commands.push({ name: "highlightLines", data: { lines: [30, 31, 32] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
+                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: w.dist } });
                 pq.add(new Path(w, w.dist));
                 commands.push({ name: "colorPending", data: { vertices: [v, w] } });
             }
@@ -156,6 +159,8 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
     q.addLast(start);
     start.dist = 0;
     start.scratch++;
+
+    commands.push({ name: "setCurrentCost", data: { id: start.name, newCost: start.dist } });
     
     while (!q.isEmpty()) {
         commands.push({ name: "highlightLines", data: { lines: [12, 13, 14] } });
@@ -177,6 +182,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
                 commands.push({ name: "highlightLines", data: { lines: [24, 25, 27] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
+                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: w.dist } });
                 // Enqueue only if not already on the queue
                 if (w.scratch++ % 2 === 0) {
                     commands.push({ name: "highlightLines", data: { lines: [28] } })

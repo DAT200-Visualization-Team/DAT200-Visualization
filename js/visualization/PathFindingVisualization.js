@@ -77,6 +77,16 @@ function getLinkElement(a, b) {
     return null;
 }
 
+function changeCurrentCost(nodeId, newCost) {
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].id == nodeId)
+            nodes[i].currentCost = newCost;
+    }
+    var currentLabel = d3.selectAll('.current-cost-label').filter(function (d) { return d.id == nodeId });
+    console.log(currentLabel.node());
+    return { e: $(currentLabel.node()), p: 'callout.flash', o: { complete: function () { currentLabel.text(newCost) } } };
+}
+
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
         switch (commands[i].name) {
@@ -103,8 +113,8 @@ function executeCommands(commands) {
             case 'highlightLines':
                 loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(commands[i].data.lines, animationTime));
                 break;
-            case 'setVariable':
-
+            case 'setCurrentCost':
+                loadingSequence.push(changeCurrentCost(commands[i].data.id, commands[i].data.newCost));
                 break;
         }
     }
