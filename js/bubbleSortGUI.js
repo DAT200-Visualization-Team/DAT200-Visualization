@@ -30,41 +30,56 @@ var codeContent = [
     "}"];
 
 var code = d3.select("#code-text");
-var barChart = d3.select(".drawingArea")
-    .append("svg:svg")
-    .attr("width", width)
+var barChart = d3.select(".drawingArea").append("svg:svg");
+
+var rects = barChart.append("svg:g").selectAll("rect");
+var texts = barChart.append("svg:g").selectAll("text");
+
+createArray(data);
+
+function createArray(array) {
+    $('g').empty();
+    data = array;
+    width = (barWidth + 10) * data.length;
+
+    barChart.attr("width", width)
     .attr("height", height);
 
+    rects = rects.data(data);
+    texts = texts.data(data);
 
-barChart.selectAll("rect")
-    .data(data)
-    .enter()
-    .append("svg:rect")
-    .attr("x", function(d, index) { return index * (width / data.length); })
-    .attr("y", function(d) { return height - d - 20; })
-    .attr("height", function(d) { return d; })
-    .attr("width", barWidth)
-    .attr("class", function(d, i) { return "element" + i})
-    .attr("fill", function(d) { return "rgb(255, 0, 0)"; });
+    var r = rects.enter();
 
+    r.append("rect")
+        .attr("x", function (d, index) { return index * (width / data.length); })
+        .attr("y", function (d) { return height - d - 20; })
+        .attr("height", function (d) { return d; })
+        .attr("width", barWidth)
+        .attr("class", function (d, i) { return "element" + i })
+        .attr("fill", function (d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
 
-barChart.selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-    .text(function(d) { return d; })
-    .attr("x", function(d, index) { return index * (width / data.length) + barWidth / 4; })
-    .attr("y", height )
-    .attr("width", barWidth)
-    .attr("class", function(d, i) { return "element" + i});
+    var t = texts.enter();
+
+    t.append("text").text(function (d) { return d; })
+        .attr("x", function (d, index) { return index * (width / data.length) + barWidth / 4; })
+        .attr("y", height)
+        .attr("width", barWidth)
+        .attr("class", function (d, i) { return "element" + i });
+
+    cmd = [];
+    currentCmd = 0;
+}
+
+function startSorting() {
+    sort();
+    play();
+}
 
 $( document ).ready(function() {
     initCode();
 });
 
 $(document).on("sort", function(event, newCommands) {
-    console.log("sorted");
-    console.log(newCommands);
     cmd = newCommands.split('!');
 });
 
@@ -73,7 +88,6 @@ function sort() {
 }
 
 function runCommand() {
-    console.log(cmd[currentCmd]);
     unHighlightCode();
     switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
         case "swap":
@@ -98,30 +112,6 @@ function runCommand() {
     currentCmd++;
 }
 
-/*
- function redraw(wait) {
- barChart.selectAll("rect").
- data(data).
- transition().
- delay(wait).
- //duration(1000).
- attr("x", function(d, index) { return index * (width / data.length) + barWidth / 4; }).
- attr("y", function(d) { return height - d - 20; }).
- attr("height", function(d) { return d; });
- //attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
-
-
- /*
- barChart.selectAll("text")
- .data(data)
- .transition()
- .delay(wait)
- //.duration(1000)
- .text(function(d) { return d; })
- .attr("y", height );
- */
-//}
-
 function markAsSorted(a) {
     var selector = ".element" + a;
     if(a == 0) selector = "*";
@@ -133,7 +123,7 @@ function markAsSorted(a) {
         .attr("class", "sorted");
 }
 
-function swap(a, b, lastElement) {
+function swap(a, b) {
     var bar1 = barChart.selectAll("rect").filter(".element" + a);
     var bar2 = barChart.selectAll("rect").filter(".element" + b);
     var bar1Text = barChart.selectAll("text").filter(".element" + a);
@@ -203,7 +193,6 @@ function initCode() {
 }
 
 function codeLineHighlight(lineNr) {
-    //console.log(code);
     code.selectAll("span").filter("#codeLine" + lineNr)
         .transition()
         .duration(500)

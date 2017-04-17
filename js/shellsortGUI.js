@@ -1,9 +1,7 @@
 var data = [35, 33, 42, 10, 14, 19, 20, 40];
-//var data = [10, 20, 30, 40];
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
-//var width = 500;
 var height = 350;
 
 //Array size
@@ -38,41 +36,53 @@ var codeContent = [
 ];
 
 var code = d3.select("#code-text");
-var drawingArea = d3.select(".drawingArea")
-    .append("svg:svg")
-    .attr("width", width)
-    .attr("height", height);
-var array = drawingArea.append("g");
+var drawingArea = d3.select(".drawingArea").append("svg:svg");
+var arrayGroup;
 
-//Create unsorted array
-array.selectAll("rect")
-    .data(data)
-    .enter()
-    .append("svg:rect")
-    .attr("x", function(d, index) { return index * (width / data.length); })
-    .attr("y", function(d) { return 0; })
-    .attr("height", arrElementHeight)
-    .attr("width", arrElementWidth - 5)
-    .attr("fill", "rgb(255, 0, 127)")
-    .attr("class", function(d, i) { return "element" + i});
+createArray(data);
 
-array.selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-    .text(function(d) { return d; })
-    .attr("x", function(d, index) { return index * (width / data.length) + arrElementWidth / 3; })
-    .attr("y", 30)
-    .attr("width", barWidth)
-    .attr("class", function(d, i) { return "element" + i});
+function createArray(array) {
+    $("g").empty();
+    data = array;
+
+    width = (barWidth + 10) * data.length;
+
+    drawingArea.attr("width", width).attr("height", height);
+    arrayGroup = drawingArea.append("g");
+
+    //Create unsorted array
+    arrayGroup.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("svg:rect")
+        .attr("x", function (d, index) { return index * (width / data.length); })
+        .attr("y", function (d) { return 0; })
+        .attr("height", arrElementHeight)
+        .attr("width", arrElementWidth - 5)
+        .attr("fill", "rgb(255, 0, 127)")
+        .attr("class", function (d, i) { return "element" + i });
+
+    arrayGroup.selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d) { return d; })
+        .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 3; })
+        .attr("y", 30)
+        .attr("width", barWidth)
+        .attr("class", function (d, i) { return "element" + i });
+}
+
+function startSorting() {
+    sort();
+    play();
+}
 
 $( document ).ready(function() {
     initCode();
 });
 
 $(document).on("sort", function(event, newCommands) {
-    console.log("sorted");
-    console.log(newCommands);
     cmd = newCommands.split('!');
 });
 
@@ -87,13 +97,12 @@ function sublist(gap) {
             if(i != k) selector += ", ";
             selector = selector + ".element" + i;
         }
-        console.log(selector);
 
-        array.selectAll("rect").filter(selector)
+        arrayGroup.selectAll("rect").filter(selector)
             .transition()
             .duration(1000)
             .attr("transform", "translate(0, " + (k * 1.2 * arrElementHeight) + ")");
-        array.selectAll("text").filter(selector)
+        arrayGroup.selectAll("text").filter(selector)
             .transition()
             .duration(1000)
             .attr("transform", "translate(0, " + (k * 1.2 * arrElementHeight) + ")");
@@ -101,7 +110,7 @@ function sublist(gap) {
 }
 
 function mergeSublists() {
-    array.selectAll("rect, text")
+    arrayGroup.selectAll("rect, text")
         .transition()
         .duration(1000)
         .attr("transform", "translate(0,0)");
@@ -109,21 +118,21 @@ function mergeSublists() {
 
 function highlight(a, b, color) {
     color = color || "rgb(0, 255, 0)";
-    array.selectAll("rect").filter(".element" + a)
+    arrayGroup.selectAll("rect").filter(".element" + a)
         .transition()
         .duration(500)
         .attr("fill", "rgb(0,0,255)");
-    array.selectAll("rect").filter(".element" + b)
+    arrayGroup.selectAll("rect").filter(".element" + b)
         .transition()
         .duration(500)
         .attr("fill", color);
 }
 
 function swap(a, b) {
-    var bar1 = array.selectAll("rect").filter(".element" + a);
-    var bar2 = array.selectAll("rect").filter(".element" + b);
-    var bar1Text = array.selectAll("text").filter(".element" + a);
-    var bar2Text = array.selectAll("text").filter(".element" + b);
+    var bar1 = arrayGroup.selectAll("rect").filter(".element" + a);
+    var bar2 = arrayGroup.selectAll("rect").filter(".element" + b);
+    var bar1Text = arrayGroup.selectAll("text").filter(".element" + a);
+    var bar2Text = arrayGroup.selectAll("text").filter(".element" + b);
 
     //temp vars
     var oldBar1_X = bar1.attr('x');
@@ -149,14 +158,13 @@ function swap(a, b) {
 }
 
 function clearHighlight() {
-    array.selectAll("rect")
+    arrayGroup.selectAll("rect")
         .transition()
         .duration(500)
         .attr("fill", "rgb(255, 0, 127)");
 }
 
 function runCommand() {
-    console.log(cmd[currentCmd]);
     unHighlightCode();
     switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
         case "swap":
@@ -169,7 +177,6 @@ function runCommand() {
             eval(cmd[currentCmd]);
             break;
         case "high":
-            //clearHighlight();
             eval(cmd[currentCmd]);
             break;
         case "code":
@@ -207,7 +214,6 @@ function initCode() {
 }
 
 function codeLineHighlight(lineNr) {
-    //console.log(code);
     code.selectAll("span").filter("#codeLine" + lineNr)
         .transition()
         .duration(500)

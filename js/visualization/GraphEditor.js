@@ -344,9 +344,6 @@ function restart() {
 }
 
 function mousedown() {
-    // prevent I-bar on drag
-    //d3.event.preventDefault();
-
     // because :active only works in WebKit?
     svg.classed('active', true);
 
@@ -400,7 +397,7 @@ var lastKeyDown = -1;
 
 function keydown() {
     if (selected_label != null) return;
-    d3.event.preventDefault();
+
     if (lastKeyDown !== -1) return;
     lastKeyDown = d3.event.keyCode;
 

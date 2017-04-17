@@ -1,8 +1,8 @@
 {
   "categories": [
     {
-      "id": "lists",
-      "name": "Lists",
+      "id": "collections",
+      "name": "Collections",
       "image": "http://kriblikrably.com/wp-content/themes/shopperpress/thumbs/list.png",
       "subCategories": [
         {
@@ -12,6 +12,70 @@
         {
           "id": "linkedlist",
           "name": "Linked List"
+        },
+        {
+          "id": "stack",
+          "name": "Stack",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "initStack",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "arrayValues",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Push",
+              "function": "pushElement",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "pushValue",
+                  "placeholder": "123"
+                }
+              ]
+            },
+            {
+              "name": "Pop",
+              "function": "popElement"
+            }
+          ]
+        },
+        {
+          "id": "queue",
+          "name": "Queue",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "initQueue",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "arrayValues",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Enqueue",
+              "function": "enqueue",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "enqueueValue",
+                  "placeholder": "123"
+                }
+              ]
+            },
+            {
+              "name": "Dequeue",
+              "function": "dequeue"
+            }
+          ]
         }
       ]
     },
@@ -22,7 +86,24 @@
       "subCategories": [
         {
           "id": "insertionsort",
-          "name": "Insertion Sort"
+          "name": "Insertion Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         },
         {
           "id": "mergesort",
@@ -30,11 +111,70 @@
         },
         {
           "id": "bubblesort",
-          "name": "Bubble Sort"
+          "name": "Bubble Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         },
         {
           "id": "quicksort",
           "name": "Quick Sort"
+        },
+        {
+          "id": "shellsort",
+          "name": "Shell Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
+        },
+        {
+          "id": "countingsort",
+          "name": "Counting Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "5,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "startSorting"
+            }
+          ]
         }
       ]
     },
@@ -45,15 +185,25 @@
       "subCategories": [
         {
           "id": "binarytree",
-          "name": "Binary Tree"
+          "name": "Binary Tree",
+          "commands": [
+            {
+              "name": "Pre Order",
+              "function": "visualizePreOrder"
+            },
+            {
+              "name": "In Order",
+              "function": "visualizeInOrder"
+            },
+            {
+              "name": "Post Order",
+              "function": "visualizePostOrder"
+            }
+          ]
         },
         {
           "id": "binarysearchtree",
           "name": "Binary Search Tree"
-        },
-        {
-          "id": "binarysearchtreewithrank",
-          "name": "Binary Search Tree With Rank"
         },
         {
           "id": "avltree",
@@ -68,60 +218,53 @@
       "subCategories": [
         {
           "id": "dijkstra",
-          "name": "Dijkstra"
-        },
-        {
-          "id": "bellmanford",
-          "name": "Bellman-Ford"
-        }
-      ]
-    },
-    {
-      "id": "stacks",
-      "name": "Stacks",
-      "image": "https://msdnshared.blob.core.windows.net/media/TNBlogsFS/BlogFileStorage/blogs_msdn/ericlippert/WindowsLiveWriter/TheStackIsAnImplementationDetail_C978/Stack_4.jpg",
-      "subCategories": [
-        {
-          "id": "stack",
-          "name": "Stack",
+          "name": "Dijkstra",
           "commands": [
             {
-              "name": "Create",
-              "function": "initStack",
+              "name": "Shortest Path",
+              "function": "performCurrentPathfinding",
               "arguments": [
                 {
-                  "type": "array",
-                  "name": "Data",
-                  "placeholder":  "1,2,3..."
-                }
-              ]
-            },
-            {
-              "name": "Push",
-              "function": "pushElement",
-              "arguments": [
+                  "type": "int",
+                  "name": "Start",
+                  "placeholder": "Start"
+                },
                 {
-                  "type": "string",
-                  "name": "Data",
-                  "placeholder":  "123"
+                  "type": "int",
+                  "name": "End",
+                  "placeholder": "End"
                 }
               ]
-            },
-            {
-              "name": "Pop",
-              "function": "popElement"
             }
           ]
         },
         {
-          "id": "queue",
-          "name": "Queue"
+          "id": "bellmanford",
+          "name": "Bellman-Ford",
+          "commands": [
+            {
+              "name": "Shortest Path",
+              "function": "performCurrentPathfinding",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Start",
+                  "placeholder": "Start"
+                },
+                {
+                  "type": "int",
+                  "name": "End",
+                  "placeholder": "End"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "id": "otheralgorithms",
-      "name": "Other algorithms",
+      "id": "other",
+      "name": "Other",
       "image": "http://www.computerhope.com/jargon/a/algorithm.jpg",
       "subCategories": [
         {
@@ -130,7 +273,28 @@
         },
         {
           "id": "fibonacci",
-          "name": "Fibonacci"
+          "name": "Fibonacci",
+          "commands": [
+            {
+              "name": "Iterative",
+              "function": "runIterativeFib",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "n",
+                  "placeholder": "Integer"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practicaldijkstra",
+          "name": "Practical Dijkstra"
+        },
+        {
+          "id": "filetree",
+          "name":  "File Tree"
         }
       ]
     }

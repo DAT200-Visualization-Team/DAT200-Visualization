@@ -1,11 +1,11 @@
 {{#if this.commands}}
 <div id="command-widget">
     <div id="expand-tab">
-        <a href="#" class="red valign-wrapper" onclick="$('#command-items-wrapper').fadeToggle(200);">
+        <a href="#" class="red valign-wrapper" onclick="$('#command-items-wrapper').fadeToggle(200, function(){if($('#command-items-wrapper').css('display') != 'none')$(this).css('display', 'table-cell')});">
             <i class="material-icons tiny valign white-text">play_arrow</i>
         </a>
     </div>
-    <div id="command-items-wrapper">
+    <div id="command-items-wrapper"  style="display: none;">
         <ul id="command-items-content">
             {{#each this.commands}}
             <li style="display: table-row;">
@@ -16,15 +16,16 @@
                     </div>
                 </a>
                 {{#if this.arguments}}
-                <div class="command-item white-text" style="display: none; margin: 0; height: 50%; max-height: 5vh;">
+                <div class="command-item white-text" style="display: none; margin: 0; height: 50%; max-height: 5vh; width: 100% !important;">
                     <div class="valign-wrapper" style="width: 100%; height: 100%;">
-                    <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))">
-                        {{#each this.arguments}}
-                        <div style="height: 50%; overflow: hidden; padding: 0; display: inline-block;  width: 50%;">
-                            <input placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}" style="height: 11px; font-size: 11px; line-height:1; margin: 0; padding: 0;">
-                        </div>                    
-                        {{/each}}
-                    </form>
+                        <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))">
+                            {{#each this.arguments}}
+                            <div style="height: 3vh; overflow: hidden; padding: 0; display: inline-block;  width: 5vw;">
+                                <input class="argument-input" placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}">
+                            </div>                 
+                            {{/each}}
+                            <input type="submit" value="Go" style="display: none;"/>
+                        </form>
                     </div>
                 </div>
                 {{/if}}

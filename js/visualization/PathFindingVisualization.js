@@ -41,6 +41,10 @@ function performPathFinding(algorithm, start, end) {
     playAnimation();
 }
 
+function performCurrentPathfinding(start, end) {
+    performPathFinding(currentAlgorithm, start, end)
+}
+
 function addPathColorFrame(path, color, time) {
     loadingSequence.push({ e: path, p: { fill: color, stroke: color }, o: { duration: time } });
 };
