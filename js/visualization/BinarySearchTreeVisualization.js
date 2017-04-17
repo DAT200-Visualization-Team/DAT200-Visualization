@@ -131,22 +131,53 @@ function visualizeSearch(lbl) {
 }
 
 function visualizeRemove(lbl) {
-    /*
-    if (t === null)
-        //TODO: give error
-    if (x - t.getElement() < 0)
-        t.setLeft(this.removeNode(x, t.getLeft()));
-    else if (x - t.getElement() > 0)
-        t.setRight(this.removeNode(x, t.getRight()));
-    else if (t.getLeft() !== null && t.getRight() !== null) { // Two children
-        t.setElement(this.findMinNode(t.getRight()).getElement());
-        t.setRight(this.removeMinNode(t.getRight()));
+    function remove(x, t) {
+        if(parent != bst.root) {
+            var point = findNodeInTreeEditor(parent).p;
+            $("#g_lines line").each(function() {
+                if(point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
+                    loadingSequence.push({e: $(this), p: {stroke: "#ffff00"}, o: {duration: animationTime}});
+                }
+            });
+        }
+
+        if (t === null) {}//TODO: give error
+        if (x - t.getElement() < 0) {
+            parent = t, direction = 'left';
+            t.setLeft(remove(x, t.getLeft()));
+        }
+        else if (x - t.getElement() > 0) {
+            parent = t, direction = 'right';
+            t.setRight(remove(x, t.getRight()));
+        }
+        else if (t.getLeft() !== null && t.getRight() !== null) { // Two children
+            t.setElement(bst.findMinNode(t.getRight()).getElement()); // Bytter verdiene på elementene
+            t.setRight(bst.removeMinNode(t.getRight())); // Fjerner noden den har bytta med, og setter
+        }
+        else {
+            if(t.getLeft() !== null) {
+                parent = t, direction = 'left';
+                t = t.getLeft();
+            }
+            else {
+                parent = t, direction = 'right';
+                t = t.getRight();
+            }
+        }
+        return t;
     }
-    else
-        t = (t.getLeft() !== null) ? t.getLeft() : t.getRight();
-    return t;
-    */
+
+    loadingSequence = [];
+    var parent = bst.root, direction = null;
+    remove(lbl, bst.root);
+    $.Velocity.RunSequence(loadingSequence);
+    makeGUIUnEditable();
 }
 
 init(50);
-//visualizeInsert(45);
+/*visualizeInsert(70);
+visualizeInsert(60);
+visualizeInsert(80);
+visualizeInsert(30);
+visualizeInsert(20);
+visualizeInsert(40);*/
