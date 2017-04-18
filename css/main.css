@@ -213,6 +213,7 @@ pre {
     top: 25%;
     left: 0;
     height: 60vh;
+    pointer-events: none;
 }
 
 #expand-tab {
@@ -223,6 +224,7 @@ pre {
     max-width: 15px;
     max-height: 45px;
     overflow: hidden;
+    pointer-events: all;
 }
 
 #expand-tab a {
@@ -255,6 +257,7 @@ pre {
     width: 10vw;
     padding-left: 6px;
     border-bottom: 1px solid lavender;
+    pointer-events: all;
 }
 
 #argument-wrapper {
