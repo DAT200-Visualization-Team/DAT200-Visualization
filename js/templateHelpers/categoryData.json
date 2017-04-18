@@ -269,7 +269,33 @@
       "subCategories": [
         {
           "id": "towerofhanoi",
-          "name": "Tower of Hanoi"
+          "name": "Tower of Hanoi",
+          "commands": [
+            {
+              "name": "Solve",
+              "function": "hanoi",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Disks",
+                  "placeholder": "Disks",
+                  "options": [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+                },
+                {
+                  "type": "string",
+                  "name": "Start",
+                  "placeholder": "Start",
+                  "options": [ "A", "B", "C" ]
+                },
+                {
+                  "type": "string",
+                  "name": "End",
+                  "placeholder": "End",
+                  "options": ["A", "B", "C"]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "fibonacci",

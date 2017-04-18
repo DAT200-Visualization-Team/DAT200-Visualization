@@ -25,6 +25,10 @@ var animationTime = baseAnimationTime; // can be adjusted by user
 
 var codeDisplayManager;
 
+$(document).ready(function () {
+    $('select').material_select();
+});
+
 function updateSVG() {
     $(".towerOfHanoiContainer").html($(".towerOfHanoiContainer").html());
 }
@@ -159,7 +163,6 @@ function sendCommands(commands, disks, from) {
             loadingSequence.push(tmp[1]);
         } else {
             var tmp = codeDisplayManager.getVelocityFramesForHighlight(commands[i], animationTime);
-            //console.log(tmp);
             loadingSequence.push(tmp[0], tmp[1]);
         }
     }

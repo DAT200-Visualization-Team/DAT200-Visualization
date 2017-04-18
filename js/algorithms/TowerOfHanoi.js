@@ -1,16 +1,3 @@
-/*
-//var report = [];
-
-function hanoi(disks, from, to, temp) {
-    if (disks === 0)
-        return;
-    hanoi(disks - 1, from, temp, to);
-    console.log("Moving disc " + disks + " from " + from + " to " + to);
-    //report.push([disks, from, to]);
-    hanoi(disks - 1, temp, to, from);
-}
-*/
-
 function Hanoi(disks, from, to, temp) {
     if (disks > 9) {
         throw {name: "ArgumentOutOfRangeException", message: "GUI can only handle maximum 9 disks"};
@@ -40,10 +27,7 @@ Hanoi.prototype.showReport = function() {
     return this.commands;
 };
 
-function doHanoi() {
-    var numdisks = parseInt($("#numdisks").val());
-    var from = $("#from").val().toString();
-    var to = $("#to").val().toString();
+function doHanoi(numdisks, from, to) {
     var speed = parseInt($("#speed").val());
     animationTime = baseAnimationTime / speed;
 
@@ -53,8 +37,3 @@ function doHanoi() {
 
     new Hanoi(numdisks, from, to, arr[0]);
 }
-
-
-//var h = new Hanoi(3, "A", "C", "B");
-//var rep = h.showReport();
-//console.log(rep[0]);*/
