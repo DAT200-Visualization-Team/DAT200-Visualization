@@ -1,7 +1,7 @@
 {{#if this.commands}}
 <div id="command-widget">
     <div id="expand-tab">
-        <a href="#" class="red valign-wrapper" onclick="$('#command-items-wrapper').fadeToggle(200, function () { if ($('#command-items-wrapper').css('display') != 'none') $(this).css('display', 'table-cell') });">
+        <a href="#" class="red valign-wrapper" onclick="toggleFadeState($('#command-items-wrapper'));">
             <i class="material-icons tiny valign white-text">play_arrow</i>
         </a>
     </div>
@@ -10,19 +10,18 @@
             {{#each this.commands}}
             <li style="display: table-row;">
                 <a href="#" style="display: table-cell;">
-                    {{!Calls the function associated with the box, but if it has arguments, toggle the visibility of the argument boxes.}}
-                    <div onclick="{{#if this.arguments}}$(this).parent().parent().children().last().fadeToggle(200, function(){if($(this).css('display') != 'none')$(this).css('display', 'table-cell')});{{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
+                    <div onclick="{{#if this.arguments}}toggleFadeState($('#argument-wrapper')){{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
                         <p class="valign">{{this.name}}</p>
                     </div>
                 </a>
                 {{#if this.arguments}}
-                <div class="command-item white-text" style="display: none; margin: 0; height: 50%; max-height: 5vh; width: 100% !important;">
-                    <div class="valign-wrapper" style="width: 100%; height: 100%; display: table-row">
+                <div class="command-item white-text" id="argument-wrapper">
+                    <div class="valign-wrapper" style="display: table-row">
                         <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))">
                             {{#each this.arguments}}
-                            <div style="height: 100%; overflow: hidden; padding: 0 10px 0 0; display: table-cell; vertical-align: central;  width: 5vw;">
+                            <div class="input-wrapper">
                                 {{#if this.options}}
-                                <select name="{{this.name}}" class="browser-default" data-type="{{this.type}}" style="color: black; font-size: 10px; line-height: 1; height: 100%; padding: 0;">
+                                <select name="{{this.name}}" class="browser-default argument-select" data-type="{{this.type}}">
                                     <option value="" disabled selected>{{this.placeholder}}</option>
                                     {{#each this.options}}
                                     <option value="{{this}}">{{this}}</option>
@@ -33,8 +32,8 @@
                                 {{/if}}
                             </div>                 
                             {{/each}}
-                            <div style="height: 100%; overflow: hidden; padding: 0 10px 0 0; display: table-cell; vertical-align: central;  width: 3vw;">
-                                <input type="submit" value="Go" style="color:black;"/>
+                            <div class="input-wrapper submit-wrapper">
+                                <input type="submit" value="Go" class="waves-light waves-effect"/>
                             </div>
                         </form>
                     </div>

@@ -1,3 +1,10 @@
+function toggleFadeState(element) {
+    element.fadeToggle(200, function () {
+        if (element.css('display') != 'none')
+            element.css('display', 'table-cell');
+    });
+}
+
 function handleFunctionSubmit(functionName, formElement) {
     event.preventDefault();
     var argumentValuesArray = [];
