@@ -273,7 +273,7 @@
           "commands": [
             {
               "name": "Solve",
-              "function": "hanoi",
+              "function": "doHanoi",
               "arguments": [
                 {
                   "type": "int",

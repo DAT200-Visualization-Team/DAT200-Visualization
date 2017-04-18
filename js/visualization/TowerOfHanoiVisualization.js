@@ -27,6 +27,8 @@ var codeDisplayManager;
 
 $(document).ready(function () {
     $('select').material_select();
+    setPlatform();
+    updateSVG();
 });
 
 function updateSVG() {

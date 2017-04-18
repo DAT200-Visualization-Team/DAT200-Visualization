@@ -22,7 +22,7 @@
                             {{#each this.arguments}}
                             <div style="height: 100%; overflow: hidden; padding: 0 10px 0 0; display: table-cell; vertical-align: central;  width: 5vw;">
                                 {{#if this.options}}
-                                <select name="{{this.name}}" class="browser-default" style="color: black; font-size: 10px; line-height: 1; height: 100%; padding: 0;">
+                                <select name="{{this.name}}" class="browser-default" data-type="{{this.type}}" style="color: black; font-size: 10px; line-height: 1; height: 100%; padding: 0;">
                                     <option value="" disabled selected>{{this.placeholder}}</option>
                                     {{#each this.options}}
                                     <option value="{{this}}">{{this}}</option>
