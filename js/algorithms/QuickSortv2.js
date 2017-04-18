@@ -11,6 +11,7 @@ function QuickSort(arr) {
 QuickSort.prototype.sort = function() {
     this.quickSort(0, this.a.length - 1);
 
+    commands.push("merge()");
     return this.a;
 };
 
@@ -30,7 +31,8 @@ QuickSort.prototype.quickSort = function(low, high) {
 
 QuickSort.prototype.partition = function(low, high) {
     var pivot = this.a[low];
-    commands.push("markPivot(" + (low) + ", 'left');" );
+    //commands.push("markPivot(" + (low) + ", 'left');" );
+
     var i, j;
     for (i = low - 1, j = high + 1; ;) {
         while (this.a[++i] < pivot /*&& commands.push("markPivot(" + (i) + ", 'left');" )*/) {
