@@ -321,6 +321,14 @@
         {
           "id": "filetree",
           "name":  "File Tree"
+        },
+        {
+          "id": "maxsubsequencesum",
+          "name":  "Max Subsequence Sum"
+        },
+        {
+          "id": "arraysearch",
+          "name":  "Array Search"
         }
       ]
     }
