@@ -46,8 +46,8 @@ function createArray(array) {
 
     r.append("rect")
         .attr("x", function (d, index) { return index * (width / data.length); })
-        .attr("y", function (d) { return height - d - 20; })
-        .attr("height", function (d) { return d; })
+        .attr("y", function (d) { return height - (d/Math.max.apply(null, data)) * 250 - 20; })
+        .attr("height", function (d) { return d / Math.max.apply(null, data) * 250; })
         .attr("width", barWidth)
         .attr("class", function (d, i) { return "element" + i })
         .attr("fill", "red");

@@ -52,8 +52,8 @@ function createRects(data) {
         .enter()
         .append("svg:rect")
         .attr("x", function(d, index) { return index * (width / data.length) + 100; })
-        .attr("y", function(d) { return height - d - 50; })
-        .attr("height", function(d) { return d; })
+        .attr("y", function (d) { return height - (d/Math.max.apply(null, data)) * 250 - 50; })
+        .attr("height", function (d) { return d / Math.max.apply(null, data) * 250; })
         .attr("width", barWidth)
         .attr("class", function(d, i) { return "element" + i})
         .attr("fill", function(d) { return "red"; });
