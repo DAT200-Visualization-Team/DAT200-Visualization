@@ -9,29 +9,39 @@
         <ul id="command-items-content">
             {{#each this.commands}}
             <li style="display: table-row;">
+                {{! Add the box containing the name of the function}}
                 <a href="#" style="display: table-cell;">
-                    <div onclick="{{#if this.arguments}}toggleFadeState($('#argument-wrapper')){{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
+                    {{! If the command has arguments, fade the argument box in or out, otherwise run the associated function }}
+                    <div onclick="{{#if this.arguments}}toggleFadeState($(this).parent().parent().children().last());{{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
                         <p class="valign">{{this.name}}</p>
                     </div>
                 </a>
+                {{! Only the elements that have arguments should get the input section }}
                 {{#if this.arguments}}
-                <div class="command-item white-text" id="argument-wrapper">
+                <div class="command-item white-text argument-wrapper">
                     <div class="valign-wrapper" style="display: table-row">
-                        <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}' , $(this))">
+                        {{! The handleFunctionSubmit takes the name of the function, and the form element itself. }}
+                        {{! Within the handler, the given function is called with the result of all input fields from the form. }}
+                        <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}', $(this))">
+                            {{! Creates input element of specified type as specified by the data }}
                             {{#each this.arguments}}
                             <div class="input-wrapper">
+                                {{! All data objcets with options will be represented as selection boxes }}
                                 {{#if this.options}}
                                 <select name="{{this.name}}" class="browser-default argument-select" data-type="{{this.type}}">
                                     <option value="" disabled selected>{{this.placeholder}}</option>
+                                    {{! Add all options }}
                                     {{#each this.options}}
                                     <option value="{{this}}">{{this}}</option>
                                     {{/each}}
                                 </select>
+                                {{! If it is not a select boc it is a regular input field }}
                                 {{else}}
                                 <input class="argument-input" placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}">
                                 {{/if}}
                             </div>                 
                             {{/each}}
+                            {{! Add the button for submitting the values, and therefore starting the process }}
                             <div class="input-wrapper submit-wrapper">
                                 <input type="submit" value="Go" class="waves-light waves-effect"/>
                             </div>
