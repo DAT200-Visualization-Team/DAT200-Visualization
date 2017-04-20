@@ -83,7 +83,6 @@ function changeCurrentCost(nodeId, newCost) {
             nodes[i].currentCost = newCost;
     }
     var currentLabel = d3.selectAll('.current-cost-label').filter(function (d) { return d.id == nodeId });
-    console.log(currentLabel.node());
     return { e: $(currentLabel.node()), p: 'callout.flash', o: { complete: function () { currentLabel.text(newCost) } } };
 }
 

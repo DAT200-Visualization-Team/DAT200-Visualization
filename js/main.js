@@ -32,3 +32,14 @@ function handleFunctionSubmit(event, functionName, formElement) {
     }
     window[functionName].apply(this, argumentValuesArray);
 }
+
+$(document).ready(function () {
+    $('.drag-target').sideNav({
+        menuWidth: 300,
+        edge: 'right',
+        closeOnClick: true,
+        draggable: false
+    });
+
+    $('.drag-target').css({ display: 'none' });
+})
