@@ -237,6 +237,7 @@ pre {
     height: 60vh;
     padding-left: 10px;
     padding-top: 1px;
+    outline: 0;
 }
 
 #command-items-content {
