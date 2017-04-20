@@ -22,7 +22,7 @@
                     <div class="valign-wrapper" style="display: table-row">
                         {{! The handleFunctionSubmit takes the name of the function, and the form element itself. }}
                         {{! Within the handler, the given function is called with the result of all input fields from the form. }}
-                        <form class="valign" method="post" onsubmit="handleFunctionSubmit('{{this.function}}', $(this))">
+                        <form class="valign" method="post" onsubmit="handleFunctionSubmit(event, '{{this.function}}', $(this));">
                             {{! Creates input element of specified type as specified by the data }}
                             {{#each this.arguments}}
                             <div class="input-wrapper">
@@ -35,7 +35,7 @@
                                     <option value="{{this}}">{{this}}</option>
                                     {{/each}}
                                 </select>
-                                {{! If it is not a select boc it is a regular input field }}
+                                {{! If it is not a select box it is a regular input field }}
                                 {{else}}
                                 <input class="argument-input" placeholder="{{this.placeholder}}" type="text" name="{{this.name}}" data-type="{{this.type}}">
                                 {{/if}}
