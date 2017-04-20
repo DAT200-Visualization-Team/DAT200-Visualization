@@ -1,4 +1,4 @@
-var input = [60, 30, 90, 20, 80, 70, 10, 100];
+var input = [60, 30, 90, 20, 80, 70, 10, 100, 25, 15, 75, 45];
 
 var barWidth = 40;
 var width = (barWidth + 10) * input.length;
@@ -31,14 +31,21 @@ var barChart = d3.select(".drawingArea")
 
 createRects(input);
 
-//Pivot marker Right
-var pivotMarkerLeft = barChart.append("svg");
-    pivotMarkerLeft.append("polygon")
+//Pivot marker left
+var pivotMarkerLeft = barChart.append("polygon")
     .attr("fill", "yellow")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30");
-    markPivot(0, "left");
+    //markPivot(0, "left");
+
+//Pivot marker Right
+var pivotMarkerRight = barChart.append("polygon")
+    .attr("fill", "yellow")
+    .attr("stroke",  "blue")
+    .attr("stroke-width", "2")
+    .attr("points", "05,30 15,10 25,30");
+    //markPivot(input.length-1, "right");
 
 //Panning
 var pan = d3.zoom()
@@ -85,8 +92,10 @@ $(document).on("sort", function(event, newCommands) {
     cmd = newCommands.split('!');
 });
 var test;
-function sort() {
-    test = new QuickSort(input.slice()).sort();
+function sort(median) {
+    test = new QuickSort(input.slice());
+    if(median == true) test.medianOfThree = true;
+    test.sort();
 }
 
 function runCommand() {
@@ -115,15 +124,65 @@ function runCommand() {
     currentCmd++;
 }
 
-function markPivot(a) {
+function markPivot(a, pivot) {
     //var currentPivot = barChart.selectAll("rect").filter(".element" + a);
     var text = barChart.selectAll("text").filter(".element" + a);
     var translation = getTranslate(text);
+    var targetX = parseInt(text.attr("x")) + parseInt(translation[0]) - 7;
+    var targetY = parseInt(text.attr("y")) + parseInt(translation[1]);
 
-    pivotMarkerLeft.transition()
+    if(pivot == 'left') {
+        pivotMarkerLeft.transition()
+            .duration(500)
+            .attr('transform', "translate(" + (targetX) + ", " + targetY + ")");
+    } else {
+        pivotMarkerRight.transition()
+            .duration(500)
+            .attr('transform', "translate(" + (targetX) + ", " + targetY + ")");
+    }
+
+}
+
+function colorElement(from, to, type) {
+    var selector = "";
+    for(var i = from; i <= to; i++) {
+        if(i != from) selector += ", ";
+        selector = selector + ".element" + i;
+    }
+    var elements = barChart.selectAll("rect").filter(selector);
+    if(type == "less") {
+        elements.transition()
+            .duration(500)
+            .attr("fill", "magenta");
+    } else {
+        elements.transition()
+            .duration(500)
+            .attr("fill", "lime");
+    }
+}
+
+function resetColor(from, to) {
+    var selector = "";
+    for(var i = from; i <= to; i++) {
+        if(i != from) selector += ", ";
+        selector = selector + ".element" + i;
+    }
+    barChart.selectAll("rect").filter(selector)
+        .attr("fill", "red");
+}
+
+function highlightPivot(index) {
+    removeHighlightPivot();
+    barChart.selectAll("rect").filter(".element" + index)
+        .transition()
         .duration(500)
-        .attr('x', parseInt(text.attr("x")) + parseInt(translation[0])) //TODO make sure centered!
-        .attr('y', parseInt(text.attr("y")) + parseInt(translation[1]));
+        .attr('stroke', "green")
+        .attr('stroke-width', "4");
+}
+
+function removeHighlightPivot() {
+    barChart.selectAll("rect")
+        .attr('stroke', "none");
 }
 
 function swap(a, b) {
@@ -154,13 +213,14 @@ function swap(a, b) {
 }
 
 function colorPartition(from, to, direction) {
+    //resetColor(from, to);
     var selector = "";
     for(var i = from; i <= to; i++) {
         if(i != from) selector += ", ";
         selector = selector + ".element" + i;
     }
     barChart.selectAll("*").filter(selector)
-        .attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
+        //.attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
         .transition()
         .duration(500)
         .each( function(d, index) {
@@ -230,6 +290,7 @@ function play() {
     setTimeout(function(){
         //runCommand();
         eval(commands[currentCmd]);
+        console.log(commands[currentCmd]);
         currentCmd++;
         //Run next command if there is one
         if(currentCmd < commands.length) play();

@@ -31,4 +31,14 @@ function handleFunctionSubmit(event, functionName, formElement) {
         }
     }
     window[functionName].apply(this, argumentValuesArray);
+
+    toggleFadeState($('#command-items-wrapper'));
 }
+
+$(document).mouseup(function (e) {
+    var commandPopup = $('#command-items-wrapper');
+    if (!$('#expand-tab').is(e.target) && $('#expand-tab').has(e.target).length == 0 && !commandPopup.is(e.target) && commandPopup.has(e.target).length == 0) {
+        if($('#command-items-wrapper').css('display') != 'none')
+            toggleFadeState($('#command-items-wrapper'));
+    }
+});

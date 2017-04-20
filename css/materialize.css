@@ -7054,7 +7054,7 @@ input[type=range]:focus::-ms-fill-upper {
   width: 10px;
   position: fixed;
   top: 0;
-  z-index: 998;
+  /* z-index: 998; */
 }
 
 .side-nav.fixed {
