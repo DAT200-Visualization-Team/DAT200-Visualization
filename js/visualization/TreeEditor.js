@@ -293,61 +293,90 @@ function tree(rootLbl) {
         function continueReposing() {
             var level = 0;
             var minSpace = 20;
-            while(getNodesByLevel(level).length != 0) {
+            while (getNodesByLevel(level).length != 0) {
                 var btNodes = getNodesByLevel(level);
                 var nodes = convertToGUITree(btNodes);
-                for(var i = 0; i < nodes.length; i++) {
-                    for(var j = i + 1; j < nodes.length; j++) {
-                        if(Math.abs(j.p.x - i.p.x) == minSpace) {
-                            // TODO: find common parent and increase space between its children
-                            findLCA()
+                for (var i = 0; i < nodes.length; i++) {
+                    for (var j = i + 1; j < nodes.length; j++) {
+                        var diff = Math.abs(nodes[j].p.x - nodes[i].p.x);
+                        if (diff < minSpace) {
+                            var bt = convertToBinaryTree();
+                            // finding common parent and increase space between its children
+                            var commonParent = findLCA(bt.getRoot(), getNodeByElement(bt.getRoot(), nodes[j].v), getNodeByElement(bt.getRoot(), nodes[i].v));
+                            commonParent =  tree.getVerticeById(commonParent.element);
+                            for(var children = 0; children < commonParent.c.length; children++) {
+                                var dx = 10;
+                                if(commonParent.c[children].d == 'left') dx = -10;
+                                var child = tree.getVerticeById(commonParent.c[children].v);
+                                //child.p.x = child.p.x + dx;
+                                moveSubTree(child, dx);
+                            }
                         }
                     }
                 }
+                level++;
             }
         }
 
-        function findPath(node, path) {
-            function findPth(node, k) {
-                // base case
-                if (node == null) return false;
+        function moveSubTree(node, dx) {
+            node.p.x += 2*dx;
+            node.c.forEach(function(i) {
+                console.log(i.v);
+                var child = tree.getVerticeById(i.v);
+                child.p.x += dx;
+                moveSubTree(child, dx);
+            });
+        }
 
-                // Store this node in path vector. The node will be removed if
-                // not in path from root to k
-                path.push(node);
+        function getNodeByElement(node, x) {
+            if (node != null) {
 
-                // See if the k is same as root's key
-                if (node == k)
-                    return true;
-
-                // Check if k is found in left or right sub-tree
-                if ( (node.left && findPath(node.left, path, k)) || (node.right && findPath(node.right, path, k)) )
-                    return true;
-
-                // If not present in subtree rooted with root, remove root from
-                // path[] and return false
-                path.pop();
-                return false;
+                if (node.element == x) {
+                    return node;
+                } else {
+                    return getNodeByElement(node.left, x) || getNodeByElement(node.right, x);
+                }
             }
+            return null;
+        }
 
-            return findPth(node, k);
+        function findPath(node, path, k) {
+            // base case
+            if (node == null) return false;
+
+            // Store this node in path vector. The node will be removed if
+            // not in path from root to k
+            path.push(node);
+
+            // See if the k is same as root's key
+            if (node == k)
+                return true;
+
+            // Check if k is found in left or right sub-tree
+            if ((node.left && findPath(node.left, path, k)) || (node.right && findPath(node.right, path, k)))
+                return true;
+
+            // If not present in subtree rooted with root, remove root from
+            // path[] and return false
+            path.pop();
+            return false;
         }
 
         function findLCA(node, n1, n2) {
             // to store paths to n1 and n2 from the root
-            var path1, path2;
+            var path1 = [], path2 = [];
 
             // Find paths from root to n1 and root to n1. If either n1 or n2
             // is not present, return -1
-            if ( !findPath(root, path1, n1) || !findPath(root, path2, n2))
+            if (!findPath(node, path1, n1) || !findPath(node, path2, n2))
                 return -1;
 
             /* Compare the paths to get the first different value */
             var i;
-            for (i = 0; i < path1.size() && i < path2.size() ; i++)
+            for (i = 0; i < path1.length && i < path2.length; i++)
                 if (path1[i] != path2[i])
                     break;
-            return path1[i-1];
+            return path1[i - 1];
         }
 
         function getNodesByLevel(n) {
@@ -367,6 +396,7 @@ function tree(rootLbl) {
                         drill(node.right, clevel + 1, rlevel);
                 }
             }
+
             var result = [];
             var bt = convertToBinaryTree();
             drill(bt.getRoot(), 0, n);
@@ -376,9 +406,9 @@ function tree(rootLbl) {
         function convertToBinaryTree() {
             function setChildren(binaryNode) {
                 var child;
-                treeGUI.vis.forEach(function(i) {
-                    if(i.f.v === binaryNode.element) {
-                        if(i.d == 'left') child = binaryNode.setLeft(new BinaryNode(i.v));
+                treeGUI.vis.forEach(function (i) {
+                    if (i.f.v === binaryNode.element) {
+                        if (i.d == 'left') child = binaryNode.setLeft(new BinaryNode(i.v));
                         else child = binaryNode.setRight(new BinaryNode(i.v));
                         setChildren(child);
                     }
@@ -392,16 +422,18 @@ function tree(rootLbl) {
 
         function convertToGUITree(arr) {
             var result = [];
-            arr.forEach(function(i) {
-                tree.vis.forEach(function(j) {
-                    if(i.getElement() == j.v)
+            arr.forEach(function (i) {
+                tree.vis.forEach(function (j) {
+                    if (i.getElement() == j.v)
                         result.push(j);
                 });
             });
-
+            return result;
         }
 
+
         repos(v[0]);
+        continueReposing();
     };
 
     initialize = function () {
