@@ -10,7 +10,7 @@
             {{#each this.commands}}
             <li style="display: table-row;">
                 {{! Add the box containing the name of the function}}
-                <a href="#" style="display: table-cell;">
+                <a class="waves-effect waves-red hoverable" href="#" style="display: table-cell;">
                     {{! If the command has arguments, fade the argument box in or out, otherwise run the associated function }}
                     <div onclick="{{#if this.arguments}}toggleFadeState($(this).parent().parent().children().last());{{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
                         <p class="valign">{{this.name}}</p>
@@ -18,7 +18,7 @@
                 </a>
                 {{! Only the elements that have arguments should get the input section }}
                 {{#if this.arguments}}
-                <div class="command-item white-text argument-wrapper">
+                <div class="command-item white-text argument-wrapper hoverable">
                     <div class="valign-wrapper" style="display: table-row">
                         {{! The handleFunctionSubmit takes the name of the function, and the form element itself. }}
                         {{! Within the handler, the given function is called with the result of all input fields from the form. }}

@@ -3,7 +3,6 @@ function toggleFadeState(element) {
         if (element.css('display') != 'none')
             element.css('display', 'table-cell');
     });
-    event.stopPropagation();
 }
 
 function handleFunctionSubmit(event, functionName, formElement) {
@@ -39,6 +38,7 @@ function handleFunctionSubmit(event, functionName, formElement) {
 $(document).mouseup(function (e) {
     var commandPopup = $('#command-items-wrapper');
     if (!$('#expand-tab').is(e.target) && $('#expand-tab').has(e.target).length == 0 && !commandPopup.is(e.target) && commandPopup.has(e.target).length == 0) {
-        toggleFadeState($('#command-items-wrapper'));
+        if($('#command-items-wrapper').css('display') != 'none')
+            toggleFadeState($('#command-items-wrapper'));
     }
 });
