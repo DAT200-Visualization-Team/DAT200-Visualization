@@ -5,7 +5,7 @@ function toggleFadeState(element) {
     });
 }
 
-function handleFunctionSubmit(functionName, formElement) {
+function handleFunctionSubmit(event, functionName, formElement) {
     event.preventDefault();
     var argumentValuesArray = [];
     var allInputs = formElement.find(':input');
