@@ -294,15 +294,60 @@ function tree(rootLbl) {
             var level = 0;
             var minSpace = 20;
             while(getNodesByLevel(level).length != 0) {
-                var nodes = convertToGUITree(getNodesByLevel(level));
+                var btNodes = getNodesByLevel(level);
+                var nodes = convertToGUITree(btNodes);
                 for(var i = 0; i < nodes.length; i++) {
                     for(var j = i + 1; j < nodes.length; j++) {
                         if(Math.abs(j.p.x - i.p.x) == minSpace) {
-                            //TODO: find common parent and increase space between its children
+                            // TODO: find common parent and increase space between its children
+                            findLCA()
                         }
                     }
                 }
             }
+        }
+
+        function findPath(node, path) {
+            function findPth(node, k) {
+                // base case
+                if (node == null) return false;
+
+                // Store this node in path vector. The node will be removed if
+                // not in path from root to k
+                path.push(node);
+
+                // See if the k is same as root's key
+                if (node == k)
+                    return true;
+
+                // Check if k is found in left or right sub-tree
+                if ( (node.left && findPath(node.left, path, k)) || (node.right && findPath(node.right, path, k)) )
+                    return true;
+
+                // If not present in subtree rooted with root, remove root from
+                // path[] and return false
+                path.pop();
+                return false;
+            }
+
+            return findPth(node, k);
+        }
+
+        function findLCA(node, n1, n2) {
+            // to store paths to n1 and n2 from the root
+            var path1, path2;
+
+            // Find paths from root to n1 and root to n1. If either n1 or n2
+            // is not present, return -1
+            if ( !findPath(root, path1, n1) || !findPath(root, path2, n2))
+                return -1;
+
+            /* Compare the paths to get the first different value */
+            var i;
+            for (i = 0; i < path1.size() && i < path2.size() ; i++)
+                if (path1[i] != path2[i])
+                    break;
+            return path1[i-1];
         }
 
         function getNodesByLevel(n) {
