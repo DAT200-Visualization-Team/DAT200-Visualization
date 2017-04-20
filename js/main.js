@@ -31,15 +31,6 @@ function handleFunctionSubmit(event, functionName, formElement) {
         }
     }
     window[functionName].apply(this, argumentValuesArray);
+
+    toggleFadeState($('#command-items-wrapper'));
 }
-
-$(document).ready(function () {
-    $('.drag-target').sideNav({
-        menuWidth: 300,
-        edge: 'right',
-        closeOnClick: true,
-        draggable: false
-    });
-
-    $('.drag-target').css({ display: 'none' });
-})
