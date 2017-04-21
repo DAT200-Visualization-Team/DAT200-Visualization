@@ -298,7 +298,7 @@ function tree(rootLbl) {
                 var nodes = convertToGUITree(btNodes);
                 for (var i = 0; i < nodes.length; i++) {
                     for (var j = i + 1; j < nodes.length; j++) {
-                        var diff = Math.abs(nodes[j].p.x - nodes[i].p.x);
+                        var diff = nodes[j].p.x - nodes[i].p.x;
                         if (diff < minSpace) {
                             var bt = convertToBinaryTree();
                             // finding common parent and increase space between its children
@@ -319,7 +319,7 @@ function tree(rootLbl) {
         }
 
         function moveSubTree(node, dx) {
-            node.p.x += 2*dx;
+            node.p.x += 5*dx;
             node.c.forEach(function(i) {
                 console.log(i.v);
                 var child = tree.getVerticeById(i.v);
