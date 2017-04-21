@@ -1,72 +1,76 @@
-{{#each this.categories}}
+<header>
+    {{#each this.categories}}
     <ul id="{{id}}" class="dropdown-content">
         {{#each subCategories}}
-            <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
+        <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
         {{/each}}
     </ul>
-{{/each}}
-
-{{#each this.categories}}
-<ul id="mobile{{id}}" class="dropdown-content">
-    {{#each subCategories}}
-    <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
     {{/each}}
-</ul>
-{{/each}}
 
-<nav class="red">
-    <div class="nav-wrapper">
-        <a href="./index.html" class="brand-logo left">&nbsp;StructurAlgo</a>
-        <a href="#" data-activates="mobilemenu" class="right button-collapse"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
-            {{#each categories}}
-                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
-            {{/each}}
-            <li><a id="download-button" href="#"><i class="material-icons">file_download</i></a></li>
-            <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
-        </ul>
+    {{#each this.categories}}
+    <ul id="mobile{{id}}" class="dropdown-content">
+        {{#each subCategories}}
+        <li><a href="./{{this.id}}.html">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+    {{/each}}
 
-        <ul class="side-nav" id="mobilemenu">
-            {{#each categories}}
-                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="mobile{{id}}" data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
-            {{/each}}
-            <li><a id="download-button-mobile" href="#"><i class="material-icons">file_download</i></a></li>
-            <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
-        </ul>
-    </div>
-</nav>
+    <nav class="red">
+        <div class="nav-wrapper">
+            <a href="./index.html" class="brand-logo left">&nbsp;StructurAlgo</a>
+            <a href="#" data-activates="mobilemenu" class="right button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                {{#each categories}}
+                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="{{id}}"
+                       data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                {{/each}}
+                <li><a id="download-button" href="#"><i class="material-icons">file_download</i></a></li>
+                <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
+            </ul>
 
-<div id="settings-modal" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h4>Settings</h4>
-        <!-- Load file --->
-        <form action="#">
-            <div class="file-field input-field">
-                <div class="btn">
-                    <span>Load</span>
-                    <input type="file" id="file-input" accept="json">
+            <ul class="side-nav" id="mobilemenu">
+                {{#each categories}}
+                <li><a class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="mobile{{id}}"
+                       data-beloworigin="true">{{name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                {{/each}}
+                <li><a id="download-button-mobile" href="#"><i class="material-icons">file_download</i></a></li>
+                <li><a href="#settings-modal"><i class="material-icons">settings</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="settings-modal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Settings</h4>
+            <!-- Load file --->
+            <form action="#">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Load</span>
+                        <input type="file" id="file-input" accept="json">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Upload datastructure JSON file">
+                    </div>
                 </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Upload datastructure JSON file">
+                <!-- Set font size -->
+                <div class="input-field col s12">
+                    <select id="font-size-select">
+                        <option value="10">10</option>
+                        <option value="12" selected>12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="22">22</option>
+                        <option value="24">24</option>
+                    </select>
+                    <label>Font Size</label>
                 </div>
-            </div>
-            <!-- Set font size -->
-            <div class="input-field col s12">
-                <select id="font-size-select">
-                    <option value="10">10</option>
-                    <option value="12" selected>12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                    <option value="20">20</option>
-                    <option value="22">22</option>
-                    <option value="24">24</option>
-                </select>
-                <label>Font Size</label>
-            </div>
-        </form>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
     </div>
-    <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-</div>
+</header>
