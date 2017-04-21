@@ -201,8 +201,13 @@ pre {
 }
 
 .ui-resizable-s, .ui-resizable-se, .ui-icon-gripsmall-diagonal-se {
-    background-image: url();
+    /*background-image: url();*/
 }
+
+body {
+    background-color: #fcfcfc;
+}
+
 
 /* ==========================================================================
    Common command interface
@@ -237,6 +242,7 @@ pre {
     height: 60vh;
     padding-left: 10px;
     padding-top: 1px;
+    outline: 0;
 }
 
 #command-items-content {
@@ -260,7 +266,7 @@ pre {
     pointer-events: all;
 }
 
-#argument-wrapper {
+.argument-wrapper {
     display: none;
     margin: 0;
     height: 50%;
@@ -295,6 +301,10 @@ pre {
 
 .submit-wrapper {
     width: 3vw;
+}
+
+.drag-target {
+    display: none;
 }
 
 /* ==========================================================================

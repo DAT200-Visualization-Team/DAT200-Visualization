@@ -67,7 +67,7 @@ CodeDisplayManager.prototype.getVelocityFramesForHighlight = function (index, hi
     this.currentLine = index++;
 
     return [
-        { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 1 }, o: { duration: highlightTime / 2, delay: initialDelay } },
+        { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 1, backgroundColor: '#ffff00' }, o: { duration: highlightTime / 2, delay: initialDelay } },
         { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 0 }, o: { duration: highlightTime / 2 } }
     ];
 };

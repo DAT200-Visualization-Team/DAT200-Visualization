@@ -38,7 +38,7 @@ function tree(rootLbl) {
     tree.incX = 500, tree.incY = 30, tree.incS = 20;
 
     tree.getVerticeById = function (id) {
-        for(var i = 0; i < tree.vis.length; i++)
+        for (var i = 0; i < tree.vis.length; i++)
             if (tree.vis[i].v == id) return tree.vis[i];
 
         return -1;
@@ -123,7 +123,9 @@ function tree(rootLbl) {
     };
 
     redraw = function () {
-        var edges = d3.select("#g_lines").selectAll('line').data(tree.getEdges(), function(d) {return d.v2});
+        var edges = d3.select("#g_lines").selectAll('line').data(tree.getEdges(), function (d) {
+            return d.v2
+        });
 
         edges.transition().duration(500)
             .attr('x1', function (d) {
@@ -159,7 +161,9 @@ function tree(rootLbl) {
         edges = edges.merge(e);
 
 
-        var circles = d3.select("#g_circles").selectAll('circle').data(tree.getVertices(), function(d) {return d.v});
+        var circles = d3.select("#g_circles").selectAll('circle').data(tree.getVertices(), function (d) {
+            return d.v
+        });
 
         circles.transition().duration(500).attr('cx', function (d) {
             return d.p.x;
@@ -189,7 +193,9 @@ function tree(rootLbl) {
         circles = circles.merge(c);
 
 
-        var labels = d3.select("#g_labels").selectAll('text').data(tree.getVertices(), function(d) {return d.v});
+        var labels = d3.select("#g_labels").selectAll('text').data(tree.getVertices(), function (d) {
+            return d.v
+        });
 
         labels.text(function (d) {
             return d.l;
@@ -239,7 +245,7 @@ function tree(rootLbl) {
         }
 
         v = tree.getVerticeById(v);
-        if(v.c.length == 0) return 1;
+        if (v.c.length == 0) return 1;
         v.c.forEach(function (i) {
             getLfCnt(tree.getVerticeById(i.v));
         });
@@ -249,18 +255,18 @@ function tree(rootLbl) {
 
     reposition = function (v) {
         /*function repos(v) {
-            var lC = getLeafCount(v.v), left = v.p.x - tree.w * (lC - 1) / 2;
-            v.c.forEach(function (d) {
-                var vc = d;
-                d = tree.getVerticeById(d.v);
-                var w = tree.w * getLeafCount(d.v);
-                left += w;
-                d.p = {x: left - (w + tree.w) / 2, y: v.p.y + tree.h};
-                vc.p = d.p;
-                repos(d);
-            });
-        }
-        repos(v[0]);*/
+         var lC = getLeafCount(v.v), left = v.p.x - tree.w * (lC - 1) / 2;
+         v.c.forEach(function (d) {
+         var vc = d;
+         d = tree.getVerticeById(d.v);
+         var w = tree.w * getLeafCount(d.v);
+         left += w;
+         d.p = {x: left - (w + tree.w) / 2, y: v.p.y + tree.h};
+         vc.p = d.p;
+         repos(d);
+         });
+         }
+         repos(v[0]);*/
 
         function repos(v) {
             var lC = getLeafCount(v.v),
@@ -271,8 +277,12 @@ function tree(rootLbl) {
                 d = tree.getVerticeById(d.v);
 
                 var w = 0;
-                if(d.d == 'right') { w += 15 * lC }
-                if(d.d == 'left') { w -= 15 * lC }
+                if (d.d == 'right') {
+                    w += 15 * lC
+                }
+                if (d.d == 'left') {
+                    w -= 15 * lC
+                }
 
                 d.p = {x: left + w, y: v.p.y + tree.h};
                 vc.p = d.p;
@@ -280,7 +290,150 @@ function tree(rootLbl) {
             });
         }
 
+        function continueReposing() {
+            var level = 0;
+            var minSpace = 20;
+            while (getNodesByLevel(level).length != 0) {
+                var btNodes = getNodesByLevel(level);
+                var nodes = convertToGUITree(btNodes);
+                for (var i = 0; i < nodes.length; i++) {
+                    for (var j = i + 1; j < nodes.length; j++) {
+                        var diff = Math.abs(nodes[j].p.x - nodes[i].p.x);
+                        if (diff < minSpace) {
+                            var bt = convertToBinaryTree();
+                            // finding common parent and increase space between its children
+                            var commonParent = findLCA(bt.getRoot(), getNodeByElement(bt.getRoot(), nodes[j].v), getNodeByElement(bt.getRoot(), nodes[i].v));
+                            commonParent =  tree.getVerticeById(commonParent.element);
+                            for(var children = 0; children < commonParent.c.length; children++) {
+                                var dx = 10;
+                                if(commonParent.c[children].d == 'left') dx = -10;
+                                var child = tree.getVerticeById(commonParent.c[children].v);
+                                //child.p.x = child.p.x + dx;
+                                moveSubTree(child, dx);
+                            }
+                        }
+                    }
+                }
+                level++;
+            }
+        }
+
+        function moveSubTree(node, dx) {
+            node.p.x += 2*dx;
+            node.c.forEach(function(i) {
+                console.log(i.v);
+                var child = tree.getVerticeById(i.v);
+                child.p.x += dx;
+                moveSubTree(child, dx);
+            });
+        }
+
+        function getNodeByElement(node, x) {
+            if (node != null) {
+
+                if (node.element == x) {
+                    return node;
+                } else {
+                    return getNodeByElement(node.left, x) || getNodeByElement(node.right, x);
+                }
+            }
+            return null;
+        }
+
+        function findPath(node, path, k) {
+            // base case
+            if (node == null) return false;
+
+            // Store this node in path vector. The node will be removed if
+            // not in path from root to k
+            path.push(node);
+
+            // See if the k is same as root's key
+            if (node == k)
+                return true;
+
+            // Check if k is found in left or right sub-tree
+            if ((node.left && findPath(node.left, path, k)) || (node.right && findPath(node.right, path, k)))
+                return true;
+
+            // If not present in subtree rooted with root, remove root from
+            // path[] and return false
+            path.pop();
+            return false;
+        }
+
+        function findLCA(node, n1, n2) {
+            // to store paths to n1 and n2 from the root
+            var path1 = [], path2 = [];
+
+            // Find paths from root to n1 and root to n1. If either n1 or n2
+            // is not present, return -1
+            if (!findPath(node, path1, n1) || !findPath(node, path2, n2))
+                return -1;
+
+            /* Compare the paths to get the first different value */
+            var i;
+            for (i = 0; i < path1.length && i < path2.length; i++)
+                if (path1[i] != path2[i])
+                    break;
+            return path1[i - 1];
+        }
+
+        function getNodesByLevel(n) {
+            /*
+             * node - node being visited
+             * clevel - current level
+             * rlevel - requested level
+             * result - result queue
+             */
+            function drill(node, clevel, rlevel) {
+                if (clevel == rlevel)
+                    result.push(node);
+                else {
+                    if (node.left != null)
+                        drill(node.left, clevel + 1, rlevel);
+                    if (node.right != null)
+                        drill(node.right, clevel + 1, rlevel);
+                }
+            }
+
+            var result = [];
+            var bt = convertToBinaryTree();
+            drill(bt.getRoot(), 0, n);
+            return result;
+        }
+
+        function convertToBinaryTree() {
+            function setChildren(binaryNode) {
+                var child;
+                treeGUI.vis.forEach(function (i) {
+                    if (i.f.v === binaryNode.element) {
+                        if (i.d == 'left') child = binaryNode.setLeft(new BinaryNode(i.v));
+                        else child = binaryNode.setRight(new BinaryNode(i.v));
+                        setChildren(child);
+                    }
+                });
+            }
+
+            var bt = new BinaryTree(tree.vis[0].v);
+            setChildren(bt.getRoot());
+            return bt;
+        }
+
+        function convertToGUITree(arr) {
+            var result = [];
+            arr.forEach(function (i) {
+                tree.vis.forEach(function (j) {
+                    if (i.getElement() == j.v)
+                        result.push(j);
+                });
+            });
+            return result;
+        }
+
+
         repos(v[0]);
+        continueReposing();
     };
 
     initialize = function () {
