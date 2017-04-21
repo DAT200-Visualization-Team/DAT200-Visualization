@@ -56,13 +56,12 @@ var codeContent = [
 var code = d3.select("#code-text");
 var drawingArea = d3.select(".drawingArea")
     .append("svg:svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", $('#graphics').width())
+    .attr("height", $('#graphics').height());
+
+var hashFunctionBlock = drawingArea.append("g");
 var bucket = drawingArea.append("g");
 var keys = drawingArea.append("g");
-
-//Hash function
-var hashFunctionBlock = drawingArea.append("g");
 
 hashFunctionBlock.append("rect")
     .attr("width", blockWidth)
@@ -142,13 +141,26 @@ var arrow = drawingArea.append("path")
     .attr("opacity", "0")
     .style('marker-end','url(#end-arrow)');
 
+//Panning
+var pan = d3.zoom()
+    .scaleExtent([1/4, 2])
+    .on("zoom", panning);
+
+drawingArea.call(pan);
+
+function panning() {
+    drawingArea.attr("transform", d3.event.transform);
+}
+
 function updateArrow(index) {
     unhighlightKey();
+
+    var targetY = parseInt(keys.selectAll("rect").filter(":nth-child(" + (index+1) + ")").attr("y"));
     //The data for our line
     var lineData = [{ "x": arrElementWidth,   "y": height/2 + arrElementHeight/2},
         { "x": width + 30 - blockWidth - arrElementWidth - keyWidth - blockMargin,  "y": height/2 + arrElementHeight/2},
-        { "x": width - 30 - arrElementWidth - keyWidth - blockMargin,  "y": index * (arrElementHeight+5) + arrElementHeight/2},
-        { "x": width - arrElementWidth - keyWidth - keyMargin,  "y": index * (arrElementHeight+5) + arrElementHeight/2}];
+        { "x": width - 30 - arrElementWidth - keyWidth - blockMargin,  "y": targetY + arrElementHeight/2},
+        { "x": width - arrElementWidth - keyWidth - keyMargin,  "y": targetY + arrElementHeight/2}];
 
     var lineFunction = d3.line()
         .x(function(d) { return d.x; })
@@ -165,7 +177,8 @@ function updateArrow(index) {
 function getElementHeigth(length) {
     if(length <= 10) return 40;
 
-    return height / length-5;
+    return 40;
+    //return height / length-5;
 }
 
 $( document ).ready(function() {
@@ -190,6 +203,7 @@ function clearHighlight(array) {
 }
 
 function add(value) {
+    prevOffset = 0;
     hideHash();
 
     bucket.append("rect")
@@ -254,6 +268,11 @@ function replaceElement(index) {
         .attr("y", 2*arrElementHeight/3 + index * (arrElementHeight+5));
 
     drawingArea.selectAll(".newElement").classed(".newElement", false);
+
+    arrow.transition()
+        .duration(1000)
+        .attr("opacity", "0");
+    arrow.attr("d", "");
 }
 
 function highlightKey(index) {
@@ -278,6 +297,7 @@ function removeElement(index) {
         .attr("stroke-width", "2");
 }
 
+var prevOffset = 0;
 function displayHash(hashValue, length, offset) {
     hashFunctionBlock.selectAll("text")
         .transition()
@@ -285,9 +305,10 @@ function displayHash(hashValue, length, offset) {
         .attr("fill", "red")
         .text( function() {
             if(offset == 0) {
-                return "Abs(" + hashValue + " % " + length + ") = " + Math.abs(hashValue % length);
+                return hashValue + " % " + length + " = " + Math.abs(hashValue % length);
             }
-            return "Abs(" + hashValue + " % " + length + ") + " + offset + " = " + (Math.abs(hashValue % length) + offset);
+            prevOffset += offset;
+            return hashValue + " % " + length + " + " + prevOffset + " = " + (Math.abs(hashValue % length) + prevOffset);
         })
         .transition()
         .duration(500)
@@ -378,6 +399,8 @@ function updateTable() {
     //var data = ["", "", "", "", ""];
     var data = table.array;
     arrElementHeight = getElementHeigth(data.length);
+    drawingArea.attr("height", data.length * (arrElementHeight + 5));
+
     console.log(data.length);
 
     bucket.selectAll("rect")
