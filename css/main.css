@@ -201,8 +201,13 @@ pre {
 }
 
 .ui-resizable-s, .ui-resizable-se, .ui-icon-gripsmall-diagonal-se {
-    background-image: url();
+    /*background-image: url();*/
 }
+
+body {
+    background-color: #fcfcfc;
+}
+
 
 /* ==========================================================================
    Common command interface
