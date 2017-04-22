@@ -57,7 +57,6 @@ Graph.prototype.getPathInner = function(dest, pathMap) {
         commands.push({ name: "colorFast", data: { vertices: [dest.prev, dest] } });
     }
     pathMap[dest.name] = dest.dist;
-    //if(dest.prev != null)
         
     return pathMap;
 };
@@ -107,6 +106,7 @@ Graph.prototype.dijkstra = function (startName) {
             commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
+        commands.push({ name: "newNode", data: { vertex: v } });
         commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
         v.scratch = 1;
         nodesSeen++;
@@ -175,6 +175,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
+            commands.push({ name: "newNode", data: { vertex: v } });
             
             if (w != v.prev)
                 commands.push({ name: "colorCurrent", data: { vertices: [v, w] } });

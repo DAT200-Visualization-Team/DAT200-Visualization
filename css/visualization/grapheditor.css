@@ -111,10 +111,15 @@ td, th {
     vertical-align: central;
 }
 
+td {
+    padding: 10px !important;
+}
+
 thead {
     border-bottom: 1px solid #526475;
 }
 
 tr td:first-child, tr th:first-child {
     border-right: 1px solid #526475;
+    font-weight: bold;
 }
