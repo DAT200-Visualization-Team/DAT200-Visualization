@@ -54,3 +54,52 @@ text.id {
   text-anchor: middle;
   font-weight: bold;
 }
+
+/*#### Matrix viewer style ####*/
+#matrix-window {
+    position: absolute;
+    top: 30%;
+    left: 2%;
+    background-color: #b3d6ff;
+    width: 40vw;
+    height: 40vh;
+    min-width: 200px;
+    min-height: 200px;
+    display: none;
+}
+
+.no-space{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#controls {
+    width: 100%;
+    background-color: #526475;
+    margin-bottom: 0 !important;
+    padding-top: 7px;
+}
+
+#header-text {
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#close-button {
+    flex: 0 1 auto;
+    margin-left: auto;
+}
+
+#content-container {
+    position: relative;
+    float: left;
+    overflow-y: auto;
+    width: 100%;
+    height: 80%;
+}
+
+#content li * {
+    padding: 0 8px 8px 8px;
+}

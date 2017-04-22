@@ -18,11 +18,15 @@ $(document).ready(function () {
             codeDisplayManager.loadFunctions('dijkstra');
             codeDisplayManager.changeFunction('dijkstra');
             currentAlgorithm = 'dijkstra';
+            $('#matrix-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
+            $('#matrix-window').draggable({ containment: 'document', handle: '#controls' });
             break;
         case '/bellmanford.html':
             codeDisplayManager.loadFunctions('bellmanford');
             codeDisplayManager.changeFunction('bellmanford');
             currentAlgorithm = 'bellmanford';
+            $('#matrix-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
+            $('#matrix-window').draggable({ containment: 'document', handle: '#controls' });
             break;
     }
 });
@@ -117,4 +121,8 @@ function executeCommands(commands) {
                 break;
         }
     }
+}
+
+function toggleMatrixHiding() {
+    $('#matrix-window').toggle(200);
 }
