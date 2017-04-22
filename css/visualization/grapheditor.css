@@ -85,6 +85,8 @@ text.id {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #close-button {
@@ -102,4 +104,17 @@ text.id {
 
 #content li * {
     padding: 0 8px 8px 8px;
+}
+
+td, th {
+    text-align: center;
+    vertical-align: central;
+}
+
+thead {
+    border-bottom: 1px solid #526475;
+}
+
+tr td:first-child, tr th:first-child {
+    border-right: 1px solid #526475;
 }
