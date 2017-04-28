@@ -1,0 +1,53 @@
+#arraySearch-wrapper {
+    display: table;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+#arraySearch {
+    /* Følgende to linjer ødelegger for scrollen, men trengs for vertikal sentrering */
+    display: table-cell;
+    vertical-align: middle;
+
+    padding: 20px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    max-width: 100%;
+
+    /* Følgende linje ødelegger for max-width, men trengs for å få tallene på én linje */
+    white-space:nowrap;
+}
+
+.entry {
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    margin: 0;
+    padding: 0;
+    border: 1px solid black;
+    background-color: #00C853;
+}
+
+.entry-value {
+    display: inline-block;
+    font-size: 2rem;
+    padding: 0;
+    /*Vertically centering*/
+    margin:auto;
+    line-height:4rem;
+    /*Horizontally centering*/
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+
+    border-bottom: 25px solid darkred;
+}
