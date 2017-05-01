@@ -3,20 +3,26 @@
         <div class="col s12 valign no-padding">
             <ul class="col s12 valign-wrapper no-margin no-padding">
                 <li class="col s1 valign">
-                    <a><i class="material-icons center-align">play_arrow</i></a>
+                    <a>
+                        <i id="play-button" class="material-icons center-align clickable-icon noselect">play_arrow</i>
+                    </a>
                 </li>
                 <li class="col s9 valign">
                     <form action="#">
                         <p class="range-field no-margin">
-                            <input type="range" id="seek-bar" min="0" max="100" value="0"/>
+                            <input type="range" id="seek-bar" min="0" max="100" value="0" />
                         </p>
                     </form>
                 </li>
                 <li class="col s1 valign">
-                    <a><i class="material-icons center-align">undo</i></a>
+                    <a>
+                        <i id="step-prev" class="material-icons center-align clickable-icon noselect">undo</i>
+                    </a>
                 </li>
                 <li class="col s1 valign">
-                    <a><i class="material-icons center-align">redo</i></a>
+                    <a>
+                        <i id="step-next" class="material-icons center-align clickable-icon noselect">redo</i>
+                    </a>
                 </li>
             </ul>
         </div>

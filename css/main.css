@@ -322,12 +322,24 @@ body {
     height: 2.3em;
 }
 
+#animation-player i:hover {
+    opacity: 0.5;
+}
+
+#animation-player i:active {
+    color: #F44336;
+}
+
 .no-margin {
     margin: 0;
 }
 
 .no-padding {
     padding: 0;
+}
+
+.clickable-icon{
+    cursor: pointer;
 }
 
 /* ==========================================================================
