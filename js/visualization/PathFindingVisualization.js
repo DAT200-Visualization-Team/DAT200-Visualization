@@ -5,6 +5,9 @@ var animationTime = 200;
 var codeDisplayManager = new CodeDisplayManager('javascript', 'graph');
 var currentAlgorithm;
 var matrixColumns;
+var finishedColumns;
+
+var currentStartNode;
 
 var lineColors = {
     currentPath: '#255eba',
@@ -47,6 +50,7 @@ function performPathFinding(algorithm, start, end) {
 }
 
 function performCurrentPathfinding(start, end) {
+    currentStartNode = start;
     $('#matrix-header, #matrix-body').empty();
     initializeHeader();
     performPathFinding(currentAlgorithm, start, end)
@@ -95,42 +99,52 @@ function changeCurrentCost(nodeId, newCost) {
 
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
+        var data = commands[i].data;
         switch (commands[i].name) {
             case 'colorCurrent':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
                     addPathColorFrame(path, lineColors.currentPath, animationTime);
-                
                 break;
             case 'colorPending':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if (path != null)
                     addPathColorFrame($(path), lineColors.pendingPath, animationTime);
                 if ($('#matrix'))
-                    updateNodeCell(commands[i].data.vertices[1].name, commands[i].data.vertices[1].cost);
+                    updateNodeCell(data.vertices[1].name, data.vertices[1].cost);
                 break;
             case 'colorSlow':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if (path != null)
                     addPathColorFrame(path, lineColors.slowPath, animationTime);
                 break;
             case 'colorFast':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if (path != null)
                     addPathColorFrame(path, lineColors.fastPath, animationTime * 5);
                 break;
             case 'highlightLines':
-                loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(commands[i].data.lines, animationTime));
+                loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(data.lines, animationTime));
                 break;
             case 'setCurrentCost':
-                loadingSequence.push(changeCurrentCost(commands[i].data.id, commands[i].data.newCost));
-                if ($('matrix'))
-                    updateNodeCell(commands[i].data.id, commands[i].data.newCost);
+                loadingSequence.push(changeCurrentCost(data.id, data.newCost));
                 break;
             case 'newNode':
                 if ($('#matrix')) {
-                    setCellBorder(commands[i].data.vertex.name);
-                    createNewRow(commands[i].data.vertex.name);
+                    var current = data.vertex.name;
+                    $('#current-row').children().each(function () {
+                        if (this.innerHTML == '')
+                            this.innerHTML = '\u221E';
+                    });
+                    setCellBorder(data.vertex.name, 'blue');
+                    createNewRow(data.vertex.name);
+                    console.log('new node', data.vertex.name);
+                }
+                break;
+            case 'updateMatrixCost':
+                if ($('matrix')) {
+                    console.log('updating', data.id);
+                    updateNodeCell(data.id, data.newCost);
                 }
                 break;
         }
@@ -143,6 +157,7 @@ function toggleMatrixHiding() {
 
 function initializeHeader() {
     matrixColumns = [];
+    finishedColumns = [];
     $('#matrix-header').append('<th>V</th>');
     nodes.forEach(function (node) {
         $('#matrix-header').append('<th>' + node.id + '</th>');
@@ -155,20 +170,22 @@ function createNewRow(label) {
     $('#matrix-body').append('<tr id="current-row"><td>' + label + '</td></tr>');
 
     matrixColumns.forEach(function (column) {
-        console.log('Appending');
         $('#current-row').append('<td></td>');
     });
 }
 
 function findNodeCellFromId(nodeId) {
     var index = matrixColumns.indexOf(nodeId) + 1; // Add one to compensate for label
+    if (index == -1) return null;
     return $('#current-row').children().eq(index);
 }
 
 function updateNodeCell(nodeId, newCost) {
-    findNodeCellFromId(nodeId).text(newCost);
+    if(!(nodeId in finishedColumns))
+        findNodeCellFromId(nodeId).text(newCost);
 }
 
 function setCellBorder(nodeId, color) {
     findNodeCellFromId(nodeId).css('border', '3px solid ' + color);
+    finishedColumns.push(nodeId);
 }
