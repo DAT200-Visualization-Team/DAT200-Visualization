@@ -22,93 +22,96 @@
 
 </head>
 <body>
-<!--[if lt IE 8]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-    your browser</a> to improve your experience.</p>
-<![endif]-->
+    <!--[if lt IE 8]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+        your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-<div id="view">
-    <div id="toggle-view-button" class="right-corner-abs">
-        <a class="tiny waves-effect waves-light btn"><i class="tiny material-icons">view_column</i></a>
-    </div>
-    <div id="graphics" class="left">
-        <div class="towerOfHanoiContainer">
-            <svg id="towerOfHanoi">
-                <g id="pegs"></g>
-                <g id="disks"></g>
-            </svg>
+    <div id="view">
+        <div id="toggle-view-button" class="right-corner-abs">
+            <a class="tiny waves-effect waves-light btn"><i class="tiny material-icons">view_column</i></a>
         </div>
-    </div>
-    <div id="code" class="right">
-        <div>
-            <h3>Tower of Hanoi</h3>
-
-            <div class="input-field row" style="margin-right: 100px; margin-left: 15px;">
-                <select id="speed" name="speed" class="col s3">
-                    <option value="" disabled>Speed</option>
-                    <option value="1" selected>1x</option>
-                    <option value="2">2x</option>
-                    <option value="3">3x</option>
-                    <option value="4">4x</option>
-                    <option value="5">5x</option>
-                    <option value="6">6x</option>
-                    <option value="7">7x</option>
-                    <option value="8">8x</option>
-                    <option value="9">9x</option>
-                    <option value="10">10x</option>
-                </select>
+        <div id="graphics" class="left">
+            <div class="towerOfHanoiContainer">
+                <svg id="towerOfHanoi">
+                    <g id="pegs"></g>
+                    <g id="disks"></g>
+                </svg>
             </div>
+        </div>
+        <div id="code" class="right">
+            <div>
+                <h3>Tower of Hanoi</h3>
+
+                <div class="input-field row" style="margin-right: 100px; margin-left: 15px;">
+                    <select id="speed" name="speed" class="col s3">
+                        <option value="" disabled>Speed</option>
+                        <option value="1" selected>1x</option>
+                        <option value="2">2x</option>
+                        <option value="3">3x</option>
+                        <option value="4">4x</option>
+                        <option value="5">5x</option>
+                        <option value="6">6x</option>
+                        <option value="7">7x</option>
+                        <option value="8">8x</option>
+                        <option value="9">9x</option>
+                        <option value="10">10x</option>
+                    </select>
+                </div>
 
 
-            <pre>
+                <pre>
                 <code id="code-text"></code>
             </pre>
+            </div>
         </div>
     </div>
-</div>
 
-<a id="downloadLink" style="display: none"></a>
+    <a id="downloadLink" style="display: none"></a>
 
-<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
-<script src="js/plugins.js"></script>
-<script src="js/utils/cookiesUtils.js"></script>
-<script src="js/main.js"></script>
-<script src="js/materialize.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
-<script src="js/vendor/velocity.min.js"></script>
-<script src="js/vendor/velocity.ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
-<script src="js/vendor/handlebars-v4.0.5.js"></script>
-<script src="js/templateHelpers/templateController.js"></script>
-<script src="js/settings.js"></script>
-<script src="js/resize.js"></script>
-<script src="js/vendor/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();
-$("#draggable").draggable();</script>
-<script src="js/codedisplay/CodeDisplayManager.js"></script>
-<script src="js/visualization/TowerOfHanoiVisualization.js"></script>
-<script src="js/algorithms/TowerOfHanoi.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+    <script src="js/plugins.js"></script>
+    <script src="js/utils/cookiesUtils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/materialize.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
+    <script src="js/vendor/velocity.min.js"></script>
+    <script src="js/vendor/velocity.ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations-next-lite.min.js"></script>
+    <script src="js/vendor/handlebars-v4.0.5.js"></script>
+    <script src="js/templateHelpers/templateController.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/resize.js"></script>
+    <script src="js/vendor/highlight.pack.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="js/codedisplay/CodeDisplayManager.js"></script>
+    <script src="js/visualization/TowerOfHanoiVisualization.js"></script>
+    <script src="js/algorithms/TowerOfHanoi.js"></script>
+    <script src="js/visualization/player/Step.js"></script>
+    <script src="js/visualization/player/AnimationPlayer.js"></script>
 
 
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-<script>
-    (function (b, o, i, l, e, r) {
-        b.GoogleAnalyticsObject = l;
-        b[l] || (b[l] =
-                function () {
-                    (b[l].q = b[l].q || []).push(arguments)
-                });
-        b[l].l = +new Date;
-        e = o.createElement(i);
-        r = o.getElementsByTagName(i)[0];
-        e.src = 'https://www.google-analytics.com/analytics.js';
-        r.parentNode.insertBefore(e, r)
-    }(window, document, 'script', 'ga'));
-    ga('create', 'UA-XXXXX-X', 'auto');
-    ga('send', 'pageview');
-</script>
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+        (function (b, o, i, l, e, r) {
+            b.GoogleAnalyticsObject = l;
+            b[l] || (b[l] =
+                    function () {
+                        (b[l].q = b[l].q || []).push(arguments)
+                    });
+            b[l].l = +new Date;
+            e = o.createElement(i);
+            r = o.getElementsByTagName(i)[0];
+            e.src = 'https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e, r)
+        }(window, document, 'script', 'ga'));
+        ga('create', 'UA-XXXXX-X', 'auto');
+        ga('send', 'pageview');
+    </script>
 </body>
 </html>
