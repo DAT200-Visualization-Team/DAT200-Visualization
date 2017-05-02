@@ -32,7 +32,7 @@ function enqueue() {
         queue.enqueue(arguments[i]);
 
         loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(3, 500))
-        var newElement = $('<div class="queue-entry element red lighten-3 z-depth-3" style="opacity: 0; display: none;"><h4 class="queue-value truncate noselect">' + arguments[i] + '</h4></div>').prependTo(('#queue'));
+        var newElement = $('<div class="queue-entry element red lighten-3 z-depth-3 valign-wrapper" style="opacity: 0; display: none;"><h4 class="queue-value center-align truncate noselect valign">' + arguments[i] + '</h4></div>').prependTo(('#queue'));
 
         loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(4, 500))
         loadingSequence.push({ e: newElement, p: { translateX: [0, -500], opacity: 1 }, o: { duration: 2000, display: 'inline-block' } });
