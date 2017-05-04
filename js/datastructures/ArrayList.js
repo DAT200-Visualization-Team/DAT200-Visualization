@@ -1,6 +1,8 @@
 const DEFAULT_CAPACITY = 5;
 const NOT_FOUND = -1;
 
+var commands = [];
+
 function ArrayList(other) {
     this.theItems;
     this.theSize;
@@ -42,8 +44,6 @@ ArrayList.prototype.set = function (index, newVal) {
     old = this.theItems[index];
     this.theItems[index] = newVal;
 
-    //Send event to gui
-    $(document).trigger("replaceElement", [index, newVal]);
 
     return old;
 };
@@ -79,16 +79,9 @@ ArrayList.prototype.add = function (x) {
     //Update gui
     //Ensure capacity
     if(this.capacity == this.theSize - 1) {
-        $(document).trigger("extendCapacity", this.theSize - 1);
         var temp = this.theSize;
-        setTimeout(function(){
-            $(document).trigger("replaceElement", [temp - 1, x]);
-        }, 20000);
     } else {
-        $(document).trigger("replaceElement", [this.theSize - 1, x]);
     }
-    $(document).trigger("updateTheSize", this.theSize);
-    $(document).trigger("updateModCount", this.modCount);
 
     return true;
 };
@@ -107,17 +100,10 @@ ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
     for (var i = index; i < this.size() - 1; i++) {
         this.theItems[i] = this.theItems[i + 1];
-
-        //Send event to GUI
-        $(document).trigger("moveElement", [i + 1, i]);
     }
 
     this.theSize--;
     this.modCount++;
-
-    //Update gui
-    $(document).trigger("updateTheSize", this.theSize);
-    $(document).trigger("updateModCount", this.modCount);
 
     return removedItem;
 };

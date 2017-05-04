@@ -76,6 +76,10 @@
               "function": "dequeue"
             }
           ]
+        },
+        {
+          "id": "hash",
+          "name": "Hash Table"
         }
       ]
     },
