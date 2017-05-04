@@ -194,6 +194,14 @@ pre {
     white-space: pre !important;
 }
 
+code {
+    background: #fcfcfc !important;
+}
+
+svg {
+    background-color: #fcfcfc;
+}
+
 .right-corner-abs {
     position: absolute;
     right: 1vw;
@@ -202,13 +210,12 @@ pre {
 }
 
 .ui-resizable-s, .ui-resizable-se, .ui-icon-gripsmall-diagonal-se {
-    /*background-image: url();*/
+    background-image: url() !important;
 }
 
 body {
     background-color: #fcfcfc;
 }
-
 
 
 /* ==========================================================================
