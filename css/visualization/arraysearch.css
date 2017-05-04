@@ -43,7 +43,8 @@
     transform: translateX(-50%);
 }
 
-.arrow-up {
+#arrow-up {
+    display: inline-block;
     width: 0;
     height: 0;
     border-left: 25px solid transparent;
