@@ -5,25 +5,19 @@
             <div class="col s12 m4">
                 <div class="card white hoverable">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="{{image}}"/>
+                        <img class="activator" src="{{this.image}}"/>
                     </div>
                     <div class="card-content activator">
-                        <span class="card-title grey-text text-darken-4 activator noselect">{{name}}</span>
-
+                        <span class="card-title grey-text text-darken-4 activator noselect">{{this.name}}</span>
                     </div>
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Card Title<i
+                        <span class="card-title grey-text text-darken-4">{{this.name}}<i
                                 class="material-icons right">close</i></span>
                         <p>Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore
                             epicuri
                             temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam
                             scaevola quo.</p>
                     </div>
-                    <!--<div class="card-action" style="padding-bottom: 2em">
-                        {{#each subCategories}}
-                        <a class="col l5 text-darken-3 red-text" href="./{{this.id}}.html">{{this.name}}</a>
-                        {{/each}}
-                    </div>-->
                 </div>
             </div>
             {{/each}}
