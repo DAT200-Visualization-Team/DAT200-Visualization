@@ -46,6 +46,8 @@ $.ajax({
             var filteredData = filterDataToSubCategory(data, currentFile.split('.')[0]);
             var commandHtml = render("commandTemplate", filteredData);
             $("body").append(commandHtml);
+            var playerHtml = render("animationPlayer");
+            $("#graphics").append(playerHtml);
         }
     }
 });

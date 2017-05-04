@@ -27,7 +27,11 @@
 
     <div id="view">
         <div id="graphics" class="left">
-
+            <div style="position: absolute; left: 1%; top: 1%;">
+                <a class="waves-effect waves-light btn" id="open-browser-button" onclick="toggleMatrixHiding()">
+                    <i class="material-icons">grid_on</i>
+                </a>
+            </div>
         </div>
         <div id="code" class="right">
 
@@ -36,6 +40,27 @@
                 <pre><code id="code-text">
             </code></pre>
             </div>
+        </div>
+    </div>
+
+    <div id="matrix-window">
+        <div id="controls" style="display: flex; justify-content: flex-start; position: relative;">
+            <div id="header-text">Matrix representation</div>
+            <div id="close-button"><a href="#" onclick="toggleMatrixHiding()"><i class="material-icons">close</i></a></div>
+        </div>
+        <div id="content-container" class="row">
+            <ul id="content">
+                <li>
+                    <table id="matrix">
+                        <thead>
+                            <tr id="matrix-header">
+                            </tr>
+                        </thead>
+                        <tbody id="matrix-body">
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -69,6 +94,8 @@
     <script src="js/datastructures/Path.js"></script>
     <script src="js/datastructures/Graph.js"></script>
     <script src="js/visualization/PathFindingVisualization.js"></script>
+    <script src="js/visualization/player/Step.js"></script>
+    <script src="js/visualization/player/AnimationPlayer.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>

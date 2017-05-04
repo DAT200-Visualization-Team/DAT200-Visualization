@@ -54,3 +54,72 @@ text.id {
   text-anchor: middle;
   font-weight: bold;
 }
+
+/*#### Matrix viewer style ####*/
+#matrix-window {
+    position: absolute;
+    top: 30%;
+    left: 2%;
+    background-color: #b3d6ff;
+    width: 40vw;
+    height: 40vh;
+    min-width: 200px;
+    min-height: 200px;
+    display: none;
+}
+
+.no-space{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#controls {
+    width: 100%;
+    background-color: #526475;
+    margin-bottom: 0 !important;
+    padding-top: 7px;
+}
+
+#header-text {
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#close-button {
+    flex: 0 1 auto;
+    margin-left: auto;
+}
+
+#content-container {
+    position: relative;
+    float: left;
+    overflow-y: auto;
+    width: 100%;
+    height: 80%;
+}
+
+#content li * {
+    padding: 0 8px 8px 8px;
+}
+
+td, th {
+    text-align: center;
+    vertical-align: central;
+}
+
+td {
+    padding: 10px !important;
+}
+
+thead {
+    border-bottom: 1px solid #526475;
+}
+
+tr td:first-child, tr th:first-child {
+    border-right: 1px solid #526475;
+    font-weight: bold;
+}

@@ -57,7 +57,6 @@ Graph.prototype.getPathInner = function(dest, pathMap) {
         commands.push({ name: "colorFast", data: { vertices: [dest.prev, dest] } });
     }
     pathMap[dest.name] = dest.dist;
-    //if(dest.prev != null)
         
     return pathMap;
 };
@@ -107,6 +106,7 @@ Graph.prototype.dijkstra = function (startName) {
             commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
+        commands.push({ name: "newNode", data: { vertex: v } });
         commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
         v.scratch = 1;
         nodesSeen++;
@@ -139,6 +139,8 @@ Graph.prototype.dijkstra = function (startName) {
                     commands.push({ name: "colorSlow", data: { vertices: [v, w], totalCost: v.dist + cvw } });
             }
 
+            commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
+
             if(!itr.hasNext())
                 commands.push({ name: "highlightLines", data: { lines: [20] } });
         }
@@ -170,6 +172,8 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
             throw {name: "GraphException", message: "Negative cycle detected"};
         }
         
+        commands.push({ name: "newNode", data: { vertex: v } });
+
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
             commands.push({ name: "highlightLines", data: { lines: [18, 19, 20, 21, 23] } });
             var e = itr.next();
