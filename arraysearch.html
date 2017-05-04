@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>AVL Tree</title>
+    <title>Array Search</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="css/vs.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/visualization/treeEditor.css">
+    <link rel="stylesheet" href="css/visualization/arraysearch.css">
+
 </head>
 <body>
 <!--[if lt IE 8]>
@@ -31,13 +32,13 @@
         <a class="tiny waves-effect waves-light btn"><i class="tiny material-icons">view_column</i></a>
     </div>
     <div id="graphics" class="left">
-        <div class="treeEditor">
-
+        <div id="arraySearch-wrapper">
+            <div id="arraySearch"></div>
         </div>
     </div>
     <div id="code" class="right">
         <div>
-            <h3>Binary Tree</h3>
+            <h3>Array Search</h3>
             <pre>
                 <code id="code-text"></code>
             </pre>
@@ -71,12 +72,9 @@
 <script>hljs.initHighlightingOnLoad();
 $("#draggable").draggable();</script>
 <script src="js/codedisplay/CodeDisplayManager.js"></script>
-<script src="js/datastructures/BinaryNode.js"></script>
-<script src="js/datastructures/AVLTree.js"></script>
-<script src="js/visualization/TreeEditor.js"></script>
-<script src="js/visualization/AVLTreeVisualization.js"></script>
-<script src="js/visualization/player/Step.js"></script>
-<script src="js/visualization/player/AnimationPlayer.js"></script>
+<script src="js/algorithms/ArraySearch.js"></script>
+<script src="js/visualization/ArraySearchVisualization.js"></script>
+
 
 
 

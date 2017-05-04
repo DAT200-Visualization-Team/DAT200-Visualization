@@ -8,7 +8,7 @@ function toggleFadeState(element) {
 function handleFunctionSubmit(event, functionName, formElement) {
     event.preventDefault();
     var argumentValuesArray = [];
-    var allInputs = formElement.find(':input');
+    var allInputs = formElement.find(':input').not(':input[type=submit]');
 
     for (var i = 0; i < allInputs.length; i++) {
         var type = allInputs[i].getAttribute('data-type');

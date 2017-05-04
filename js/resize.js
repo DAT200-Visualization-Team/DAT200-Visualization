@@ -1,7 +1,7 @@
 var windowToggleState = 0;
 
 $(document).ready(function () {
-    $("#graphics").resizable();
+    $("#graphics").resizable({handles: "e"});
 
     if ($(window).width() < 700) {
         windowToggleState = 1;

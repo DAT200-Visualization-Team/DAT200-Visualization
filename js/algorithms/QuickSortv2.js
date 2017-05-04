@@ -20,7 +20,7 @@ QuickSort.prototype.quickSort = function(low, high) {
     if(low < high) {
         if(high - low < 4) {
             console.log("low: " + low + ", high: " + high);
-            this.a = insertionSort(this.a, low, high+1);
+            this.a = useInsertionSort(this.a, low, high+1);
             console.log(this.a);
         } else {
 
@@ -82,7 +82,7 @@ function swapReferences(a, i, j ) {
     return a;
 }
 
-function insertionSort(a, low, high) {
+function useInsertionSort(a, low, high) {
 
     for(var p = low + 1; p < high; p++) {
         //commands.push("codeLineHighlight(2)");

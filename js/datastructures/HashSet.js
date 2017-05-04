@@ -1,7 +1,8 @@
-const DEFAULT_TABLE_SIZE = 101;
+const DEFAULT_TABLE_SIZE = 11;
 var cmd = [];
 
 function HashSet(other) {
+    this.probingType = "linear";
     this.currentSize = 0;
     this.occupied = 0;
     this.modCount = 0;
@@ -101,6 +102,7 @@ HashSet.prototype.findPos = function (x) {
     cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", 0)");
     cmd.push("updateArrow(" + currentPos + ")");
 
+    var interation = 1;
     while (this.array[currentPos] != null) {
         if (x == null) {
             if (this.array[currentPos].element == null)
@@ -111,10 +113,20 @@ HashSet.prototype.findPos = function (x) {
 
         currentPos += offset; // Compute ith probe
         cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", " + offset + ")");
-        cmd.push("updateArrow(" + currentPos + ")");
-        offset += 2;
+
+        //offset += 2;
+
+        interation += 1;
+        if(this.probingType == "quadratic") {
+            offset = Math.pow(interation, 2);
+        } else {
+            offset += 1;
+        }
+
         if (currentPos >= this.array.length) // Implement the mod
             currentPos -= this.array.length;
+
+        cmd.push("updateArrow(" + currentPos + ")");
     }
 
     return currentPos;

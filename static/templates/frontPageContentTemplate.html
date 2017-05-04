@@ -1,24 +1,33 @@
-<div class="container">
-    {{#each categories}}
+<main>
+    <div class="container" style="margin-top: 1em">
         <div class="row" style="margin-bottom: 0">
-            <div class="col l12">
-                <div class="card horizontal red lighten-4 hoverable">
-                    <div class="card-image">
-                        <img class="responsive-img" style="width: 200px;" src="{{image}}"/>
+            {{#each categories}}
+            <div class="col s12 m4">
+                <div class="card white hoverable">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="{{image}}"/>
                     </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <h5 class="card-title header">{{name}}</h5>
-                            <p>Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.</p>
-                        </div>
-                        <div class="card-action" style="padding-bottom: 2em">
-                            {{#each subCategories}}
-                                <a class="col l5 text-darken-3 red-text" href="./{{this.id}}.html">{{this.name}}</a>
-                            {{/each}}
-                        </div>
+                    <div class="card-content activator">
+                        <span class="card-title grey-text text-darken-4 activator noselect">{{name}}</span>
+
                     </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Card Title<i
+                                class="material-icons right">close</i></span>
+                        <p>Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore
+                            epicuri
+                            temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam
+                            scaevola quo.</p>
+                    </div>
+                    <!--<div class="card-action" style="padding-bottom: 2em">
+                        {{#each subCategories}}
+                        <a class="col l5 text-darken-3 red-text" href="./{{this.id}}.html">{{this.name}}</a>
+                        {{/each}}
+                    </div>-->
                 </div>
             </div>
+            {{/each}}
         </div>
-    {{/each}}
-</div>
+
+    </div>
+</main>
