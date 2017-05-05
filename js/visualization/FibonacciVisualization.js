@@ -1,17 +1,19 @@
 var codeDisplayManager = new CodeDisplayManager("javascript", "fibonacci");
-var lines = [];
-var animationTime = 100;
-var loadingSequence = [];
+//var lines = [];
+var animationTime = 1;
+//var loadingSequence = [];
+var tl;
+
 
 function runIterativeFib(n) {
     $("#fibonacci").empty();
-    lines = [];
-    loadingSequence = [];
+    //lines = [];
+    //loadingSequence = [];
     codeDisplayManager.loadFunctions("iterativeFib");
     codeDisplayManager.changeFunction("iterativeFib");
-    for (var i = 0; i < 17; i++) {
+    /*for (var i = 0; i < 17; i++) {
         lines.push(codeDisplayManager.getVelocityFramesForHighlight(i, animationTime));
-    }
+    }*/
     iterativeFib(n);
     animate();
 }
@@ -85,22 +87,24 @@ function initialize() {
 }
 
 function fadeInAndMark(id, part) {
-    loadingSequence.push({e: $("#" + id), p: {opacity: 1}, o: {duration: animationTime, display: 'inline-block'}});
+    var arr = [];
+    arr.push({e: $("#" + id), p: {opacity: 1}, o: {duration: animationTime, display: 'inline-block'}});
     if (part === 0)
-        loadingSequence.push({
+        arr.push({
             e: $("#nMinusMarker"),
             p: {opacity: 1},
-            o: {duration: animationTime, display: 'inline-block', sequenceQueue: false}
+            o: {duration: animationTime, display: 'inline-block', position: "-=" + animationTime}
         });
 
     else if (part === 1)
-        loadingSequence.push({
+        arr.push({
             e: $("#nMinusMarker"),
             p: {width: "+= 4rem"},
-            o: {duration: animationTime, display: 'inline-block', sequenceQueue: false}
+            o: {duration: animationTime, display: 'inline-block', position: "-=" + animationTime}
         })
 }
 
+//STATUS: NOT CHANGED, may not need it anymore
 function highlight(line, type) {
     switch (type) {
         case 0:
@@ -115,14 +119,17 @@ function highlight(line, type) {
     }
 }
 
+//STATUS: DONE
+// Returns an array of animation meant to be given to a method in animationPlayer.
 function forLoopAnimation(val, part) {
+    var arr = [];
     if (part === 0) {
-        loadingSequence.push({e: $("#nMinusMarker"), p: {boxShadowSpread: 3}, o: {duration: animationTime/2}});
-        loadingSequence.push({e: $("#plusMark"), p: {opacity: 1}, o: {duration: animationTime, sequenceQueue: false}});
-        loadingSequence.push({e: $("#nMinusMarker"), p: {boxShadowSpread: 0}, o: {duration: animationTime/2}});
-        loadingSequence.push({e: $("#plusMark"), p: {opacity: 0}, o: {duration: animationTime, sequenceQueue: false}});
+        arr.push({e: "#nMinusMarker", p: {boxShadowSpread: 3}, o: {duration: animationTime/2}});
+        arr.push({e: "#plusMark", p: {opacity: 1}, o: {duration: animationTime, position: "-=" + animationTime}});
+        arr.push({e: "#nMinusMarker", p: {boxShadowSpread: 0}, o: {duration: animationTime/2}});
+        arr.push({e: "#plusMark", p: {opacity: 0}, o: {duration: animationTime, position: "-=" + animationTime}});
         $("#fibonacci").append('<div class="fibonacci-entry" style="opacity: 0; display:none"><h4 class="fibonacci-value noselect">' + val + '</h4></div>');
-        loadingSequence.push({
+        arr.push({
             e: $("#fibonacci").children().last(),
             p: {opacity: 1},
             o: {duration: animationTime, display: 'inline-block', sequenceQueue: false}
@@ -130,29 +137,33 @@ function forLoopAnimation(val, part) {
 
     }
     else if (part === 1) {
-        loadingSequence.push({
+        arr.push({
             e: $("#nMinusMarker"),
             p: {width: "-= 4rem", left: "+= 4rem"},
             o: {duration: animationTime}
         });
     }
     else if (part === 2) {
-        loadingSequence.push({e: $("#nMinusMarker"), p: {width: "+= 4rem"}, o: {duration: animationTime}});
+        arr.push({e: $("#nMinusMarker"), p: {width: "+= 4rem"}, o: {duration: animationTime}});
     }
+    return arr;
 }
 
+//STATUS: DONE
+// Returns an array of animation meant to be given to a method in animationPlayer.
 function markResult() {
+    var arr = [];
     var result = $("#fibonacci").children().last();
-    loadingSequence.push({e: result, p: "callout.swing", o: {duration: animationTime}});
-    loadingSequence.push({e: $("#fibonacci").children().first(), p: {opacity: 0}, o: {duration: animationTime/2, sequenceQueue: false}});
-    loadingSequence.push({
+    arr.push({e: result, p: "callout.swing", o: {duration: animationTime}});
+    arr.push({e: $("#fibonacci").children().first(), p: {opacity: 0}, o: {duration: animationTime/2, sequenceQueue: false}});
+    arr.push({
         e: result.children().first(),
         p: {color: "#008b00", fontSize: "3rem"},
-        o: {duration: animationTime, sequenceQueue: false}
+        o: {duration: animationTime, position: "-=" + animationTime}
     })
 }
 
 function animate() {
-    $.Velocity.RunSequence(loadingSequence);
+    tl.play();
 }
 
