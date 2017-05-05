@@ -1,12 +1,22 @@
 var AnimationPlayer = (function () {
     var instance;
     var isPlaying = false;
-    var tl = new TimelineMax();
+    var tl = new TimelineMax({ onUpdate: updateSeekBar, onUpdateScope: tl, onComplete: animationComplete, paused: true });
     var stepCount = 1;
+
+    function updateSeekBar() {
+        $('#seek-bar').val(this.progress() * 100);
+    }
+
+    function animationComplete() {
+        tl.pause();
+        isPlaying = false;
+        updatePlayIcon();
+    }
 
     return {
         setPlayState: function (value) {
-            isPlaying = true;
+            isPlaying = value;
         },
         getPlayState: function () {
             return isPlaying;
@@ -26,13 +36,12 @@ var AnimationPlayer = (function () {
         },
         incrementCounter: function () {
             stepCount++;
+        },
+        updateProgress: function () {
+            updateSeekBar.call(tl);
         }
     };
 })();
-
-function StepSequence(steps) {
-
-}
 
 function appendCodeLines(lines, codeDisplayManager) {
     var frames = codeDisplayManager.getMultiHighlightInfo(lines);
@@ -62,20 +71,44 @@ function appendAnimation(line, animations, codeDisplayManager) {
 
 function togglePlayState(element) {
     AnimationPlayer.togglePlayState();
+    updatePlayIcon();
+}
+
+function updatePlayIcon() {
     if (AnimationPlayer.getPlayState())
-        element.innerHTML = 'pause';
+        $('#play-button').html('pause');
     else
-        element.innerHTML = 'play_arrow';
+        $('#play-button').html('play_arrow');
 }
 
 $('#play-button').click(function () {
-    togglePlayState(this);
+    togglePlayState();
 });
 
-$('#step-back').click(function () {
-    
+$('#step-prev').click(function () {
+    AnimationPlayer.setPlayState(false);
+    updatePlayIcon();
+    var timeLine = AnimationPlayer.tl();
+    timeLine.pause();
+    timeLine.seek(timeLine.getLabelBefore());
+    timeLine.pause();
+    AnimationPlayer.updateProgress();
 });
 
-$('#step-forward').click(function () {
-    
+$('#step-next').click(function () {
+    AnimationPlayer.setPlayState(false);
+    updatePlayIcon();
+    var timeLine = AnimationPlayer.tl();
+    timeLine.pause();
+    timeLine.seek(timeLine.getLabelAfter());
+    timeLine.pause();
+    AnimationPlayer.updateProgress();
+});
+
+$('#seek-bar').change(function () {
+    AnimationPlayer.tl().progress($(this).val() / 100);
+});
+
+$('#seek-bar').on('input', function () {
+    AnimationPlayer.tl().progress($(this).val() / 100);
 });

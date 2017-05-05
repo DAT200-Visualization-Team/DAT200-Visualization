@@ -33,6 +33,7 @@ function handleFunctionSubmit(event, functionName, formElement) {
     window[functionName].apply(this, argumentValuesArray);
 
     toggleFadeState($('#command-items-wrapper'));
+    togglePlayState($('#play-button')[0]);
 }
 
 $(document).mouseup(function (e) {
