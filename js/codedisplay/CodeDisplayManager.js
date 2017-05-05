@@ -58,25 +58,24 @@ CodeDisplayManager.prototype.highlightLine = function (index, highlightTime, ini
     $.Velocity.RunSequence(this.getVelocityFramesForHighlight(index, highlightTime, initialDelay));
 };
 
-CodeDisplayManager.prototype.getVelocityFramesForHighlight = function (index, highlightTime, initialDelay) {
+CodeDisplayManager.prototype.getHighlightInfo = function (index, highlightTime) {
     if (highlightTime == null) highlightTime = 1000;
-    if (initialDelay == null) initialDelay = 0;
 
     var lineToDisplay = $("#" + this.currentFunction).find(".highlighted-code");
 
     this.currentLine = index++;
 
     return [
-        { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 1, backgroundColor: '#ffff00' }, o: { duration: highlightTime / 2, delay: initialDelay } },
-        { e: lineToDisplay[index - 1], p: { backgroundColorAlpha: 0 }, o: { duration: highlightTime / 2 } }
+        { e: lineToDisplay[index - 1], p: { backgroundColor: 'rgba(255,255,0,1)' }, o: { duration: highlightTime / 2 } },
+        { e: lineToDisplay[index - 1], p: { backgroundColor: 'transparent' }, o: { duration: highlightTime / 2 } }
     ];
 };
 
-CodeDisplayManager.prototype.getMultipleVelocityFrameHighlights = function (indexArray, highlightTime, initialDelay) {
+CodeDisplayManager.prototype.getMultiHighlightInfo = function (indexArray, highlightTime) {
     var frames = [];
 
     for (var i = 0; i < indexArray.length; i++) {
-        frames = frames.concat(this.getVelocityFramesForHighlight(indexArray[i], highlightTime, initialDelay));
+        frames = frames.concat(this.getHighlightInfo(indexArray[i], highlightTime));
     }
 
     return frames;
