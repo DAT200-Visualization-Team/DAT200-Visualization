@@ -46,9 +46,12 @@ function appendCodeLines(lines, codeDisplayManager) {
 }
 
 function appendAnimation(line, animations, codeDisplayManager) {
-    var lineHL = codeDisplayManager.getHighlightInfo(line);
-    
-    AnimationPlayer.tl().to(lineHL[0].e, 1, lineHL[0].p);
+    var lineHL;
+    if(line || codeDisplayManager) {
+        lineHL = codeDisplayManager.getHighlightInfo(line);
+        AnimationPlayer.tl().to(lineHL[0].e, 1, lineHL[0].p);
+    }
+
     AnimationPlayer.tl().addLabel("Step" + AnimationPlayer.getStepCount());
     AnimationPlayer.incrementCounter();
 
@@ -56,8 +59,9 @@ function appendAnimation(line, animations, codeDisplayManager) {
         var info = animations[i];
         AnimationPlayer.tl().to(info.e, info.o.duration, info.p, info.o.position ? info.o.position : "+=0");
     }
-
-    AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
+    if(line || codeDisplayManager) {
+        AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
+    }
 }
 
 function togglePlayState(element) {

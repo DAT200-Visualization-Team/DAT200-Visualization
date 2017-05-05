@@ -19,9 +19,7 @@ var xPosPegA = 0;
 var xPosPegB = 0;
 var xPosPegC = 0;
 
-var baseAnimationTime = 1000;
-var animationTime = baseAnimationTime; // can be adjusted by user
-
+var animationTime = 1;
 
 var codeDisplayManager;
 
@@ -69,7 +67,7 @@ function setPlatform() {
 // Animate each disk 1000px down and all will be good.
 function setDisks(n, from) {
     var disks = [];
-    var y = platformY - diskHeight - 1000;
+    var y = platformY - diskHeight /*- 1000*/;
 
     // Resize
     diskWidthDiff = Math.pow((n - 9), 2) + 20;
@@ -94,14 +92,14 @@ function initialize(disks, from) {
     }
     updateSVG();
 
-    return { e: $("#disks"), p: { translateY: "+=1000px" }, o: { duration: animationTime, easing: "easeInSine"} };
+    //return { e: $("#disks"), p: { y: "+=1000", easing:Power3.easeOut}, o: { duration: animationTime} };
 }
 
 function moveDisk(disk, from, to) {
     var movement = [];
 
     // move up
-    movement.push({ e: $("#disk" + disk), p: { y: "-= " + (pegHeight + 2 * diskHeight)}, o: { duration: animationTime, easing: "easeInSine" } });
+    movement.push({ e: $("#disk" + disk), p: { y: "-=" + (pegHeight + 2 * diskHeight), ease:Power1.easeOut }, o: { duration: animationTime} });
 
     // move to peg
     var xPos = -parseInt(window["xPosPeg" + from]);
@@ -112,13 +110,13 @@ function moveDisk(disk, from, to) {
     else if (to === "C")
         xPos += platformWidth / 3 * 2.5;
 
-    movement.push({ e: $("#disk" + disk), p: { x: "+= " + xPos}, o: { duration: animationTime, easing: "easeInSine" } });
+    movement.push({ e: $("#disk" + disk), p: { x: "+=" + xPos, ease:Power1.easeOut }, o: { duration: animationTime } });
 
     // move down
     var yPos = (pegHeight + 2 * diskHeight)
         + diskHeight * (window["peg" + from].length - 1)
         - diskHeight * (window["peg" + to].length);
-    movement.push({ e: $("#disk" + disk), p: { y: "+= " + yPos }, o: { duration: animationTime, easing: "easeInSine" } });
+    movement.push({ e: $("#disk" + disk), p: { y: "+=" + yPos, ease:Power1.easeOut }, o: { duration: animationTime } });
 
     removeDiskFromOldPeg(disk);
     window["peg" + to].push(disk);
@@ -151,23 +149,18 @@ function resetGUI() {
 }
 
 function sendCommands(commands, disks, from) {
-    var loadingSequence = [];
-    var init = initialize(disks, from);
-    loadingSequence.push(init);
+    //TODO: animate the disks falling down on platform at initialize
+    //appendAnimation(null, initialize(disks, from), null);
+    initialize(disks, from);
     codeDisplayManager.loadFunctions("hanoi1");
     codeDisplayManager.changeFunction("hanoi1");
     for (var i = 0; i < commands.length; i++) {
         if(commands[i] instanceof Array) {
-            var tmp = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
-            loadingSequence.push(tmp[0]);
             var movedisk = moveDisk(commands[i][0], commands[i][1], commands[i][2]);
-            loadingSequence.push(movedisk[0], movedisk[1], movedisk[2]);
-            loadingSequence.push(tmp[1]);
+            appendAnimation(3, [movedisk[0], movedisk[1], movedisk[2]], codeDisplayManager);
         } else {
-            var tmp = codeDisplayManager.getVelocityFramesForHighlight(commands[i], animationTime);
-            loadingSequence.push(tmp[0], tmp[1]);
+            appendCodeLines([commands[i]], codeDisplayManager);
         }
     }
-    $.Velocity.RunSequence(loadingSequence);
 }
 

@@ -28,15 +28,12 @@ Hanoi.prototype.showReport = function() {
 };
 
 function doHanoi(numdisks, from, to) {
-    console.log(typeof numdisks, typeof from, typeof to);
     var speed = parseInt($("#speed").val());
-    animationTime = baseAnimationTime / speed;
+    //animationTime = baseAnimationTime / speed;
 
     var arr = ["A", "B", "C"].filter(function(value) {
         return from !== value && to !== value;
     });
-
-    console.log(arr[0]);
 
     new Hanoi(numdisks, from, to, arr[0]);
 }
