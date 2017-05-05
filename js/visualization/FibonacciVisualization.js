@@ -12,6 +12,9 @@ function runIterativeFib(n) {
 }
 
 function iterativeFib(n) {
+    //TODO: make it so that the visualization handles n == 1 or 2
+    if(n < 3) return;
+
     appendCodeLines([0], codeDisplayManager);
     if (n <= 0) {
         appendCodeLines([1], codeDisplayManager);
@@ -42,7 +45,6 @@ function iterativeFib(n) {
     for (var i = 3; i <= n; i++) {
         appendCodeLines([9], codeDisplayManager);
 
-
         result = nMinusOne + nMinusTwo;
         appendAnimation(10, forLoopAnimation(result, 0), codeDisplayManager);
 
@@ -56,10 +58,9 @@ function iterativeFib(n) {
         appendCodeLines([13], codeDisplayManager);
     }
 
-    appendAnimation(15, markResult(), codeDisplayManager)
+    appendAnimation(15, markResult(), codeDisplayManager);
 
     appendCodeLines([16], codeDisplayManager);
-
 }
 
 function initialize() {
@@ -82,15 +83,12 @@ function fadeInAndMark(id, part) {
     else if (part === 1)
         arr.push({
             e: $("#nMinusMarker"),
-            p: {width: "+= 4rem"},
+            p: {width: "+=4rem"},
             o: {duration: animationTime, display: 'inline-block', position: "-=" + animationTime}
         });
     return arr;
 }
 
-
-//STATUS: DONE
-// Returns an array of animation meant to be given to a method in animationPlayer.
 function forLoopAnimation(val, part) {
     var arr = [];
     if (part === 0) {
@@ -101,8 +99,8 @@ function forLoopAnimation(val, part) {
         $("#fibonacci").append('<div class="fibonacci-entry" style="opacity: 0; display:none"><h4 class="fibonacci-value noselect">' + val + '</h4></div>');
         arr.push({
             e: $("#fibonacci").children().last(),
-            p: {opacity: 1},
-            o: {duration: animationTime, display: 'inline-block', sequenceQueue: false}
+            p: {opacity: 1, display: 'inline-block'},
+            o: {duration: animationTime, position: "-=" + animationTime}
         });
 
     }
@@ -120,16 +118,13 @@ function forLoopAnimation(val, part) {
     return arr;
 }
 
-//STATUS: DONE
-// Returns an array of animation meant to be given to a method in animationPlayer.
 function markResult() {
     var arr = [];
     var result = $("#fibonacci").children().last();
-    arr.push({e: result, p: "callout.swing", o: {duration: animationTime}});
     arr.push({e: $("#fibonacci").children().first(), p: {opacity: 0}, o: {duration: animationTime/2, sequenceQueue: false}});
     arr.push({
         e: result.children().first(),
-        p: {color: "#008b00", fontSize: "3rem"},
+        p: {color: "#008b00", fontSize: "3rem", ease: Bounce.easeOut},
         o: {duration: animationTime, position: "-=" + animationTime}
     });
 
