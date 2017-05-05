@@ -4,6 +4,7 @@
       "id": "collections",
       "name": "Collections",
       "image": "https://www.picclickimg.com/d/l400/pict/182227501255_/Lot-Of-15-12-Single-Wholesale-DJ-Pop.jpg",
+      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
       "subCategories": [
         {
           "id": "arraylist",
@@ -87,6 +88,7 @@
       "id": "sorting",
       "name": "Sorting",
       "image": "http://s.hswstatic.com/gif/cheap-landscaping-6.jpg",
+      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
       "subCategories": [
         {
           "id": "insertionsort",
@@ -186,6 +188,7 @@
       "id": "trees",
       "name": "Trees",
       "image": "http://s.hswstatic.com/gif/tree-oak.jpg",
+      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
       "subCategories": [
         {
           "id": "binarytree",
@@ -219,6 +222,7 @@
       "id": "graphs",
       "name": "Graphs",
       "image": "http://s.hswstatic.com/gif/map-3.jpg",
+      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
       "subCategories": [
         {
           "id": "dijkstra",
@@ -270,6 +274,7 @@
       "id": "other",
       "name": "Other",
       "image": "images/otherAlgorithms.png",
+      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
       "subCategories": [
         {
           "id": "towerofhanoi",
@@ -295,7 +300,7 @@
                   "type": "string",
                   "name": "End",
                   "placeholder": "End",
-                  "options": ["A", "B", "C"]
+                  "options": [ "A", "B", "C" ]
                 }
               ]
             }
@@ -324,15 +329,15 @@
         },
         {
           "id": "filetree",
-          "name":  "File Tree"
+          "name": "File Tree"
         },
         {
           "id": "maxsubsequencesum",
-          "name":  "Max Subsequence Sum"
+          "name": "Max Subsequence Sum"
         },
         {
           "id": "arraysearch",
-          "name":  "Array Search"
+          "name": "Array Search"
         }
       ]
     }

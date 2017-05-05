@@ -1,7 +1,7 @@
 <main>
     <div class="container" style="margin-top: 1em">
         <div class="row" style="margin-bottom: 0">
-            {{#each categories}}
+            {{#each this.categories}}
             <div class="col s12 m4">
                 <div class="card white hoverable">
                     <div class="card-image waves-effect waves-block waves-light">
@@ -13,10 +13,7 @@
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">{{this.name}}<i
                                 class="material-icons right">close</i></span>
-                        <p>Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore
-                            epicuri
-                            temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam
-                            scaevola quo.</p>
+                        <p>{{this.description}}</p>
                     </div>
                 </div>
             </div>
