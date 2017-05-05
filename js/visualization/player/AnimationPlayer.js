@@ -45,8 +45,8 @@ function appendCodeLines(lines, codeDisplayManager) {
     }
 }
 
-function appendAnimation(line, animations) {
-    var lineHL = codeDisplayManager.getHighlightInfo(lines);
+function appendAnimation(line, animations, codeDisplayManager) {
+    var lineHL = codeDisplayManager.getHighlightInfo(line);
     
     AnimationPlayer.tl().to(lineHL[0].e, 1, lineHL[0].p);
     AnimationPlayer.tl().addLabel("Step" + AnimationPlayer.getStepCount());

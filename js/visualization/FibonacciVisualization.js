@@ -1,81 +1,64 @@
 var codeDisplayManager = new CodeDisplayManager("javascript", "fibonacci");
-//var lines = [];
 var animationTime = 1;
-//var loadingSequence = [];
-var tl;
 
 
 function runIterativeFib(n) {
     $("#fibonacci").empty();
-    //lines = [];
-    //loadingSequence = [];
+
     codeDisplayManager.loadFunctions("iterativeFib");
     codeDisplayManager.changeFunction("iterativeFib");
-    /*for (var i = 0; i < 17; i++) {
-        lines.push(codeDisplayManager.getVelocityFramesForHighlight(i, animationTime));
-    }*/
+
     iterativeFib(n);
-    animate();
 }
 
 function iterativeFib(n) {
-    highlight(0, 2);
+    appendCodeLines([0], codeDisplayManager);
     if (n <= 0) {
-        highlight(1, 2);
+        appendCodeLines([1], codeDisplayManager);
         throw new {name: "IllegalArgumentException", message: "The Fibonacci numbers start at 1."};
     }
-    highlight(2, 2);
+    appendCodeLines([2], codeDisplayManager);
     if (n === 1) {
         return 1;
     }
-    highlight(3, 2);
+    appendCodeLines([3], codeDisplayManager);
     if (n === 2) {
         return 1;
     }
 
     initialize();
 
-    highlight(5, 0);
+
     var nMinusTwo = 1;
-    fadeInAndMark("nMinusTwo", 0);
-    highlight(5, 1);
+    appendAnimation(5, fadeInAndMark("nMinusTwo", 0), codeDisplayManager);
 
-    highlight(6, 0);
     var nMinusOne = 1;
-    fadeInAndMark("nMinusOne", 1);
-    highlight(6, 1);
+    appendAnimation(6, fadeInAndMark("nMinusOne", 1), codeDisplayManager);
 
 
-    highlight(7, 2);
+    appendCodeLines([7], codeDisplayManager);
     var result = 0;
 
     for (var i = 3; i <= n; i++) {
-        highlight(9, 2);
+        appendCodeLines([9], codeDisplayManager);
 
 
-        highlight(10, 0);
         result = nMinusOne + nMinusTwo;
-        forLoopAnimation(result, 0);
-        highlight(10, 1);
+        appendAnimation(10, forLoopAnimation(result, 0), codeDisplayManager);
 
-        highlight(11, 0);
         nMinusTwo = nMinusOne;
-        forLoopAnimation(result, 1);
-        highlight(11, 1);
+        appendAnimation(11, forLoopAnimation(result, 1), codeDisplayManager);
 
-        highlight(12, 0);
         nMinusOne = result;
-        forLoopAnimation(result, 2);
-        highlight(12, 1);
+        appendAnimation(12, forLoopAnimation(result, 2), codeDisplayManager);
 
-        highlight(13, 2);
+
+        appendCodeLines([13], codeDisplayManager);
     }
 
-    highlight(15, 0);
-    markResult();
-    highlight(15, 1);
+    appendAnimation(15, markResult(), codeDisplayManager)
 
-    highlight(16, 2);
+    appendCodeLines([16], codeDisplayManager);
 
 }
 
@@ -101,23 +84,10 @@ function fadeInAndMark(id, part) {
             e: $("#nMinusMarker"),
             p: {width: "+= 4rem"},
             o: {duration: animationTime, display: 'inline-block', position: "-=" + animationTime}
-        })
+        });
+    return arr;
 }
 
-//STATUS: NOT CHANGED, may not need it anymore
-function highlight(line, type) {
-    switch (type) {
-        case 0:
-            loadingSequence.push(lines[line][0]);
-            break;
-        case 1:
-            loadingSequence.push(lines[line][1]);
-            break;
-        case 2:
-            loadingSequence.push(lines[line][0], lines[line][1]);
-            break;
-    }
-}
 
 //STATUS: DONE
 // Returns an array of animation meant to be given to a method in animationPlayer.
@@ -139,13 +109,14 @@ function forLoopAnimation(val, part) {
     else if (part === 1) {
         arr.push({
             e: $("#nMinusMarker"),
-            p: {width: "-= 4rem", left: "+= 4rem"},
+            p: {width: "-=4rem", left: "+=4rem"},
             o: {duration: animationTime}
         });
     }
     else if (part === 2) {
-        arr.push({e: $("#nMinusMarker"), p: {width: "+= 4rem"}, o: {duration: animationTime}});
+        arr.push({e: $("#nMinusMarker"), p: {width: "+=4rem"}, o: {duration: animationTime}});
     }
+
     return arr;
 }
 
@@ -160,10 +131,7 @@ function markResult() {
         e: result.children().first(),
         p: {color: "#008b00", fontSize: "3rem"},
         o: {duration: animationTime, position: "-=" + animationTime}
-    })
-}
+    });
 
-function animate() {
-    tl.play();
+    return arr;
 }
-
