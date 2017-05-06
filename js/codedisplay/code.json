@@ -237,6 +237,53 @@
         "header": "Graph.prototype.negative = function(startName) { // also called the Bellman-Ford algorithm",
         "lines": [ "    this.clearAll();", "     ", "    var start = this.vertexMap[startName];", "    if(start == null) {", "        throw {name: \"NoSuchElementException\", message: \"Start vertex not found\"};", "    }", "     ", "    var q = new LinkedList();", "    q.addLast(start);", "    start.dist = 0;", "    start.scratch++;", "     ", "    while(!q.isEmpty()) {", "        var v = q.removeFirst();", "        if(v.scratch++ > 2 * Object.keys(this.vertexMap).length) {", "            throw {name: \"GraphException\", message: \"Negative cycle detected\"};", "        }", "         ", "        for(var itr = v.adj.iterator(0); itr.hasNext(); ) {", "            var e = itr.next();", "            var w = e.dest;", "            var cvw = e.cost;", "             ", "            if(w.dist > v.dist + cvw) {", "                w.dist = v.dist + cvw;", "                w.prev = v;", "                // Enqueue only if not already on the queue", "                if(w.scratch++ % 2 === 0) {", "                    q.addLast(w);", "                } else {", "                    w.scratch--; // undo the enqueue increment", "                }", "            }", "        }", "    }", "};" ]
       }
+    },
+    "arraySearch": {
+      "linearSearch": {
+        "header": "function linearSearch(array, search) {",
+        "lines": [
+          "    for (var i = 0; i < array.length; i++) {",
+          "        if (array[i] === search)",
+          "            return i;",
+          "    }",
+          "    return -1;",
+          "}"
+        ]
+      },
+      "binarySearch": {
+        "header": "function binarySearch(sortedArray, search) {",
+        "lines": [
+          "    var testIndex = Math.floor(sortedArray.length / 2);",
+          "    var max = sortedArray.length - 1;",
+          "    var min = 0;",
+          "",
+          "    if (search > sortedArray[max]) ",
+          "        return -1;",
+          "    if (search < sortedArray[min]) ",
+          "        return -1;",
+          "",
+          "    while (true) {",
+          "        if (sortedArray[testIndex] > search)",
+          "            max = testIndex;",
+          "        else if (sortedArray[testIndex] === search)",
+          "            return testIndex;",
+          "        else",
+          "            min = testIndex;",
+          "",
+          "        testIndex = Math.floor((max + min) / 2);",
+          "",
+          "        if (max - min <= 1) {",
+          "            if (sortedArray[max] === search) ",
+          "                return max;",
+          "            if (sortedArray[min] === search) ",
+          "                return min;",
+          "            ",
+          "            return -1;",
+          "        }",
+          "    }",
+          "}"
+        ]
+      }
     }
   }
 }
