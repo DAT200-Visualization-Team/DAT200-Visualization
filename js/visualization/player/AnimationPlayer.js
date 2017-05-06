@@ -121,6 +121,7 @@ $('#step-next').click(function () {
 
 $('#seek-bar').change(function () {
     AnimationPlayer.tl().progress($(this).val() / 100);
+    $('.thumb').width(0).height(0);
 });
 
 $('#seek-bar').on('input', function () {
