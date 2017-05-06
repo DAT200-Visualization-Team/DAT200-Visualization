@@ -41,7 +41,7 @@ var AnimationPlayer = (function () {
             updateSeekBar.call(tl);
         },
         clearTimeline: function () {
-            tl.clear();
+            tl.clear(true);
         }
     };
 })();
