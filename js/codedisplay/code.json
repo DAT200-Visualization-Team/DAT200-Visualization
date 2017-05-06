@@ -285,7 +285,7 @@
         ]
       }
     },
-    "binaryTree": {
+    "binaryTree/binaryNode": {
       "constructor": {
         "header": "function BinaryTree(rootItem) {",
         "lines": [
@@ -318,26 +318,35 @@
         ]
       },
       "printPreOrder": {
-        "header": "BinaryTree.prototype.printPreOrder = function () {",
+        "header": "BinaryNode.prototype.printPreOrder = function () {",
         "lines": [
-          "    if (this.root != null)",
-          "        this.root.printPreOrder();",
+          "    console.log(this.element);",
+          "    if (this.left != null)",
+          "        this.left.printPreOrder();",
+          "    if (this.right != null)",
+          "        this.right.printPreOrder();",
           "};"
         ]
       },
       "printPostOrder": {
-        "header": "BinaryTree.prototype.printPostOrder = function () {",
+        "header": "BinaryNode.prototype.printPostOrder = function () {",
         "lines": [
-          "    if (this.root != null)",
-          "        this.root.printPostOrder();",
+          "    if (this.left != null)",
+          "        this.left.printPostOrder();",
+          "    if (this.right != null)",
+          "        this.right.printPostOrder();",
+          "    console.log(this.element);",
           "};"
         ]
       },
       "printInOrder": {
-        "header": "BinaryTree.prototype.printInOrder = function () {",
+        "header": "BinaryNode.prototype.printInOrder = function () {",
         "lines": [
-          "    if (this.root != null)",
-          "        this.root.printInOrder();",
+          "    if (this.left != null)",
+          "        this.left.printInOrder();",
+          "    console.log(this.element);",
+          "    if (this.right != null)",
+          "        this.right.printInOrder();",
           "};"
         ]
       },
