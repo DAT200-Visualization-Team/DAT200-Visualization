@@ -1,31 +1,58 @@
 var animationTime = 1;
 var arr;
-var tl;
+var codeDisplayManager;
 
 function setArray(array) {
-    tl = new TimelineMax();
-    if(array == null) arr = [5,18,2,3,82,9,1,4,7];
+    codeDisplayManager = new CodeDisplayManager("javascript", "arraySearch");
+    if (array == null) arr = [5, 18, 2, 3, 82, 9, 1, 4, 7];
     else arr = array;
 
     $("#arraySearch").empty();
-    for(var i = 0; i < arr.length; i++) {
+    for (var i = 0; i < arr.length; i++) {
         $("#arraySearch").append('<div class="entry"><h4 class="entry-value noselect">' + arr[i] + '</h4></div>');
     }
 }
 
 function visualizeLinearSearch(search) {
+    codeDisplayManager.loadFunctions("linearSearch");
+    codeDisplayManager.changeFunction("linearSearch");
     for (var i = 0; i < arr.length; i++) {
-        if(i != 0) {
-            tl.to($("#arraySearch").children().eq(i - 1), animationTime, {backgroundColor: "#cc6c6c"});
-            tl.to($("#arraySearch").children().eq(i), animationTime, {backgroundColor: "#FFFF00"}, "-=" + animationTime);
-        } else
-            tl.to($("#arraySearch").children().eq(i), animationTime, {backgroundColor: "#FFFF00"});
+        appendCodeLines([0], codeDisplayManager);
+        if (i != 0) {
+            var tmp = [];
+            tmp.push({
+                e: $("#arraySearch").children().eq(i - 1),
+                p: {backgroundColor: "#cc6c6c"},
+                o: {duration: animationTime}
+            });
+            tmp.push({
+                e: $("#arraySearch").children().eq(i),
+                p: {backgroundColor: "#FFFF00"},
+                o: {duration: animationTime}
+            });
+            appendAnimation(0, tmp, codeDisplayManager);
+
+        } else {
+            var tmp = {
+                e: $("#arraySearch").children().eq(i),
+                p: {backgroundColor: "#FFFF00"},
+                o: {duration: animationTime}
+            };
+            appendAnimation(0, tmp, codeDisplayManager);
+        }
         if (arr[i] === search) {
-            tl.to($("#arraySearch").children().eq(i), animationTime, {backgroundColor: "green"});
+            var tmp = {
+                e: $("#arraySearch").children().eq(i),
+                p: {backgroundColor: "#FFFF00"},
+                o: {duration: animationTime}
+            };
+            appendAnimation(2, tmp, codeDisplayManager);
             return i;
         }
+        appendCodeLines(3, codeDisplayManager);
     }
-    tl.to($("#arraySearch").children(), animationTime, {backgroundColor: "red"});
+    var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "red"}, o: {duration: animationTime}};
+    appendAnimation(4, tmp);
     return -1;
 }
 
@@ -55,8 +82,4 @@ function visualizeBinarySearch(sortedArray, search) {
             return -1;
         }
     }
-}
-
-function animate() {
-    tl.play();
 }

@@ -1,6 +1,7 @@
-var animationTime = 1000;
+var animationTime = 1;
 var bt;
 var treeGUI = new tree();
+var codeDisplayManager = new CodeDisplayManager('javascript', 'binaryTree/binaryNode');
 
 function init() {
     bt = new BinaryTree(treeGUI.vis[0].v);
@@ -24,84 +25,98 @@ function createMarker() {
 }
 
 function moveMarker(cx, cy) {
-    var marker = $("#marker");
-    return { e: marker, p: { translateX: cx, translateY: cy, opacity: 1 }, o: { duration: animationTime,/*, sequenceQueue: false*/ delay: 50} };
+    return [{ e: $("#marker"), p: { x: cx, y: cy, opacity: 1 }, o: { duration: animationTime/*, delay: 50*/} }];
 }
 
 function visualizePreOrder() {
     init();
-    var res = [];
-    var loadingSequence = [];
+    codeDisplayManager.loadFunctions('printPreOrder');
+    codeDisplayManager.changeFunction('printPreOrder');
     function preOrder(node) {
-        res.push(node.element);
-        if (node.left != null)
-            preOrder(node.left);
-        if (node.right != null)
-            preOrder(node.right);
-    }
-
-    preOrder(bt.getRoot());
-    createMarker();
-
-    for(var i = 0; i < res.length; i++) {
         treeGUI.vis.forEach(function(y) {
-            if (y.v === res[i]) {
-                loadingSequence.push(moveMarker(y.p.x, y.p.y));
+            if (y.v === node.element) {
+                appendAnimation(0, moveMarker(y.p.x, y.p.y), codeDisplayManager);
             }
         });
+
+        appendCodeLines([1], codeDisplayManager);
+        if (node.left != null) {
+            appendCodeLines([2], codeDisplayManager);
+            preOrder(node.left);
+        }
+
+        appendCodeLines([3], codeDisplayManager);
+        if (node.right != null) {
+            appendCodeLines([4], codeDisplayManager);
+            preOrder(node.right);
+        }
+
+        appendCodeLines([5], codeDisplayManager);
     }
 
-    $.Velocity.RunSequence(loadingSequence);
+    createMarker();
+    preOrder(bt.getRoot());
 }
 
 function visualizeInOrder() {
     init();
-    var res = [];
-    var loadingSequence = [];
+    codeDisplayManager.loadFunctions('printInOrder');
+    codeDisplayManager.changeFunction('printInOrder');
     function inOrder(node) {
-        if (node.left != null)
+
+        appendCodeLines([0], codeDisplayManager);
+        if (node.left != null) {
+            appendCodeLines([1], codeDisplayManager);
             inOrder(node.left);
-        res.push(node.element);
-        if (node.right != null)
-            inOrder(node.right);
-    }
+        }
 
-    inOrder(bt.getRoot());
-    createMarker();
-
-    for(var i = 0; i < res.length; i++) {
         treeGUI.vis.forEach(function(y) {
-            if (y.v === res[i]) {
-                loadingSequence.push(moveMarker(y.p.x, y.p.y));
+            if (y.v === node.element) {
+                appendAnimation(2, moveMarker(y.p.x, y.p.y), codeDisplayManager);
             }
         });
+
+        appendCodeLines([3], codeDisplayManager);
+        if (node.right != null) {
+            appendCodeLines([4], codeDisplayManager);
+            inOrder(node.right);
+        }
+
+        appendCodeLines([5], codeDisplayManager);
     }
 
-    $.Velocity.RunSequence(loadingSequence);
+    createMarker();
+    inOrder(bt.getRoot());
 }
 
 function visualizePostOrder() {
     init();
+    codeDisplayManager.loadFunctions('printPostOrder');
+    codeDisplayManager.changeFunction('printPostOrder');
     var res = [];
     var loadingSequence = [];
     function postOrder(node) {
-        if (node.left != null)
+
+        appendCodeLines([0], codeDisplayManager);
+        if (node.left != null) {
+            appendCodeLines([1], codeDisplayManager);
             postOrder(node.left);
-        if (node.right != null)
+        }
+
+        appendCodeLines([2], codeDisplayManager);
+        if (node.right != null) {
+            appendCodeLines([3], codeDisplayManager);
             postOrder(node.right);
-        res.push(node.element);
-    }
+        }
 
-    postOrder(bt.getRoot());
-    createMarker();
-
-    for(var i = 0; i < res.length; i++) {
         treeGUI.vis.forEach(function(y) {
-            if (y.v === res[i]) {
-                loadingSequence.push(moveMarker(y.p.x, y.p.y));
+            if (y.v === node.element) {
+                appendAnimation(4, moveMarker(y.p.x, y.p.y), codeDisplayManager);
             }
         });
-    }
 
-    $.Velocity.RunSequence(loadingSequence);
+        appendCodeLines([5], codeDisplayManager);
+    }
+    createMarker();
+    postOrder(bt.getRoot());
 }

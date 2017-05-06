@@ -237,6 +237,307 @@
         "header": "Graph.prototype.negative = function(startName) { // also called the Bellman-Ford algorithm",
         "lines": [ "    this.clearAll();", "     ", "    var start = this.vertexMap[startName];", "    if(start == null) {", "        throw {name: \"NoSuchElementException\", message: \"Start vertex not found\"};", "    }", "     ", "    var q = new LinkedList();", "    q.addLast(start);", "    start.dist = 0;", "    start.scratch++;", "     ", "    while(!q.isEmpty()) {", "        var v = q.removeFirst();", "        if(v.scratch++ > 2 * Object.keys(this.vertexMap).length) {", "            throw {name: \"GraphException\", message: \"Negative cycle detected\"};", "        }", "         ", "        for(var itr = v.adj.iterator(0); itr.hasNext(); ) {", "            var e = itr.next();", "            var w = e.dest;", "            var cvw = e.cost;", "             ", "            if(w.dist > v.dist + cvw) {", "                w.dist = v.dist + cvw;", "                w.prev = v;", "                // Enqueue only if not already on the queue", "                if(w.scratch++ % 2 === 0) {", "                    q.addLast(w);", "                } else {", "                    w.scratch--; // undo the enqueue increment", "                }", "            }", "        }", "    }", "};" ]
       }
+    },
+    "arraySearch": {
+      "linearSearch": {
+        "header": "function linearSearch(array, search) {",
+        "lines": [
+          "    for (var i = 0; i < array.length; i++) {",
+          "        if (array[i] === search)",
+          "            return i;",
+          "    }",
+          "    return -1;",
+          "}"
+        ]
+      },
+      "binarySearch": {
+        "header": "function binarySearch(sortedArray, search) {",
+        "lines": [
+          "    var testIndex = Math.floor(sortedArray.length / 2);",
+          "    var max = sortedArray.length - 1;",
+          "    var min = 0;",
+          "",
+          "    if (search > sortedArray[max]) ",
+          "        return -1;",
+          "    if (search < sortedArray[min]) ",
+          "        return -1;",
+          "",
+          "    while (true) {",
+          "        if (sortedArray[testIndex] > search)",
+          "            max = testIndex;",
+          "        else if (sortedArray[testIndex] === search)",
+          "            return testIndex;",
+          "        else",
+          "            min = testIndex;",
+          "",
+          "        testIndex = Math.floor((max + min) / 2);",
+          "",
+          "        if (max - min <= 1) {",
+          "            if (sortedArray[max] === search) ",
+          "                return max;",
+          "            if (sortedArray[min] === search) ",
+          "                return min;",
+          "            ",
+          "            return -1;",
+          "        }",
+          "    }",
+          "}"
+        ]
+      }
+    },
+    "binaryTree/binaryNode": {
+      "constructor": {
+        "header": "function BinaryTree(rootItem) {",
+        "lines": [
+          "    this.root = null;",
+          "",
+          "    if (rootItem !== undefined)",
+          "        this.root = new BinaryNode(rootItem, null, null);",
+          "}"
+        ]
+      },
+      "getRoot": {
+        "header": "BinaryTree.prototype.getRoot = function () {",
+        "lines": [
+          "    return this.root;",
+          "};"
+        ]
+      },
+      "size": {
+        "header": "BinaryTree.prototype.size = function () {",
+        "lines": [
+          "    return binaryTreeSize(this.root);",
+          "};"
+        ]
+      },
+      "height": {
+        "header": "BinaryTree.prototype.height = function () {",
+        "lines": [
+          "    return binaryTreeHeight(this.root);",
+          "};"
+        ]
+      },
+      "printPreOrder": {
+        "header": "BinaryNode.prototype.printPreOrder = function () {",
+        "lines": [
+          "    console.log(this.element);",
+          "    if (this.left != null)",
+          "        this.left.printPreOrder();",
+          "    if (this.right != null)",
+          "        this.right.printPreOrder();",
+          "};"
+        ]
+      },
+      "printPostOrder": {
+        "header": "BinaryNode.prototype.printPostOrder = function () {",
+        "lines": [
+          "    if (this.left != null)",
+          "        this.left.printPostOrder();",
+          "    if (this.right != null)",
+          "        this.right.printPostOrder();",
+          "    console.log(this.element);",
+          "};"
+        ]
+      },
+      "printInOrder": {
+        "header": "BinaryNode.prototype.printInOrder = function () {",
+        "lines": [
+          "    if (this.left != null)",
+          "        this.left.printInOrder();",
+          "    console.log(this.element);",
+          "    if (this.right != null)",
+          "        this.right.printInOrder();",
+          "};"
+        ]
+      },
+      "makeEmpty": {
+        "header": "BinaryTree.prototype.makeEmpty = function () {",
+        "lines": [
+          "    this.root = null;",
+          "};"
+        ]
+      },
+      "isEmpty": {
+        "header": "BinaryTree.prototype.isEmpty = function () {",
+        "lines": [
+          "    return this.root == null;",
+          "};"
+        ]
+      },
+      "merge": {
+        "header": "BinaryTree.prototype.merge = function (rootItem, t1, t2) {",
+        "lines": [
+          "    if (t1.root == t2.root && t1.root != null)",
+          "        throw { name: \"IllegalArgumentException\", message: \"Can't merge two trees with the same root\" };",
+          "    ",
+          "    // Allocate new node",
+          "    this.root = new BinaryNode(rootItem, t1.root, t2.root);",
+          "    ",
+          "    if (this != t1)",
+          "        t1.root = null;",
+          "    if (this != t2)",
+          "        t2.root = null;",
+          "};"
+        ]
+      }
+    },
+    "binarySearchTree": {
+      "constructor": {
+        "header": "function BinarySearchTree() {",
+        "lines": [
+          "    this.root = null;",
+          "}"
+        ]
+      },
+      "insert": {
+        "header": "BinarySearchTree.prototype.insert = function (x) {",
+        "lines": [
+          "    this.root = this.insertNode(x, this.root);",
+          "};"
+        ]
+      },
+      "remove": {
+        "header": "BinarySearchTree.prototype.remove = function (x) {",
+        "lines": [
+          "    this.root = this.removeNode(x, this.root);",
+          "};"
+        ]
+      },
+      "removeMin": {
+        "header": "BinarySearchTree.prototype.removeMin = function () {",
+        "lines": [
+          "    this.root = this.removeMinNode(this.root);",
+          "};"
+        ]
+      },
+      "findMin": {
+        "header": "BinarySearchTree.prototype.findMin = function () {",
+        "lines": [
+          "    return this.elementAt(this.findMinNode(this.root));",
+          "};"
+        ]
+      },
+      "findMax": {
+        "header": "BinarySearchTree.prototype.findMax = function () {",
+        "lines": [
+          "    return this.elementAt(this.findMaxNode(this.root));",
+          "};"
+        ]
+      },
+      "find": {
+        "header": "BinarySearchTree.prototype.find = function (x) {",
+        "lines": [
+          "    return this.elementAt(this.findNode(x, this.root));",
+          "};"
+        ]
+      },
+      "makeEmpty": {
+        "header": "BinarySearchTree.prototype.makeEmpty = function () {",
+        "lines": [
+          "    this.root = null;",
+          "};"
+        ]
+      },
+      "isEmpty": {
+        "header": "BinarySearchTree.prototype.isEmpty = function () {",
+        "lines": [
+          "    return this.root == null;",
+          "};"
+        ]
+      },
+      "elementAt": {
+        "header": "BinarySearchTree.prototype.elementAt = function (t) {",
+        "lines": [
+          "    return t === null ? null : t.getElement();",
+          "};"
+        ]
+      },
+      "findNode": {
+        "header": "BinarySearchTree.prototype.findNode = function (x, t) {",
+        "lines": [
+          "    while (t !== null) {",
+          "        if (x - t.getElement() < 0)",
+          "            t = t.getLeft();",
+          "        else if (x - t.getElement() > 0)",
+          "            t = t.getRight();",
+          "        else",
+          "            return t; // Match",
+          "    }",
+          "",
+          "    return null; // Not Found",
+          "};"
+        ]
+      },
+      "findMinNode": {
+        "header": "BinarySearchTree.prototype.findMinNode = function (t) {",
+        "lines": [
+          "    if (t !== null)",
+          "        while (t.getLeft() !== null)",
+          "            t = t.getLeft();",
+          "    return t;",
+          "};"
+        ]
+      },
+      "findMaxNode": {
+        "header": "BinarySearchTree.prototype.findMaxNode = function (t) {",
+        "lines": [
+          "    if (t !== null)",
+          "        while (t.getRight() !== null)",
+          "            t = t.getRight();",
+          "    return t;",
+          "};"
+        ]
+      },
+      "insertNode": {
+        "header": "BinarySearchTree.prototype.insertNode = function (x, t) {",
+        "lines": [
+          "    if (t === null)",
+          "        t = new BinaryNode(x);",
+          "    else if (x - t.getElement() < 0)",
+          "        t.setLeft(this.insertNode(x, t.getLeft()));",
+          "    else if (x - t.getElement() > 0)",
+          "        t.setRight(this.insertNode(x, t.getRight()));",
+          "    else",
+          "        throw { name: \"DuplicateItemException\", message: \"Duplicate items are not allowed\" };",
+          "    return t;",
+          "};"
+        ]
+      },
+      "removeMinNode": {
+        "header": "BinarySearchTree.prototype.removeMinNode = function (t) {",
+        "lines": [
+          "    if (t === null)",
+          "        throw { name: \"ItemNotFoundException\", message: \"The item was not found\" };",
+          "    else if (t.getLeft() !== null) {",
+          "        t.setLeft(this.removeMinNode(t.getLeft()));",
+          "        return t;",
+          "    }",
+          "    else",
+          "        return t.getRight();",
+          "};"
+        ]
+      },
+      "removeNode": {
+        "header": "BinarySearchTree.prototype.removeNode = function (x, t) {",
+        "lines": [
+          "    if (t === null)",
+          "        throw { name: \"ItemNotFoundException\", message: \"The item was not found\" };",
+          "    if (x - t.getElement() < 0)",
+          "        t.setLeft(this.removeNode(x, t.getLeft()));",
+          "    else if (x - t.getElement() > 0)",
+          "        t.setRight(this.removeNode(x, t.getRight()));",
+          "    else if (t.getLeft() !== null && t.getRight() !== null) { // Two children",
+          "        t.setElement(this.findMinNode(t.getRight()).getElement());",
+          "        t.setRight(this.removeMinNode(t.getRight()));",
+          "    }",
+          "    else",
+          "        t = (t.getLeft() !== null) ? t.getLeft() : t.getRight();",
+          "    return t;",
+          "};"
+        ]
+      }
     }
+
+
   }
 }
