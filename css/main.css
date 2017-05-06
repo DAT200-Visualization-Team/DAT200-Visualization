@@ -329,14 +329,6 @@ body {
     height: 2.3em;
 }
 
-#animation-player i:hover {
-    opacity: 0.5;
-}
-
-#animation-player i:active {
-    color: #F44336;
-}
-
 .no-margin {
     margin: 0;
 }
@@ -345,8 +337,20 @@ body {
     padding: 0;
 }
 
+.no-padding-right {
+    padding-right: 0;
+}
+
 .clickable-icon{
     cursor: pointer;
+}
+
+.clickable-icon:hover {
+    opacity: 0.5;
+}
+
+.clickable-icon:active {
+    color: #F44336;
 }
 
 input[type=range] {
