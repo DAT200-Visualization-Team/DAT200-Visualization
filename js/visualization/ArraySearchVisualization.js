@@ -11,7 +11,6 @@ function setArray(array) {
     for (var i = 0; i < arr.length; i++) {
         $("#arraySearch").append('<div class="entry"><h4 class="entry-value noselect">' + arr[i] + '</h4></div>');
     }
-    
 }
 
 function visualizeLinearSearch(search) {
