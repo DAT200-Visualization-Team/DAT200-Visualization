@@ -127,3 +127,8 @@ $('#seek-bar').change(function () {
 $('#seek-bar').on('input', function () {
     AnimationPlayer.tl().progress($(this).val() / 100);
 });
+
+$('#speed-bar').change(function () {
+    TweenMax.to(AnimationPlayer.tl(), 2, { timeScale: $(this).val() });
+    $('.thumb').width(0).height(0);
+});
