@@ -54,7 +54,7 @@ var commands = [];
 Graph.prototype.getPathInner = function(dest, pathMap) {
     if (dest.prev !== null) {
         this.getPathInner(dest.prev, pathMap);
-        commands.push({ name: "colorFast", data: { vertices: [dest.prev, dest] } });
+        commands.push({ name: "colorLine", data: { vertices: [dest.prev, dest], color: "#1ece21", line: 0 } });
     }
     pathMap[dest.name] = dest.dist;
         
@@ -90,13 +90,13 @@ Graph.prototype.dijkstra = function (startName) {
         commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
-    commands.push({ name: "highlightLines", data: { lines: [6, 7, 8, 10] } });
+    commands.push({ name: "highlightLines", data: { lines: [6, 7] } });
     this.clearAll();
     pq.add(new Path(start, 0));
     start.dist = 0;
+    commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
 
-    commands.push({ name: "setCurrentCost", data: { id: start.name, newCost: start.dist } });
-
+    commands.push({ name: "highlightLines", data: { lines: [10] } });
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
         commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
@@ -112,13 +112,15 @@ Graph.prototype.dijkstra = function (startName) {
         nodesSeen++;
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
-            commands.push({ name: "highlightLines", data: { lines: [20, 21, 22, 23, 25] } });
+            commands.push({ name: "highlightLines", data: { lines: [20] } });
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
 
+
             if (w != v.prev)
-                commands.push({ name: "colorCurrent", data: { vertices: [v, w]} });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba", line: 21 } });
+            commands.push({ name: "highlightLines", data: { lines: [22, 23, 25] } });
 
             if (cvw < 0) {
                 commands.push({ name: "highlightLines", data: { lines: [26] } });
@@ -127,16 +129,16 @@ Graph.prototype.dijkstra = function (startName) {
 
             commands.push({ name: "highlightLines", data: { lines: [29] } });
             if (w.dist > v.dist + cvw) {
-                commands.push({ name: "highlightLines", data: { lines: [30, 31, 32] } });
+                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: v.dist + cvw, line: 30 } });
+                commands.push({ name: "highlightLines", data: { lines: [31] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
-                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: w.dist } });
                 pq.add(new Path(w, w.dist));
-                commands.push({ name: "colorPending", data: { vertices: [v, w] } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a", line: 32 } });
             }
             else {
                 if (w != v.prev)
-                    commands.push({ name: "colorSlow", data: { vertices: [v, w], totalCost: v.dist + cvw } });
+                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 33 } });
             }
 
             commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
@@ -156,13 +158,13 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
         commands.push({ name: "highlightLines", data: { lines: [4] } })
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
-    commands.push({ name: "highlightLines", data: { lines: [7, 8, 9, 10] } });
+    commands.push({ name: "highlightLines", data: { lines: [7, 8] } });
     var q = new LinkedList();
     q.addLast(start);
     start.dist = 0;
+    commands.push({ name: "setCurrentCost", data: { line: 9, id: start.name, newCost: start.dist } });
+    commands.push({ name: "highlightLines", data: { lines: [10] } });
     start.scratch++;
-
-    commands.push({ name: "setCurrentCost", data: { id: start.name, newCost: start.dist } });
     
     while (!q.isEmpty()) {
         commands.push({ name: "highlightLines", data: { lines: [12, 13, 14] } });
@@ -175,31 +177,36 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
         commands.push({ name: "newNode", data: { vertex: v } });
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
-            commands.push({ name: "highlightLines", data: { lines: [18, 19, 20, 21, 23] } });
+            commands.push({ name: "highlightLines", data: { lines: [18] } });
+
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
             
             if (w != v.prev)
-                commands.push({ name: "colorCurrent", data: { vertices: [v, w] } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba", line: 19 } });
+
+            commands.push({ name: "highlightLines", data: { lines: [20, 21, 23] } });
+
             if (w.dist > v.dist + cvw) {
-                commands.push({ name: "highlightLines", data: { lines: [24, 25, 27] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
-                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: w.dist } });
+
+                commands.push({ name: "setCurrentCost", data: { line: 24, id: w.name, newCost: w.dist } });
+                commands.push({ name: "highlightLines", data: { lines: [25, 27] } });
+
                 // Enqueue only if not already on the queue
                 if (w.scratch++ % 2 === 0) {
-                    commands.push({ name: "highlightLines", data: { lines: [28] } })
-                    commands.push({ name: "colorPending", data: { vertices: [v, w] } });
+                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a", line: 28 } });
                     q.addLast(w);
                 } else {
-                    commands.push({ name: "highlightLines", data: { lines: [29, 30] } })
+                    commands.push({ name: "highlightLines", data: { lines: [29, 30] } });
                     w.scratch--; // undo the enqueue increment
                 }
             }
             else {
                 if(w != v.prev)
-                    commands.push({ name: "colorSlow", data: { vertices: [v, w] } });
+                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 32 } });
             }
         }
     }
