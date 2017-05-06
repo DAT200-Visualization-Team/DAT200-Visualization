@@ -1,7 +1,7 @@
 var AnimationPlayer = (function () {
     var instance;
     var isPlaying = false;
-    var tl = new TimelineMax({ onUpdate: updateSeekBar, onUpdateScope: tl, onComplete: animationComplete, paused: true });
+    var tl = createNewTimeline();
     var stepCount = 1;
 
     function updateSeekBar() {
@@ -12,6 +12,11 @@ var AnimationPlayer = (function () {
         tl.pause();
         isPlaying = false;
         updatePlayIcon();
+    }
+
+    function createNewTimeline() {
+        var timeline = new TimelineMax({ onUpdate: updateSeekBar, onUpdateScope: timeline, onComplete: animationComplete, paused: true });
+        return timeline;
     }
 
     return {
@@ -41,7 +46,7 @@ var AnimationPlayer = (function () {
             updateSeekBar.call(tl);
         },
         clearTimeline: function () {
-            tl.clear(true);
+            tl = createNewTimeline();
         }
     };
 })();

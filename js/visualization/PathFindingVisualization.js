@@ -1,6 +1,4 @@
-var loadingSequence = [];
 var graph;
-var animationTime = 200;
 
 var codeDisplayManager = new CodeDisplayManager('javascript', 'graph');
 var currentAlgorithm;
@@ -8,13 +6,6 @@ var matrixColumns;
 var finishedColumns;
 
 var currentStartNode;
-
-var lineColors = {
-    currentPath: '#255eba',
-    pendingPath: '#d8d10a',
-    slowPath: '#cc181b',
-    fastPath: '#1ece21',
-}
 
 $(document).ready(function () {
     switch (window.location.pathname) {
@@ -36,7 +27,6 @@ $(document).ready(function () {
 });
 
 function performPathFinding(algorithm, start, end) {
-    loadingSequence = [];
     resetLinkColors();
     buildGraph();
 
@@ -46,7 +36,6 @@ function performPathFinding(algorithm, start, end) {
         graph.dijkstra(start);
 
     graph.getPath(end);
-    playAnimation();
 }
 
 function performCurrentPathfinding(start, end) {
@@ -56,16 +45,12 @@ function performCurrentPathfinding(start, end) {
     performPathFinding(currentAlgorithm, start, end)
 }
 
-function addPathColorFrame(path, color, time) {
-    loadingSequence.push({ e: path, p: { fill: color, stroke: color }, o: { duration: time } });
+function addPathColorFrame(line, path, color) {
+    appendAnimation(line, [{ e: path, p: { fill: color, stroke: color }, o: { duration: 1 } }], codeDisplayManager);
 };
 
 function resetLinkColors() {
     d3.selectAll('.link').transition().duration(1000).style('stroke', '#000000');
-}
-
-function playAnimation() {
-    $.Velocity.RunSequence(loadingSequence);
 }
 
 function buildGraph() {
@@ -88,46 +73,40 @@ function getLinkElement(a, b) {
     return null;
 }
 
-function changeCurrentCost(nodeId, newCost) {
+function changeCurrentCost(line, nodeId, newCost) {
+    var oldCost;
+
     for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].id == nodeId)
+        if (nodes[i].id == nodeId) {
+            oldCost = nodes[i].currentCost;
             nodes[i].currentCost = newCost;
+        }
     }
     var currentLabel = d3.selectAll('.current-cost-label').filter(function (d) { return d.id == nodeId });
-    return { e: $(currentLabel.node()), p: 'callout.flash', o: { complete: function () { currentLabel.text(newCost) } } };
+    appendAnimation(line, [{
+        e: currentLabel.node,
+        p: {
+            fill: 'green', yoyo: true,
+            onComplete: function () { currentLabel.text(newCost); },
+            onReverseComplete: function () { currentLabel.text(oldCost); }
+        }, o: { duration: 1 }
+    }], codeDisplayManager)
 }
 
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
         var data = commands[i].data;
         switch (commands[i].name) {
-            case 'colorCurrent':
+            case 'colorLine':
                 var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
-                    addPathColorFrame(path, lineColors.currentPath, animationTime);
-                break;
-            case 'colorPending':
-                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame($(path), lineColors.pendingPath, animationTime);
-                if ($('#matrix'))
-                    updateNodeCell(data.vertices[1].name, data.vertices[1].cost);
-                break;
-            case 'colorSlow':
-                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.slowPath, animationTime);
-                break;
-            case 'colorFast':
-                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.fastPath, animationTime * 5);
+                    addPathColorFrame(data.line, path, data.color);
                 break;
             case 'highlightLines':
-                loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(data.lines, animationTime));
+                appendCodeLines(data.lines, codeDisplayManager);
                 break;
             case 'setCurrentCost':
-                loadingSequence.push(changeCurrentCost(data.id, data.newCost));
+                changeCurrentCost(data.line, data.id, data.newCost);
                 break;
             case 'newNode':
                 if ($('#matrix')) {
