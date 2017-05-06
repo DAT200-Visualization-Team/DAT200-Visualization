@@ -16,13 +16,14 @@ function setArray(array) {
 function visualizeLinearSearch(search) {
     codeDisplayManager.loadFunctions("linearSearch");
     codeDisplayManager.changeFunction("linearSearch");
+
     for (var i = 0; i < arr.length; i++) {
-        appendCodeLines([0], codeDisplayManager);
+        appendCodeLines(0, codeDisplayManager);
         if (i != 0) {
             var tmp = [];
             tmp.push({
                 e: $("#arraySearch").children().eq(i - 1),
-                p: {backgroundColor: "#cc6c6c"},
+                p: {backgroundColor: "#CC6C6C"},
                 o: {duration: animationTime}
             });
             tmp.push({
@@ -30,7 +31,7 @@ function visualizeLinearSearch(search) {
                 p: {backgroundColor: "#FFFF00"},
                 o: {duration: animationTime}
             });
-            appendAnimation(0, tmp, codeDisplayManager);
+            appendAnimation(1, tmp, codeDisplayManager);
 
         } else {
             var tmp = {
@@ -38,22 +39,22 @@ function visualizeLinearSearch(search) {
                 p: {backgroundColor: "#FFFF00"},
                 o: {duration: animationTime}
             };
-            appendAnimation(0, tmp, codeDisplayManager);
+            appendAnimation(1, [tmp], codeDisplayManager);
         }
         if (arr[i] === search) {
             var tmp = {
                 e: $("#arraySearch").children().eq(i),
-                p: {backgroundColor: "#FFFF00"},
+                p: {backgroundColor: "#00FF00"},
                 o: {duration: animationTime}
             };
-            appendAnimation(2, tmp, codeDisplayManager);
+            appendAnimation(2, [tmp], codeDisplayManager);
             return i;
         }
         appendCodeLines(3, codeDisplayManager);
     }
-    var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "red"}, o: {duration: animationTime}};
-    appendAnimation(4, tmp);
-    return -1;
+    var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+    appendAnimation(4, [tmp], codeDisplayManager);
+    //return -1;
 }
 
 function visualizeBinarySearch(sortedArray, search) {
