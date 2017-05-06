@@ -32,8 +32,10 @@ function handleFunctionSubmit(event, functionName, formElement) {
     }
     window[functionName].apply(this, argumentValuesArray);
 
+    AnimationPlayer.clearTimeline();
+
     toggleFadeState($('#command-items-wrapper'));
-    togglePlayState($('#play-button')[0]);
+    togglePlayState();
 }
 
 $(document).mouseup(function (e) {

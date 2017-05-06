@@ -39,6 +39,9 @@ var AnimationPlayer = (function () {
         },
         updateProgress: function () {
             updateSeekBar.call(tl);
+        },
+        clearTimeline: function () {
+            tl.clear();
         }
     };
 })();
@@ -56,7 +59,8 @@ function appendCodeLines(lines, codeDisplayManager) {
 
 function appendAnimation(line, animations, codeDisplayManager) {
     var lineHL;
-    if(line || codeDisplayManager) {
+
+    if(line && codeDisplayManager) {
         lineHL = codeDisplayManager.getHighlightInfo(line);
         AnimationPlayer.tl().to(lineHL[0].e, 1, lineHL[0].p);
     }
@@ -68,12 +72,13 @@ function appendAnimation(line, animations, codeDisplayManager) {
         var info = animations[i];
         AnimationPlayer.tl().to(info.e, info.o.duration, info.p, info.o.position ? info.o.position : "+=0");
     }
-    if(line || codeDisplayManager) {
+
+    if(line) {
         AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
     }
 }
 
-function togglePlayState(element) {
+function togglePlayState() {
     AnimationPlayer.togglePlayState();
     updatePlayIcon();
 }
@@ -94,7 +99,7 @@ $('#step-prev').click(function () {
     updatePlayIcon();
     var timeLine = AnimationPlayer.tl();
     timeLine.pause();
-    timeLine.seek(timeLine.getLabelBefore());
+    timeLine.seek(timeLine.getLabelBefore(), false);
     timeLine.pause();
     AnimationPlayer.updateProgress();
 });
@@ -104,7 +109,7 @@ $('#step-next').click(function () {
     updatePlayIcon();
     var timeLine = AnimationPlayer.tl();
     timeLine.pause();
-    timeLine.seek(timeLine.getLabelAfter());
+    timeLine.seek(timeLine.getLabelAfter(), false);
     timeLine.pause();
     AnimationPlayer.updateProgress();
 });
