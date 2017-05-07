@@ -1,5 +1,6 @@
 var stack;
 var codeDisplayManager;
+var lastElementPopped = null;
 
 $(document).ready(function () {
     if (stack == null) {
@@ -10,79 +11,58 @@ $(document).ready(function () {
 });
 
 function initStack(array) {
+    cleanUpPoppedElement();
     $('#stack').empty();
-    console.log(array);
 
-    animatePushes(array);
+    stack.arrayList = new ArrayList(array);
+
+    array.forEach(function (value) {
+        $('#stack').prepend('<div class="stack-entry red lighten-3 z-depth-3"><h4 class="stack-value center-align truncate noselect">'
+            + value + '</h4></div>');
+    });
 }
 
 function pushElement(value) {
-    animatePushes(value);
-}
-
-function popElement() {
-    animatePops(1);
-}
-
-function animatePushes(values) {
-    var loadingSequence = [];
+    cleanUpPoppedElement();
     codeDisplayManager.loadFunctions("push");
     codeDisplayManager.changeFunction("push");
 
-    if (values == null)
-        values = [null];
+    var element = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0; y: -500px;"><h4 class="stack-value center-align truncate noselect">'
+        + value + '</h4></div>').prependTo('#stack');
 
-    if (!(values instanceof Array)) {
-        var tmp = values;
-        values = [values];
-    }
-
-    for (var i = 0; i < values.length; i++) {
-        var currentElement = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0;"><h4 class="stack-value center-align truncate noselect">' + values[i] + '</h4></div>').prependTo('#stack');
-        loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
-        loadingSequence.push({ e: currentElement, p: { translateY: [0, -500], opacity: 1 }, o: { duration: 2000, easing: 'easeOutQuad' } });
-        stack.push(values[i]);
-    }
-
-    $.Velocity.RunSequence(loadingSequence);
+    appendAnimation(0, [{ e: element, p: [{ y: '-500px' }, { opacity: 1, y: '0', ease: Bounce.easeOut }], o: { duration: 3 } }], codeDisplayManager);
+    stack.push(value);
 }
 
-function animatePops(count) {
+function popElement() {
+    cleanUpPoppedElement();
     codeDisplayManager.loadFunctions("pop");
     codeDisplayManager.changeFunction("pop");
 
-    var loadingSequence = [];
-    if (count == null) {
-        count = 1;
+    var element = $('#stack').children().first();
+
+    var xValue = generateRandomNumberInRange(-100, 100);
+    var yValue = generateRandomNumberInRange(-100, -40);
+    var directionMovement = pickRandomNumber(-2000, 2000);
+
+    try {
+        appendCodeLines([0], codeDisplayManager);
+        stack.pop();
+
+        appendAnimation(2, [{ e: element, p: { x: xValue, y: yValue, ease: Power2.easeOut }, o: { duration: 1 } }, 
+            { e: element, p: { x: directionMovement, opacity: 0, ease: Power2.easeIn }, o: { duration: 1 } }], codeDisplayManager);
+
+        lastElementPopped = element;
     }
-
-    for (var i = 0; i < count; i++) {
-
-        codeDisplayManager.highlightLine(0);
-        try {
-            stack.pop()
-
-            var currentElement = $('#stack').children().eq(i);
-
-            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
-            loadingSequence.push({
-                e: currentElement, p: { translateX: generateRandomNumberInRange(-100, 100), translateY: generateRandomNumberInRange(-100, -40) },
-                o: { duration: 1500, delay: 1000 , easing: 'easeOutQuad' },
-            });
-            
-            loadingSequence.push({
-                e: currentElement, p: { translateX: pickRandomNumber(-5000, 5000) },
-                o: { duration: 1000, easing: 'easeInSine', complete: function (elements) { elements[0].remove() } },
-            });
-            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(2, 500));
-        }
-        catch (err) {
-            loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(1, 500));
-            break;
-        }
+    catch (e) {
+        appendCodeLines([1], codeDisplayManager);
+        alert(e.message);
     }
+}
 
-    $.Velocity.RunSequence(loadingSequence);
+function cleanUpPoppedElement() {
+    if (lastElementPopped != null)
+        lastElementPopped.remove();
 }
 
 function generateRandomNumberInRange(min, max) {
@@ -110,10 +90,4 @@ function processUploadedObject(object) {
 
 $('#download-button, #download-button-mobile').on('click', function () {
     downloadObjectJson(stack);
-});
-
-$('#push-input').keyup(function (event) {
-    if (event.keyCode == 13) {
-        pushElement($('#push-input').val());
-    }
 });

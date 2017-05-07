@@ -4,6 +4,7 @@
     width: 100%;
     margin-top: 25vh;
     overflow-x: hidden;
+    padding-bottom: 5vh;
 }
 
 #stack {
