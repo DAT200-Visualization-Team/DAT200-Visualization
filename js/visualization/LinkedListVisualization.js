@@ -4,8 +4,7 @@ var offsetY = 100;
 var nodeHeight = 60;
 var nodeWidth = 40;
 var nodeSpace = 90;
-var speed = 1;
-var animationTime = 1000 * speed;
+var animationTime = 1;
 var codeDisplayManager;
 
 
@@ -183,17 +182,13 @@ function redraw() {
     updateDrawingArea();
 }
 
+//STATUS: converted to GSAP
 function initialize() {
     clear();
     linkedList = new LinkedList();
     codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
     codeDisplayManager.loadFunctions("constructor");
     codeDisplayManager.changeFunction("constructor");
-    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
-    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
-    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
-    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
-    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
 
     linkedList.addLast('H');
     linkedList.addLast('T');
@@ -210,27 +205,14 @@ function initialize() {
     var hArrow = new Arrow(head.children().eq(1));
     var tArrow = new Arrow(tail.children().eq(2));
 
-    var loadingSequence = [
-        line0[0],
-        { e: head, p: "transition.expandIn", o: { duration: animationTime } },
-        line0[1],
-        line1[0],
-        { e: tail, p: "transition.expandIn", o: { duration: animationTime } },
-        tArrow.animate(-45, 0),
-        line1[1],
-        line2[0],
-        hArrow.animate(45, 0),
-        line2[1],
-        line3[0],
-        line3[1],
-        line4[0],
-        line4[1],
-        { e: head, p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
-    ];
-
-    $.Velocity.RunSequence(loadingSequence);
+    appendAnimation(0, [{ e: head, p: "transition.expandIn", o: { duration: animationTime }}], codeDisplayManager);
+    appendAnimation(1, [{ e: tail, p: "transition.expandIn", o: { duration: animationTime } }, tArrow.animate(-45, 0)], codeDisplayManager);
+    appendAnimation(2, [hArrow.animate(45, 0)], codeDisplayManager);
+    appendCodeLines([3], codeDisplayManager);
+    appendAnimation(4, [{e: {}, p: {onComplete: function (elements) { redraw() }}, o: {}}], codeDisplayManager);
 }
 
+//STATUS: converted to GSAP
 function addByIndex(idx, data) {
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
@@ -275,46 +257,47 @@ function addByIndex(idx, data) {
 
     codeDisplayManager.loadFunctions("add");
     codeDisplayManager.changeFunction("add");
-    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
-    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
-    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
-    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
-    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
-    var line5 = codeDisplayManager.getVelocityFramesForHighlight(5, animationTime);
 
-    var loadingSequence = [
-        line0[0],
-        { e: p, p: "transition.expandIn", o: { duration: animationTime } },
-        line0[1],
-        line1[0],
+
+    appendAnimation(0, [{e: p, p: "transition.expandIn", o: {duration: animationTime}}], codeDisplayManager);
+    var tmp = [
         npNext.animate(nodeSpace + nodeWidth, 0),
         nnPrev.animate(-(nodeSpace + nodeWidth), 0, 0, false),
-        { e: elementsToBeMoved, p: { translateX: "+" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
+        {
+            e: elementsToBeMoved,
+            p: {translateX: "+" + (nodeWidth + nodeSpace)},
+            o: {duration: animationTime, sequenceQueue: false}
+        },
         nPrev.animate(0, -(45 + 5)),
         nNext.animate(0, -(15 + 55), 0, false),
-        { e: node, p: "transition.expandIn", o: { duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false } },
-        line1[1],
-        line2[0],
-        npNext.animate(-(nodeSpace+nodeWidth), 45 + 15),
-        line2[1],
-        line3[0],
-        nnPrev.animate((nodeSpace+nodeWidth), 15 + 45),
-        { e: node, p: { translateY: "" + (-nodeHeight) }, o: { duration: animationTime } },
-        nPrev.animate(0, 45+5, 0,false),
-        nNext.animate(0, 15+55, 0, false),
-        npNext.animate(0, -(45+15), 0, false),
-        nnPrev.animate(0, -(15+45), 0, false),
-        line3[1],
-        line4[0],
-        line4[1],
-        line5[0],
-        line5[1],
-        { e: node, p: {translateY: "+=0"}, o: { duration: 1, complete: function (elements) { redraw() }}}
+        {
+            e: node,
+            p: "transition.expandIn",
+            o: {duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false}
+        }];
+    appendAnimation(1, tmp, codeDisplayManager);
+    appendAnimation(2, [npNext.animate(-(nodeSpace + nodeWidth), 45 + 15)], codeDisplayManager);
+    tmp = [
+        nnPrev.animate((nodeSpace + nodeWidth), 15 + 45),
+        {e: node, p: {translateY: "" + (-nodeHeight)}, o: {duration: animationTime}},
+        nPrev.animate(0, 45 + 5, 0, false),
+        nNext.animate(0, 15 + 55, 0, false),
+        npNext.animate(0, -(45 + 15), 0, false),
+        nnPrev.animate(0, -(15 + 45), 0, false)
     ];
-
+    appendAnimation(3, tmp, codeDisplayManager);
+    appendCodeLines([4]);
+    appendAnimation(5, [{
+        e: node, p: {
+            translateY: "+=0", onComplete: function (elements) {
+                redraw()
+            }
+        }, o: {duration: 1}
+    }], codeDisplayManager);
     $.Velocity.RunSequence(loadingSequence);
 }
 
+//STATUS: not converted to GSAP
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
     if (linkedList.size() === 0) {
@@ -365,6 +348,7 @@ function removeNode(idx) {
     ]);
 }
 
+//STATUS: not converted to GSAP
 //TODO: finish this together with highlightCode
 function getNode(idx) {
     var loadingSequence = [];
@@ -418,6 +402,7 @@ function getNode(idx) {
 
 }
 
+//STATUS: not converted to GSAP
 function findPos(data) {
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
@@ -440,7 +425,10 @@ function findPos(data) {
     }, 3000);
 }
 
+
+
 //Iterator
+//STATUS: not converted to GSAP
 function iterator(idx) {
     var p = createPointer('south',
         offsetX + (nodeSpace + nodeWidth) * (idx + 1) + nodeWidth / 2, 50,
@@ -451,11 +439,13 @@ function iterator(idx) {
     $("#linkedlist").children().last().attr("opacity", "1");
 }
 
+//STATUS: not converted to GSAP
 function iteratorNext() {
     p = new Arrow($("#linkedlist").children().last());
     $.Velocity.RunSequence([p.translateStraightArrow(nodeWidth + nodeSpace, 0)]);
 }
 
+//STATUS: not converted to GSAP
 function iteratorPrev() {
     p = new Arrow($("#linkedlist").children().last());
     $.Velocity.RunSequence([p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)]);
