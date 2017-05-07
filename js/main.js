@@ -36,8 +36,6 @@ function handleFunctionSubmit(event, functionName, formElement) {
 function executeFunction(functionName, args) {
     AnimationPlayer.clearTimeline();
 
-    console.log(functionName);
-
     if (args != null) {
         window[functionName].apply(this, args);
     }
