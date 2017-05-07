@@ -19,28 +19,14 @@ function visualizeLinearSearch(search) {
 
     for (var i = 0; i < arr.length; i++) {
         appendCodeLines([0], codeDisplayManager);
-        if (i != 0) {
-            var tmp = [];
-            tmp.push({
-                e: $("#arraySearch").children().eq(i - 1),
-                p: {backgroundColor: "#CC6C6C"},
-                o: {duration: animationTime}
-            });
-            tmp.push({
-                e: $("#arraySearch").children().eq(i),
-                p: {backgroundColor: "#FFFF00"},
-                o: {duration: animationTime}
-            });
-            appendAnimation(1, tmp, codeDisplayManager);
 
-        } else {
-            var tmp = {
-                e: $("#arraySearch").children().eq(i),
-                p: {backgroundColor: "#FFFF00"},
-                o: {duration: animationTime}
-            };
-            appendAnimation(1, [tmp], codeDisplayManager);
-        }
+        var tmp = {
+            e: $("#arraySearch").children().eq(i),
+            p: {backgroundColor: "#FFFF00"},
+            o: {duration: animationTime}
+        };
+        appendAnimation(1, [tmp], codeDisplayManager);
+
         if (arr[i] === search) {
             var tmp = {
                 e: $("#arraySearch").children().eq(i),
@@ -50,7 +36,13 @@ function visualizeLinearSearch(search) {
             appendAnimation(2, [tmp], codeDisplayManager);
             return i;
         }
-        appendCodeLines([3], codeDisplayManager);
+
+        var tmp = {
+            e: $("#arraySearch").children().eq(i),
+            p: {backgroundColor: "#CC6C6C"},
+            o: {duration: animationTime}
+        };
+        appendAnimation(3, [tmp], codeDisplayManager);
     }
     var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
     appendAnimation(4, [tmp], codeDisplayManager);
