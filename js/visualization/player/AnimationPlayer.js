@@ -65,7 +65,7 @@ function appendCodeLines(lines, codeDisplayManager) {
 function appendAnimation(line, animations, codeDisplayManager) {
     var lineHL;
 
-    if(line && codeDisplayManager) {
+    if(line != null && codeDisplayManager != null) {
         lineHL = codeDisplayManager.getHighlightInfo(line);
         AnimationPlayer.tl().to(lineHL[0].e, 1, lineHL[0].p);
     }
@@ -83,7 +83,7 @@ function appendAnimation(line, animations, codeDisplayManager) {
         }      
     }
 
-    if(line) {
+    if(line != null) {
         AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
     }
 }
