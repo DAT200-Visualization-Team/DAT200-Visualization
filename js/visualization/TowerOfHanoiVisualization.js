@@ -116,7 +116,7 @@ function moveDisk(disk, from, to) {
     var yPos = (pegHeight + 2 * diskHeight)
         + diskHeight * (window["peg" + from].length - 1)
         - diskHeight * (window["peg" + to].length);
-    movement.push({ e: $("#disk" + disk), p: { y: "+=" + yPos, ease:Power1.easeOut }, o: { duration: animationTime } });
+    movement.push({ e: $("#disk" + disk), p: { y: "+=" + yPos, ease: Bounce.easeOut }, o: { duration: animationTime } });
 
     removeDiskFromOldPeg(disk);
     window["peg" + to].push(disk);

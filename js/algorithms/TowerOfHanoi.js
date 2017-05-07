@@ -28,8 +28,6 @@ Hanoi.prototype.showReport = function() {
 };
 
 function doHanoi(numdisks, from, to) {
-    var speed = parseInt($("#speed").val());
-    //animationTime = baseAnimationTime / speed;
 
     var arr = ["A", "B", "C"].filter(function(value) {
         return from !== value && to !== value;
