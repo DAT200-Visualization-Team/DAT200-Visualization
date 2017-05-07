@@ -75,7 +75,12 @@ function appendAnimation(line, animations, codeDisplayManager) {
 
     for (var i = 0; i < animations.length; i++) {
         var info = animations[i];
-        AnimationPlayer.tl().to(info.e, info.o.duration, info.p, info.o.position ? info.o.position : "+=0");
+        if (Array.isArray(info.p)) {
+            AnimationPlayer.tl().fromTo(info.e, info.o.duration, info.p[0], info.p[1], info.o.position ? info.o.position : "+=0");
+        }
+        else {
+            AnimationPlayer.tl().to(info.e, info.o.duration, info.p, info.o.position ? info.o.position : "+=0");
+        }      
     }
 
     if(line) {
