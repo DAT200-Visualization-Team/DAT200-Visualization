@@ -30,9 +30,20 @@ function handleFunctionSubmit(event, functionName, formElement) {
 
         }
     }
+    executeFunction(functionName, argumentValuesArray);
+}
+
+function executeFunction(functionName, args) {
     AnimationPlayer.clearTimeline();
 
-    window[functionName].apply(this, argumentValuesArray);
+    console.log(functionName);
+
+    if (args != null) {
+        window[functionName].apply(this, args);
+    }
+    else {
+        window[functionName]();
+    }
 
     toggleFadeState($('#command-items-wrapper'));
     togglePlayState();

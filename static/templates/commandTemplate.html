@@ -12,7 +12,7 @@
                 {{! Add the box containing the name of the function}}
                 <a class="waves-effect waves-red hoverable" href="#" style="display: table-cell;">
                     {{! If the command has arguments, fade the argument box in or out, otherwise run the associated function }}
-                    <div onclick="{{#if this.arguments}}toggleFadeState($(this).parent().parent().children().last());{{else}}window['{{this.function}}']();{{/if}}" class="command-item white-text valign-wrapper">
+                    <div onclick="{{#if this.arguments}}toggleFadeState($(this).parent().parent().children().last());{{else}}executeFunction('{{this.function}}');{{/if}}" class="command-item white-text valign-wrapper">
                         <p class="valign">{{this.name}}</p>
                     </div>
                 </a>
