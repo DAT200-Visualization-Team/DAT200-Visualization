@@ -41,25 +41,6 @@ function enqueue(value) {
 
     appendAnimation(5, [{ e: newElement, p: [{x: '-500px'}, { display: 'inline-block', opacity: 1, x: 0, ease: Power4.easeOut }], o: { duration: 2 } }], codeDisplayManager);
     appendCodeLines([6], codeDisplayManager);
-
-    //var loadingSequence = [];
-
-    //for (var i = 0; i < arguments.length; i++) {
-    //    loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(0, 500));
-    //    if (queue.currentSize === queue.theArray.length)
-    //        loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(1, 500));
-
-    //    queue.enqueue(arguments[i]);
-
-    //    loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(3, 500))
-    //    var newElement = $('<div class="queue-entry element red lighten-3 z-depth-3 valign-wrapper" style="opacity: 0; display: none;"><h4 class="queue-value center-align truncate noselect valign">' + arguments[i] + '</h4></div>').prependTo(('#queue'));
-
-    //    loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(4, 500))
-    //    loadingSequence.push({ e: newElement, p: { translateX: [0, -500], opacity: 1 }, o: { duration: 2000, display: 'inline-block' } });
-
-    //    loadingSequence = loadingSequence.concat(codeDisplayManager.getVelocityFramesForHighlight(5, 500));
-    //}
-    //$.Velocity.RunSequence(loadingSequence);
 }
 
 function dequeue() {
@@ -95,7 +76,6 @@ function cleanUpDequeuedElement() {
 function processUploadedObject(object) {
     queue = new Queue();
     initQueue(object.Queue.theArray.slice(0, object.Queue.currentSize));
-    console.log(object.Queue.theArray.slice(0, object.Queue.currentSize))
     queue.theArray = object.Queue.theArray;
     queue.currentSize = object.Queue.currentSize;
     queue.front = object.Queue.front;
