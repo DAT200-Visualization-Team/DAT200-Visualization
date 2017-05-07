@@ -18,7 +18,7 @@ function visualizeLinearSearch(search) {
     codeDisplayManager.changeFunction("linearSearch");
 
     for (var i = 0; i < arr.length; i++) {
-        appendCodeLines(0, codeDisplayManager);
+        appendCodeLines([0], codeDisplayManager);
         if (i != 0) {
             var tmp = [];
             tmp.push({
@@ -50,7 +50,7 @@ function visualizeLinearSearch(search) {
             appendAnimation(2, [tmp], codeDisplayManager);
             return i;
         }
-        appendCodeLines(3, codeDisplayManager);
+        appendCodeLines([3], codeDisplayManager);
     }
     var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
     appendAnimation(4, [tmp], codeDisplayManager);
