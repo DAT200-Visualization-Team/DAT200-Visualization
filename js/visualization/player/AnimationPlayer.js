@@ -28,6 +28,11 @@ var AnimationPlayer = (function () {
         },
         togglePlayState: function () {
             isPlaying = !isPlaying;
+
+            if (tl.progress() == 1) {
+                tl.restart(false, false);
+            }
+
             if (isPlaying)
                 tl.resume();
             else
