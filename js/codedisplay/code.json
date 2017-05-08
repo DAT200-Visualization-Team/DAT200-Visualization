@@ -4,25 +4,29 @@
       "constructor": {
         "header": "function Stack() {",
         "lines": [
-          "  this.arrayList = new ArrayList();", "}"
+          "  this.arrayList = new ArrayList();",
+          "}"
         ]
       },
       "isEmpty": {
         "header": "Stack.prototype.isEmpty = function () {",
         "lines": [
-          "  return this.arrayList.size() === 0;", "}"
+          "  return this.arrayList.size() === 0;",
+          "}"
         ]
       },
       "makeEmpty": {
         "header": "Stack.prototype.makeEmpty = function () {",
         "lines": [
-          "  this.arrayList.clear();", "}"
+          "  this.arrayList.clear();",
+          "}"
         ]
       },
       "push": {
         "header": "Stack.prototype.push = function (element) {",
         "lines": [
-          "  this.arrayList.add(element);", "}"
+          "  this.arrayList.add(element);",
+          "}"
         ]
       },
       "top": {
@@ -538,8 +542,46 @@
           "};"
         ]
       }
+    },
+    "insertionSort": {
+      "insertionSort": {
+        "header": "function insertionSort(a) {",
+        "lines": [ "    for(var p = 1; p < a.length; p++) {", "        var tmp = a[p];", "        var j = p;", "        for(; j > 0 && tmp < a[j - 1]; j--) {", "            a[j] = a[j - 1];", "        }", "        a[j] = tmp;", "    }", "    return a;", "}" ]
+      }
+    },
+    "mergeSort": {
+      "mergeSort": {
+        "header": "MergeSort.prototype.mergeSort = function(a, left, right) {",
+        "lines": [ "    if(left < right) {", "        var center = parseInt((left + right) / 2);", "        this.mergeSort(this.a, left, center);", "        this.mergeSort(this.a, center + 1, right);", "        this.merge(this.a, left, center + 1, right);", "    }", "};" ]
+      },
+      "merge": {
+        "header": "MergeSort.prototype.merge = function(a, leftPos, rightPos, rightEnd) {",
+        "lines": [ "    var tmpArray = [];", "    var leftEnd = rightPos - 1;", "    var tmpPos = leftPos;", "    var numElements = rightEnd - leftPos + 1;", "", "    while(leftPos <= leftEnd && rightPos <= rightEnd) {", "        if(this.a[leftPos] <= this.a[rightPos]) {", "            tmpArray[tmpPos++] = this.a[leftPos++];", "        } else {", "            tmpArray[tmpPos++] = this.a[rightPos++];", "        }", "    }", "", "    while(leftPos <= leftEnd) {", "        tmpArray[tmpPos++] = this.a[leftPos++];", "    }", "", "    while(rightPos <= rightEnd) {", "        tmpArray[tmpPos++] = this.a[rightPos++];", "    }", "", "    for(var i = 0; i < numElements; i++, rightEnd--) {", "        a[rightEnd] = tmpArray[rightEnd];", "    }", "};" ]
+      }
+    },
+    "bubbleSort": {
+      "bubbleSort": {
+        "header": "function bubbleSort(array) {",
+        "lines": [ "    var n = array.length;", "    while(n > 0) {", "        newN = 0;", "        for (var i = 1; i < n; i++) {", "            if (array[i - 1] > array[i]) {", "                var tmp = array[i];", "                array[i] = array[i - 1];", "                array[i - 1] = tmp;", "                newN = i;", "            }", "        }", "        n = newN;", "    }", "", "    return array;", "}" ]
+      }
+    },
+    "quickSort": {
+      "quickSort": {
+        "header": "QuickSort.prototype.quickSort = function(low, high) {",
+        "lines": [ "    if(low + 3 > high) {", "        this.a = insertionSort(this.a);", "    }", "    else {", "        var middle = Math.floor(parseInt(low + high) / 2);", "        if (this.a[middle] < this.a[low]) {", "            this.a = swapReferences(this.a, low, middle);", "        }", "        if (this.a[high] < this.a[low]) {", "            this.a = swapReferences(this.a, low, high);", "        }", "        if (this.a[high] < this.a[middle]) {", "            this.a = swapReferences(this.a, middle, high);", "        }", "", "        this.a = swapReferences(this.a, middle, high - 1);", "        var pivot = this.a[high - 1];", "", "        var i, j;", "        for (i = low, j = high - 1; ;) {", "            while (this.a[++i] < pivot) {", "            }", "            while (pivot < this.a[--j]) {", "            }", "            if (i >= j)", "                break;", "            this.a = swapReferences(this.a, i, j);", "        }", "        this.a = swapReferences(this.a, i, high - 1);", "", "        this.quickSort(low, i - 1);", "        this.quickSort(i + 1, high);", "    }", "};" ]
+      }
+    },
+    "shellSort": {
+      "shellSort": {
+        "header": "function shellSort(a) {",
+        "lines": [ "    for(var gap = a.length / 2; gap > 0;", "        gap = gap === 2 ? 1 : parseInt(gap / 2.2)) {", "        for(var i = gap; i < a.length; i++) {", "            var tmp = a[i];", "", "            for(var j = i; j >= gap && tmp < a[j - gap]; j-= gap) {", "                a[j] = a[j - gap];", "            }", "            a[j] = tmp;", "        }", "    }", "    return a;", "}" ]
+      }
+    },
+    "countingSort": {
+      "countingSort": {
+        "header": "function countingSort(array, maxValue) {",
+        "lines": [ "    if (array.constructor !== Array || array.length == 0)", "        return [];", "", "    var valueCount = Array.apply(null, Array(maxValue)).map(Number.prototype.valueOf, 0);", "    var value;", "", "    for (var i = 0; i < array.length; i++) {", "        value = array[i];", "        valueCount[value] += 1;", "    }", "", "    var result = new Array(array.list);", "    var index = 0;", "    for (var i = 0; i < valueCount.length; i++) {", "        for (var j = 0; j < valueCount[i]; j++) {", "            result[index] = i;", "            index++;", "        }", "    }", "", "    return result;", "}" ]
+      }
     }
-
-
   }
 }
