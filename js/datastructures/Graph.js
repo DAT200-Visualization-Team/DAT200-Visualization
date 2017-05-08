@@ -117,7 +117,6 @@ Graph.prototype.dijkstra = function (startName) {
             var w = e.dest;
             var cvw = e.cost;
 
-
             if (w != v.prev)
                 commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba", line: 21 } });
             commands.push({ name: "highlightLines", data: { lines: [22, 23, 25] } });

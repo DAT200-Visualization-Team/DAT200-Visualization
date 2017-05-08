@@ -57,9 +57,9 @@ function buildGraph() {
     graph = new Graph();
     for (var i = 0; i < links.length; i++) {
         if (links[i].left)
-            graph.addEdge(links[i].target.id, links[i].source.id, links[i].cost);
+            graph.addEdge(links[i].target.id, links[i].source.id, parseInit(links[i].cost));
         if (links[i].right)
-            graph.addEdge(links[i].source.id, links[i].target.id, links[i].cost);
+            graph.addEdge(links[i].source.id, links[i].target.id, parseInt(links[i].cost));
     }
 }
 
