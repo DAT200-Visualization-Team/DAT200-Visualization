@@ -42,6 +42,7 @@ function performCurrentPathfinding(start, end) {
     currentStartNode = start;
     $('#matrix-header, #matrix-body').empty();
     initializeHeader();
+    resetAccumulativeCosts();
     performPathFinding(currentAlgorithm, start, end)
 }
 
@@ -51,6 +52,13 @@ function addPathColorFrame(line, path, color) {
 
 function resetLinkColors() {
     d3.selectAll('.link').transition().duration(1000).style('stroke', '#000000');
+}
+
+function resetAccumulativeCosts() {
+    nodes.forEach(function (node) {
+        node.currentCost = '\u221E';
+    });
+    restart();
 }
 
 function buildGraph() {
