@@ -185,7 +185,7 @@ function redraw() {
     updateDrawingArea();
 }
 
-//STATUS: converted to GSAP
+//STATUS: not converted to GSAP
 function initialize() {
     clear();
     linkedList = new LinkedList();
@@ -205,25 +205,23 @@ function initialize() {
     head.attr("opacity", "0");
     tail.attr("opacity", "0");
 
-    var hArrow = head.children().eq(1);
-    var tArrow = tail.children().eq(2);
+    var hArrow = new Arrow(head.children().eq(1));
+    var tArrow = new Arrow(tail.children().eq(2));
 
     appendAnimation(0, [{ e: head, p: {opacity: 1}, o: { duration: animationTime }}], codeDisplayManager);
 
     var tmp = [
         { e: tail, p: {opacity: 1}, o: { duration: animationTime } },
-        GSAPArrowAnimate(tArrow, -45, 0)[0],
-        GSAPArrowAnimate(tArrow, -45, 0)[1]
+        tArrow.animate(-45, 0)
     ];
     appendAnimation(1, tmp, codeDisplayManager);
 
-    appendAnimation(2, GSAPArrowAnimate(hArrow, 45, 0), codeDisplayManager);
+    appendAnimation(2, [hArrow.animate(45, 0)], codeDisplayManager);
 
     appendCodeLines([3, 4], codeDisplayManager);
 }
 
-
-
+//STATUS: converted to GSAP
 function addByIndex(idx, data) {
     redraw();
 
@@ -299,7 +297,7 @@ function addByIndex(idx, data) {
     appendCodeLines([4, 5], codeDisplayManager);
 }
 
-//STATUS: not converted to GSAP
+//STATUS: converted to GSAP
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
     redraw();

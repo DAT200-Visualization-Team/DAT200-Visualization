@@ -26,6 +26,10 @@
               ]
             },
             {
+              "name": "Initialize",
+              "function": "initialize"
+            },
+            {
               "name": "Add",
               "function": "addByIndex",
               "arguments": [
