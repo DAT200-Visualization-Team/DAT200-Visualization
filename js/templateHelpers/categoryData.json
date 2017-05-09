@@ -55,6 +55,17 @@
                   "placeholder": "Index"
                 }
               ]
+            },
+            {
+              "name": "Get Node",
+              "function": "getNode",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                }
+              ]
             }
           ]
         },
