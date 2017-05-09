@@ -1,4 +1,5 @@
 var data = [1, 2, 3, 4, 2, 1, 3, 3, 2, 1];
+var codeDisplayManager = new CodeDisplayManager('javascript', 'countingSort');
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
@@ -153,6 +154,8 @@ function createArray(array) {
 }
 
 function startSorting() {
+    codeDisplayManager.loadFunctions("countingSort");
+    codeDisplayManager.changeFunction("countingSort");
     sort();
 }
 
@@ -163,12 +166,29 @@ function sort() {
 function countUpdate(index) {
     countArray[index]++;
 
+    highlightCode([7]);
+
     var rect = $("#countingArray rect").filter(".rect" + index);
     var text = $("#countingArray text").filter(".text" + index);
 
-    tl.to(rect, animationTime, {attr:{fill:"rgb(0, 127, 0)"}, ease:Linear.easeNone})
-        .to(text, animationTime, {text:countArray[index].toString(), ease:Linear.easeNone})
-        .to(rect, animationTime, {attr:{fill:"rgb(0, 127, 127)"}, ease:Linear.easeNone});
+    appendAnimation(8, [
+        {
+            e: rect,
+            p: { attr: { fill: "rgb(0, 127, 0)" }, ease: Power2.easeIn },
+            o: { duration: animationTime }
+        },
+        {
+            e: text,
+            p: { text: countArray[index].toString(), ease: Power2.easeIn },
+            o: { duration: animationTime }
+        },
+        {
+            e: rect,
+            p: { attr: { fill: "rgb(0, 127, 127)" }, ease: Power2.easeIn },
+            o: { duration: animationTime }
+        },
+    ], codeDisplayManager);
+    highlightCode([6]);
 }
 
 function sortedUpdate(index, value) {
@@ -181,19 +201,37 @@ function sortedUpdate(index, value) {
     sortedArray[index] = value;
 
     var text = $("#sortedArray text").filter(".text" + index);
-    tl.to(text, animationTime, {text:sortedArray[index].toString(), ease:Linear.easeNone})
+    appendAnimation(15, [{
+        e: text,
+        p: { text: sortedArray[index].toString(), ease: Power2.easeIn },
+        o: { duration: animationTime }
+    }], codeDisplayManager);
+
+    highlightCode([16, 14]);
 }
 
 function showArrow() {
-    tl.to($("#arrow"), animationTime, {attr:{opacity:1}, ease:Linear.easeNone});
+    appendAnimation(null, [{
+        e: $("#arrow"),
+        p: { attr: { opacity: 1 }, ease: Power2.easeIn },
+        o: { duration: animationTime }
+    }], null);
 }
 
 function hideArrow() {
-    tl.to($("#arrow"), animationTime, {attr:{opacity:0}, ease:Linear.easeNone});
+    appendAnimation(null, [{
+        e: $("#arrow"),
+        p: { attr: { opacity: 0 }, ease: Power2.easeOut },
+        o: { duration: animationTime }
+    }], null);
 }
 
 function pointArrow(index) {
-    tl.to($("#arrow"), animationTime, {attr:{x:(index * (width / data.length) + arrElementWidth / 3 - arrowWidth / 2)}, ease:Linear.easeNone});
+    appendAnimation(null, [{
+        e: $("#arrow"),
+        p: { attr: { x: (index * (width / data.length) + arrElementWidth / 3 - arrowWidth / 2) }, ease: Power2.easeIn },
+        o: { duration: animationTime }
+    }], null);
 }
 
 function highlight(index, array) {
@@ -202,10 +240,21 @@ function highlight(index, array) {
     } else {
         hideArrow();
     }
-    tl.to($(array + " rect").filter(".rect" + index), animationTime, {attr:{fill:"rgb(255, 0, 0)"}, ease:Linear.easeNone});
+    appendAnimation(null, [{
+        e: $(array + " rect").filter(".rect" + index),
+        p: { attr: { fill: "rgb(255, 0, 0)" }, ease: Power2.easeIn },
+        o: { duration: animationTime }
+    }], null);
 }
 
 function clearHighlight(array) {
-    tl.to($(array + " rect"), animationTime, {attr:{fill:"rgb(0, 127, 127)"}, ease:Linear.easeNone});
+    appendAnimation(null, [{
+        e: $(array + " rect"),
+        p: { attr: { fill: "rgb(0, 127, 127)" }, ease: Power2.easeOut },
+        o: { duration: animationTime }
+    }], null);
 }
 
+function highlightCode(lines) {
+    appendCodeLines(lines, codeDisplayManager);
+}
