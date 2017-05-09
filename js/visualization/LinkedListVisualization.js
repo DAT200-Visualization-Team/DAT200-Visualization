@@ -10,15 +10,18 @@ var codeDisplayManager;
 
 // (non-animation) initializer, adds some nodes
 function fastInitialize(n) {
+    console.log(n);
     codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
     linkedList.addFirst("H");
-    linkedList.addLast("x");
-    linkedList.addLast("y");
-    linkedList.addLast("z");
-    if(n != null) {
-        for(var i = 0; i < n; i++) {
-            linkedList.addLast(i);
+    if(n.length != 0) {
+        for(var i = 0; i < n.length; i++) {
+            linkedList.addLast(n[i]);
         }
+    }
+    else {
+        linkedList.addLast("x");
+        linkedList.addLast("y");
+        linkedList.addLast("z");
     }
     linkedList.addLast("T");
     redraw();
@@ -202,17 +205,103 @@ function initialize() {
     head.attr("opacity", "0");
     tail.attr("opacity", "0");
 
-    var hArrow = new Arrow(head.children().eq(1));
-    var tArrow = new Arrow(tail.children().eq(2));
+    var hArrow = head.children().eq(1);
+    var tArrow = tail.children().eq(2);
 
-    appendAnimation(0, [{ e: head, p: "transition.expandIn", o: { duration: animationTime }}], codeDisplayManager);
-    appendAnimation(1, [{ e: tail, p: "transition.expandIn", o: { duration: animationTime } }, tArrow.animate(-45, 0)], codeDisplayManager);
-    appendAnimation(2, [hArrow.animate(45, 0)], codeDisplayManager);
-    appendCodeLines([3], codeDisplayManager);
-    appendAnimation(4, [{e: {}, p: {onComplete: function (elements) { redraw() }}, o: {}}], codeDisplayManager);
+    appendAnimation(0, [{ e: head, p: {opacity: 1}, o: { duration: animationTime }}], codeDisplayManager);
+
+    var tmp = [
+        { e: tail, p: {opacity: 1}, o: { duration: animationTime } },
+        GSAPArrowAnimate(tArrow, -45, 0)[0],
+        GSAPArrowAnimate(tArrow, -45, 0)[1]
+    ];
+    appendAnimation(1, tmp, codeDisplayManager);
+
+    appendAnimation(2, GSAPArrowAnimate(hArrow, 45, 0), codeDisplayManager);
+
+    appendCodeLines([3, 4], codeDisplayManager);
 }
 
-//STATUS: converted to GSAP
+
+
+function NEWaddByIndex(idx, data) {
+    if (linkedList.size() === 0) {
+        throw new Error("Linked List has not yet been initialized");
+    }
+    else if (idx < 0 || idx >= linkedList.size() - 1) {
+        throw new Error("Index is out of range");
+    }
+
+    linkedList.add(idx + 1, data);
+
+    // Get and draw p
+    var p = createPointer('south',
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
+        50,
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
+        80);
+
+
+    // Draw newNode with both arrows
+    var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
+        offsetY + nodeHeight, data, true, (idx + 1));
+    updateDrawingArea();
+
+    var node = $("#linkedlist").children().eq(idx + 1);
+    node.attr("opacity", "0");
+
+    //taking first the head in mind, and then the tail
+    var i = idx + 2;
+    var elementsToBeMoved;
+    for (; i < linkedList.size() + 1; i++) {
+        i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
+            : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
+    }
+
+    var nNext = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(1));
+    var nPrev = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
+    var npNext = new Arrow($("#linkedlist").children().eq(idx).children().eq(1));
+    var nnPrev = new Arrow($("#linkedlist").children().eq(idx + 2).children().eq(2));
+
+    p = $("#linkedlist").children().last();
+    p.attr("opacity", 0);
+
+    codeDisplayManager.loadFunctions("add");
+    codeDisplayManager.changeFunction("add");
+
+
+    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
+
+    var tmp = [
+        npNext.animate(nodeSpace + nodeWidth, 0),
+        nnPrev.animate(-(nodeSpace + nodeWidth), 0, null, true),
+        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
+        nPrev.animate(0, -(45 + 5), null, true),
+        nNext.animate(0, -(15 + 55), null, true),
+        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
+    ];
+    appendAnimation(1, tmp, codeDisplayManager);
+
+    appendAnimation(2, npNext.animate(-(nodeSpace + nodeWidth), (45 + 15)), codeDisplayManager);
+
+    tmp = [
+        nnPrev.animate((nodeSpace + nodeWidth), (45 + 15)),
+        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
+        nPrev.animate(0, (45 + 5), null, true),
+        nNext.animate(0, (15 + 45), null, true),
+        npNext.animate(0, (45 + 15), null, true),
+        nnPrev.animate(0, (15 + 45), null, true)
+    ];
+    appendAnimation(3, tmp, codeDisplayManager);
+
+    appendCodeLines([4], codeDisplayManager);
+
+    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
+}
+
+
+
+//STATUS: not converted to GSAP
 function addByIndex(idx, data) {
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
@@ -259,43 +348,161 @@ function addByIndex(idx, data) {
     codeDisplayManager.changeFunction("add");
 
 
-    appendAnimation(0, [{e: p, p: "transition.expandIn", o: {duration: animationTime}}], codeDisplayManager);
+    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
+
+    var npNext1 = npNext.animate(nodeSpace + nodeWidth, 0);
+    var nnPrev1 = nnPrev.animate(-(nodeSpace + nodeWidth), 0, null, true);
+    var nPrev1 = nPrev.animate(0, -(45 + 5), null, true);
+    var nNext1 = nNext.animate(0, -(15 + 55), null, true);
     var tmp = [
-        npNext.animate(nodeSpace + nodeWidth, 0),
-        nnPrev.animate(-(nodeSpace + nodeWidth), 0, 0, false),
-        {
-            e: elementsToBeMoved,
-            p: {translateX: "+" + (nodeWidth + nodeSpace)},
-            o: {duration: animationTime, sequenceQueue: false}
-        },
-        nPrev.animate(0, -(45 + 5)),
-        nNext.animate(0, -(15 + 55), 0, false),
-        {
-            e: node,
-            p: "transition.expandIn",
-            o: {duration: animationTime, easing: "easeInOutExpo", sequenceQueue: false}
-        }];
+        npNext1[0],
+        npNext1[0],
+
+        nnPrev1[0],
+        nnPrev1[1],
+
+        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
+
+        nPrev1[0],
+        nPrev1[1],
+
+        nNext1[0],
+        nNext1[1],
+
+        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
+    ];
     appendAnimation(1, tmp, codeDisplayManager);
-    appendAnimation(2, [npNext.animate(-(nodeSpace + nodeWidth), 45 + 15)], codeDisplayManager);
+
+    var npNext2 = npNext.animate((nodeSpace + nodeWidth), (45 + 15));
+    appendAnimation(2, [npNext2[0], npNext2[1]], codeDisplayManager);
+
+    var nnPrev3 = nnPrev.animate(-(nodeSpace + nodeWidth), (45 + 15));
+    var nPrev3 = nPrev.animate(0, (45 + 5), null, true);
+    var nNext3 = nNext.animate(0, (15 + 45), null, true);
+    var npNext3 = npNext.animate(0, (45 + 15), null, true);
+    var nnPrev3 = nnPrev.animate(0, (15 + 45), null, true);
     tmp = [
-        nnPrev.animate((nodeSpace + nodeWidth), 15 + 45),
-        {e: node, p: {translateY: "" + (-nodeHeight)}, o: {duration: animationTime}},
-        nPrev.animate(0, 45 + 5, 0, false),
-        nNext.animate(0, 15 + 55, 0, false),
-        npNext.animate(0, -(45 + 15), 0, false),
-        nnPrev.animate(0, -(15 + 45), 0, false)
+        nnPrev3[0],
+        nnPrev3[1],
+
+        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
+
+        nPrev3[0],
+        nPrev3[1],
+
+        nNext3[0],
+        nNext3[1],
+
+        npNext3[0],
+        npNext3[1],
+
+        nnPrev3[0],
+        nnPrev3[1]
     ];
     appendAnimation(3, tmp, codeDisplayManager);
-    appendCodeLines([4]);
-    appendAnimation(5, [{
-        e: node, p: {
-            translateY: "+=0", onComplete: function (elements) {
-                redraw()
-            }
-        }, o: {duration: 1}
-    }], codeDisplayManager);
-    $.Velocity.RunSequence(loadingSequence);
+
+    appendCodeLines([4], codeDisplayManager);
+
+    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
 }
+
+
+function OLDaddByIndex(idx, data) {
+    if (linkedList.size() === 0) {
+        throw new Error("Linked List has not yet been initialized");
+    }
+    else if (idx < 0 || idx >= linkedList.size() - 1) {
+        throw new Error("Index is out of range");
+    }
+
+    linkedList.add(idx + 1, data);
+
+    // Get and draw p
+    var p = createPointer('south',
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
+        50,
+        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
+        80);
+
+
+    // Draw newNode with both arrows
+    var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
+        offsetY + nodeHeight, data, true, (idx + 1));
+    updateDrawingArea();
+
+    var node = $("#linkedlist").children().eq(idx + 1);
+    node.attr("opacity", "0");
+
+    //taking first the head in mind, and then the tail
+    var i = idx + 2;
+    var elementsToBeMoved;
+    for (; i < linkedList.size() + 1; i++) {
+        i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
+            : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
+    }
+
+    var nNext = $("#linkedlist").children().eq(idx + 1).children().eq(1);
+    var nPrev = $("#linkedlist").children().eq(idx + 1).children().eq(2);
+    var npNext = $("#linkedlist").children().eq(idx).children().eq(1);
+    var nnPrev = $("#linkedlist").children().eq(idx + 2).children().eq(2);
+
+    p = $("#linkedlist").children().last();
+    p.attr("opacity", 0);
+
+    codeDisplayManager.loadFunctions("add");
+    codeDisplayManager.changeFunction("add");
+
+
+    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
+    var tmp = [
+        GSAPArrowAnimate(npNext, nodeSpace + nodeWidth, 0)[0],
+        GSAPArrowAnimate(npNext, nodeSpace + nodeWidth, 0)[1],
+
+        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), 0, true)[0],
+        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), 0, true)[1],
+
+        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
+
+        GSAPArrowAnimate(nPrev, 0, -(45 + 5), true)[0],
+        GSAPArrowAnimate(nPrev, 0, -(45 + 5), true)[1],
+
+        GSAPArrowAnimate(nNext, 0, -(15 + 55), true)[0],
+        GSAPArrowAnimate(nNext, 0, -(15 + 55), true)[1],
+
+        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
+    ];
+    appendAnimation(1, tmp, codeDisplayManager);
+
+    appendAnimation(2, [
+        GSAPArrowAnimate(npNext, (nodeSpace + nodeWidth), (45 + 15))[0],
+        GSAPArrowAnimate(npNext, (nodeSpace + nodeWidth), (45 + 15))[1]
+    ], codeDisplayManager);
+
+    tmp = [
+        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), (45 + 15))[0],
+        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), (45 + 15))[1],
+
+        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
+
+        GSAPArrowAnimate(nPrev, 0, (45 + 5))[0],
+        GSAPArrowAnimate(nPrev, 0, (45 + 5))[1],
+
+        GSAPArrowAnimate(nNext, 0, (15 + 45))[0],
+        GSAPArrowAnimate(nNext, 0, (15 + 45))[1],
+
+        GSAPArrowAnimate(npNext, 0, (45 + 15))[0],
+        GSAPArrowAnimate(npNext, 0, (45 + 15))[1],
+
+        GSAPArrowAnimate(nnPrev, 0, (15 + 45))[0],
+        GSAPArrowAnimate(nnPrev, 0, (15 + 45))[1]
+    ];
+    appendAnimation(3, tmp, codeDisplayManager);
+
+    appendCodeLines([4], codeDisplayManager);
+
+    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
+}
+
 
 //STATUS: not converted to GSAP
 //TODO: find a meaningful variable to take in
@@ -451,3 +658,20 @@ function iteratorPrev() {
     $.Velocity.RunSequence([p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)]);
 }
 
+
+
+function arrowTester() {
+    codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
+    codeDisplayManager.loadFunctions("add");
+    codeDisplayManager.changeFunction("add");
+
+    createNode(offsetX, offsetY, 'H', 'Head', -1, true, true);
+    updateDrawingArea();
+
+    var node = new Arrow($("#linkedlist").children().eq(0).children().eq(1));
+    console.log(node);
+    var ani1 = node.animate(50, 0);
+    var ani2 = node.animate(50, 0);
+    appendAnimation(0, [ani1], codeDisplayManager);
+    appendAnimation(1, [ani2], codeDisplayManager);
+}
