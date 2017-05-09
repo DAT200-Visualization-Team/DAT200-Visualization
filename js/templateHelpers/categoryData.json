@@ -239,11 +239,42 @@
         },
         {
           "id": "binarysearchtree",
-          "name": "Binary Search Tree"
-        },
-        {
-          "id": "avltree",
-          "name": "AVL Tree"
+          "name": "Binary Search Tree",
+          "commands": [
+            {
+              "name": "Insert",
+              "function": "visualizeInsert",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            },
+            {
+              "name": "Find",
+              "function": "visualizeSearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            },
+            {
+              "name": "Remove",
+              "function": "visualizeRemove",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
