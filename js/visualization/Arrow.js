@@ -53,7 +53,6 @@ Arrow.prototype.animate = function(dx, dy, dmy, sequence) {
     var tp2y = arrow.p2y;
 
     var progressAnimation = function (self) {
-        //console.log(self);
         var tweenValue = self.progress();
 
 
@@ -84,7 +83,7 @@ Arrow.prototype.animate = function(dx, dy, dmy, sequence) {
 
     var animationToBeReturned = {
         e: this.arrow.children(),
-        p: { onUpdate: progressAnimation, onUpdateParams: ["{self}"] },
+        p: { onUpdate: progressAnimation, onUpdateParams: ["{self}"], ease: Power0.easeNone },
         o: { duration: animationTime, position: "-=" + sequence }
     };
 

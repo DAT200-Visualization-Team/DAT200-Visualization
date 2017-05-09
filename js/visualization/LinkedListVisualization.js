@@ -224,7 +224,9 @@ function initialize() {
 
 
 
-function NEWaddByIndex(idx, data) {
+function addByIndex(idx, data) {
+    redraw();
+
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
@@ -275,238 +277,32 @@ function NEWaddByIndex(idx, data) {
     var tmp = [
         npNext.animate(nodeSpace + nodeWidth, 0),
         nnPrev.animate(-(nodeSpace + nodeWidth), 0, null, true),
-        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
-        nPrev.animate(0, -(45 + 5), null, true),
-        nNext.animate(0, -(15 + 55), null, true),
-        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
+        { e: elementsToBeMoved, p: { x: "+" + (nodeWidth + nodeSpace), ease: Power0.easeNone }, o: { duration: animationTime, position: "-=" + animationTime } },
+        nPrev.animate(0, -50, null, true),
+        nNext.animate(0, -70, null, true),
+        {e: node, p: {opacity: 1}, o: {duration: animationTime, ease: Power0.easeNone, position: "-=" + animationTime}}
     ];
     appendAnimation(1, tmp, codeDisplayManager);
 
-    appendAnimation(2, npNext.animate(-(nodeSpace + nodeWidth), (45 + 15)), codeDisplayManager);
+    appendAnimation(2, [npNext.animate(-(nodeSpace + nodeWidth), (45 + 15))], codeDisplayManager);
 
     tmp = [
-        nnPrev.animate((nodeSpace + nodeWidth), (45 + 15)),
-        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
-        nPrev.animate(0, (45 + 5), null, true),
-        nNext.animate(0, (15 + 45), null, true),
-        npNext.animate(0, (45 + 15), null, true),
-        nnPrev.animate(0, (15 + 45), null, true)
+        nnPrev.animate((nodeSpace + nodeWidth), 60),
+        {e: node, p: {y: "+=" + (-nodeHeight), ease: Power0.easeNone}, o: {duration: animationTime}},
+        nPrev.animate(0, 50, null, true),
+        nNext.animate(0, 70, null, true),
+        npNext.animate(0, -60, null, true),
+        nnPrev.animate(0, -60, null, true)
     ];
     appendAnimation(3, tmp, codeDisplayManager);
 
-    appendCodeLines([4], codeDisplayManager);
-
-    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
+    appendCodeLines([4, 5], codeDisplayManager);
 }
-
-
-
-//STATUS: not converted to GSAP
-function addByIndex(idx, data) {
-    if (linkedList.size() === 0) {
-        throw new Error("Linked List has not yet been initialized");
-    }
-    else if (idx < 0 || idx >= linkedList.size() - 1) {
-        throw new Error("Index is out of range");
-    }
-
-    linkedList.add(idx + 1, data);
-
-    // Get and draw p
-    var p = createPointer('south',
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        50,
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        80);
-
-
-    // Draw newNode with both arrows
-    var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
-        offsetY + nodeHeight, data, true, (idx + 1));
-    updateDrawingArea();
-
-    var node = $("#linkedlist").children().eq(idx + 1);
-    node.attr("opacity", "0");
-
-    //taking first the head in mind, and then the tail
-    var i = idx + 2;
-    var elementsToBeMoved;
-    for (; i < linkedList.size() + 1; i++) {
-        i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
-            : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
-    }
-
-    var nNext = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(1));
-    var nPrev = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
-    var npNext = new Arrow($("#linkedlist").children().eq(idx).children().eq(1));
-    var nnPrev = new Arrow($("#linkedlist").children().eq(idx + 2).children().eq(2));
-
-    p = $("#linkedlist").children().last();
-    p.attr("opacity", 0);
-
-    codeDisplayManager.loadFunctions("add");
-    codeDisplayManager.changeFunction("add");
-
-
-    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
-
-    var npNext1 = npNext.animate(nodeSpace + nodeWidth, 0);
-    var nnPrev1 = nnPrev.animate(-(nodeSpace + nodeWidth), 0, null, true);
-    var nPrev1 = nPrev.animate(0, -(45 + 5), null, true);
-    var nNext1 = nNext.animate(0, -(15 + 55), null, true);
-    var tmp = [
-        npNext1[0],
-        npNext1[0],
-
-        nnPrev1[0],
-        nnPrev1[1],
-
-        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
-
-        nPrev1[0],
-        nPrev1[1],
-
-        nNext1[0],
-        nNext1[1],
-
-        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
-    ];
-    appendAnimation(1, tmp, codeDisplayManager);
-
-    var npNext2 = npNext.animate((nodeSpace + nodeWidth), (45 + 15));
-    appendAnimation(2, [npNext2[0], npNext2[1]], codeDisplayManager);
-
-    var nnPrev3 = nnPrev.animate(-(nodeSpace + nodeWidth), (45 + 15));
-    var nPrev3 = nPrev.animate(0, (45 + 5), null, true);
-    var nNext3 = nNext.animate(0, (15 + 45), null, true);
-    var npNext3 = npNext.animate(0, (45 + 15), null, true);
-    var nnPrev3 = nnPrev.animate(0, (15 + 45), null, true);
-    tmp = [
-        nnPrev3[0],
-        nnPrev3[1],
-
-        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
-
-        nPrev3[0],
-        nPrev3[1],
-
-        nNext3[0],
-        nNext3[1],
-
-        npNext3[0],
-        npNext3[1],
-
-        nnPrev3[0],
-        nnPrev3[1]
-    ];
-    appendAnimation(3, tmp, codeDisplayManager);
-
-    appendCodeLines([4], codeDisplayManager);
-
-    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
-}
-
-
-function OLDaddByIndex(idx, data) {
-    if (linkedList.size() === 0) {
-        throw new Error("Linked List has not yet been initialized");
-    }
-    else if (idx < 0 || idx >= linkedList.size() - 1) {
-        throw new Error("Index is out of range");
-    }
-
-    linkedList.add(idx + 1, data);
-
-    // Get and draw p
-    var p = createPointer('south',
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        50,
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        80);
-
-
-    // Draw newNode with both arrows
-    var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
-        offsetY + nodeHeight, data, true, (idx + 1));
-    updateDrawingArea();
-
-    var node = $("#linkedlist").children().eq(idx + 1);
-    node.attr("opacity", "0");
-
-    //taking first the head in mind, and then the tail
-    var i = idx + 2;
-    var elementsToBeMoved;
-    for (; i < linkedList.size() + 1; i++) {
-        i === idx + 2 ? elementsToBeMoved = $("#linkedlist").children().eq(i)
-            : elementsToBeMoved = elementsToBeMoved.add($("#linkedlist").children().eq(i));
-    }
-
-    var nNext = $("#linkedlist").children().eq(idx + 1).children().eq(1);
-    var nPrev = $("#linkedlist").children().eq(idx + 1).children().eq(2);
-    var npNext = $("#linkedlist").children().eq(idx).children().eq(1);
-    var nnPrev = $("#linkedlist").children().eq(idx + 2).children().eq(2);
-
-    p = $("#linkedlist").children().last();
-    p.attr("opacity", 0);
-
-    codeDisplayManager.loadFunctions("add");
-    codeDisplayManager.changeFunction("add");
-
-
-    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
-    var tmp = [
-        GSAPArrowAnimate(npNext, nodeSpace + nodeWidth, 0)[0],
-        GSAPArrowAnimate(npNext, nodeSpace + nodeWidth, 0)[1],
-
-        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), 0, true)[0],
-        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), 0, true)[1],
-
-        {e: elementsToBeMoved, p: {x: "+" + (nodeWidth + nodeSpace)}, o: {duration: animationTime, position: "-=" + animationTime}},
-
-        GSAPArrowAnimate(nPrev, 0, -(45 + 5), true)[0],
-        GSAPArrowAnimate(nPrev, 0, -(45 + 5), true)[1],
-
-        GSAPArrowAnimate(nNext, 0, -(15 + 55), true)[0],
-        GSAPArrowAnimate(nNext, 0, -(15 + 55), true)[1],
-
-        {e: node, p: {opacity: 1}, o: {duration: animationTime/*, easing: "easeInOutExpo"*/, position: "-=" + animationTime}}
-    ];
-    appendAnimation(1, tmp, codeDisplayManager);
-
-    appendAnimation(2, [
-        GSAPArrowAnimate(npNext, (nodeSpace + nodeWidth), (45 + 15))[0],
-        GSAPArrowAnimate(npNext, (nodeSpace + nodeWidth), (45 + 15))[1]
-    ], codeDisplayManager);
-
-    tmp = [
-        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), (45 + 15))[0],
-        GSAPArrowAnimate(nnPrev, -(nodeSpace + nodeWidth), (45 + 15))[1],
-
-        {e: node, p: {y: "+=" + (-nodeHeight)}, o: {duration: animationTime}},
-
-        GSAPArrowAnimate(nPrev, 0, (45 + 5))[0],
-        GSAPArrowAnimate(nPrev, 0, (45 + 5))[1],
-
-        GSAPArrowAnimate(nNext, 0, (15 + 45))[0],
-        GSAPArrowAnimate(nNext, 0, (15 + 45))[1],
-
-        GSAPArrowAnimate(npNext, 0, (45 + 15))[0],
-        GSAPArrowAnimate(npNext, 0, (45 + 15))[1],
-
-        GSAPArrowAnimate(nnPrev, 0, (15 + 45))[0],
-        GSAPArrowAnimate(nnPrev, 0, (15 + 45))[1]
-    ];
-    appendAnimation(3, tmp, codeDisplayManager);
-
-    appendCodeLines([4], codeDisplayManager);
-
-    appendAnimation(5, [{e: node, p: {y: "+=0", onComplete: function (elements) {redraw()}}, o: {duration: 1}}], codeDisplayManager);
-}
-
 
 //STATUS: not converted to GSAP
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
+    redraw();
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
@@ -528,31 +324,18 @@ function removeNode(idx) {
 
     codeDisplayManager.loadFunctions("removeNode");
     codeDisplayManager.changeFunction("removeNode");
-    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
-    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
-    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
-    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
-    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
 
-    $.Velocity.RunSequence([
-        line0[0],
-        rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60),
-        line0[1],
-        line1[0],
+    appendAnimation(0, [rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60)], codeDisplayManager);
+
+    appendAnimation(1, [
         leftArrow.animate((nodeWidth + nodeSpace), 0, -60),
-        { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime} },
-        rightArrow.animate((nodeWidth + nodeSpace), 0, -60, false),
-        leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, false),
-        { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
-        line1[1],
-        line2[0],
-        line2[1],
-        line3[0],
-        line3[1],
-        line4[0],
-        line4[1],
-        { e: $("#linkedlist"), p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
-    ]);
+         { e: $("#linkedlist").children().eq(idx), p: { autoAlpha: 0, ease: Power0.easeNone }, o: { duration: animationTime } },
+         rightArrow.animate((nodeWidth + nodeSpace), 0, -60, true),
+         leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, true),
+         { e: elementsToBeMoved, p: { x: -(nodeWidth + nodeSpace), ease: Power0.easeNone }, o: { duration: animationTime, position: '-=' + animationTime } }
+    ], codeDisplayManager);
+
+    appendCodeLines([2, 3, 4], codeDisplayManager);
 }
 
 //STATUS: not converted to GSAP
@@ -611,6 +394,7 @@ function getNode(idx) {
 
 //STATUS: not converted to GSAP
 function findPos(data) {
+    redraw();
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 80);
@@ -625,11 +409,6 @@ function findPos(data) {
         loadingSequence.push(p.translateStraightArrow(nodeWidth + nodeSpace, 0));
     }
     $.Velocity.RunSequence(loadingSequence);
-
-    //TODO: remove this later
-    setTimeout(function() {
-        redraw();
-    }, 3000);
 }
 
 

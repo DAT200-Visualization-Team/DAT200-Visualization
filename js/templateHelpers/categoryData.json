@@ -40,6 +40,17 @@
                   "placeholder": "Value"
                 }
               ]
+            },
+            {
+              "name": "Remove",
+              "function": "removeNode",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                }
+              ]
             }
           ]
         },
