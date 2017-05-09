@@ -10,7 +10,7 @@ var arrElementWidth = 50;
 var arrElementHeight = 50;
 
 //Animation
-var animationTime = 0.25;
+var animationTime = 1;
 var tl = new TimelineMax();
 
 //Max value in dataset
