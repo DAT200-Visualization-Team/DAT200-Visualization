@@ -146,7 +146,6 @@ Graph.prototype.dijkstra = function (startName) {
                     commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 33 } });
             }
 
-            console.log(w.name, w.dist);
             commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
 
             if(!itr.hasNext())
@@ -181,6 +180,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
         }
         
         commands.push({ name: "newNode", data: { vertex: v } });
+        commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
             commands.push({ name: "highlightLines", data: { lines: [18] } });
@@ -214,6 +214,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
                 if(w != v.prev)
                     commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 32 } });
             }
+            commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
         }
     }
 };
