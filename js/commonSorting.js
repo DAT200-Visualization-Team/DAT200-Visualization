@@ -1,21 +1,21 @@
-/*function swap(a, b) {
-    console.log("swap " + a + " with " + b);
+function swap(a, b) {
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
 
-    var oldRectA_X = elementA.filter("rect").attr('x');
-    var oldTextA_X = elementA.filter("text").attr('x');
+    var oldRectA_X = a * (width / data.length);
+    var oldTextA_X = a * (width / data.length) + barWidth / 4;
 
-    tl//.addLabel('swap')
-        .set(elementA.filter("rect"), {attr:{class: "element" + b}})
-        .set(elementA.filter("text"), {attr:{class: "element" + b}})
-        .set(elementB.filter("rect"), {attr:{class: "element" + a}})
-        .set(elementB.filter("text"), {attr:{class: "element" + a}})
-        .to(elementA.filter("rect"), animationTime, {attr:{x:elementB.filter('rect').attr('x'), class: "element" + b}, ease:Linear.easeNone})
-        .to(elementA.filter("text"), animationTime, {attr:{x:elementB.filter('text').attr('x'), class: "element" + b}, ease:Linear.easeNone}, '-=1')
-        .to(elementB.filter("rect"), animationTime, {attr:{x:oldRectA_X, class: "element" + a}, ease:Linear.easeNone}, '-=1')
-        .to(elementB.filter("text"), animationTime, {attr:{x:oldTextA_X, class: "element" + a}, ease:Linear.easeNone}, '-=1');
-}*/
+    var oldRectB_X = b * (width / data.length);
+    var oldTextB_X = b * (width / data.length) + barWidth / 4;
+
+    var dxA = oldRectA_X - oldRectB_X;
+    var dxB = oldRectB_X - oldRectA_X;
+
+    tl.to(elementA, animationTime, { x: '-=' + dxA})
+        .to(elementB, animationTime, { x: '-=' + dxB }, '-=' + animationTime);
+    elementA.attr('class', 'element' + b);
+    elementB.attr('class', 'element' + a);
+}
 
 function highlight(a, b, colorA, colorB) {
     colorA = colorA || "blue";
@@ -29,6 +29,11 @@ function highlight(a, b, colorA, colorB) {
         .to(elementB.filter("rect"), animationTime, {attr:{fill: colorB}, ease:Linear.easeNone}, 'highlight');
 
     return true;
+}
+
+function clearHighlight(element, origColor) {
+    origColor = origColor || "red";
+    tl.to($(".element" + element).filter("rect"), animationTime, {attr:{fill: origColor}, ease:Linear.easeNone});
 }
 
 function markAsSorted(a) {
