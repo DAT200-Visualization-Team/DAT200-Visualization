@@ -52,7 +52,11 @@ Arrow.prototype.animate = function(dx, dy, dmy, sequence) {
     var tp2x = arrow.p2x;
     var tp2y = arrow.p2y;
 
-    var progressAnimation = function (elements, complete, remaining, start, tweenValue) {
+    var progressAnimation = function (self) {
+        //console.log(self);
+        var tweenValue = self.progress();
+
+
         arrow.x1 = tx1 + (tweenValue * dx);
         arrow.y1 = ty1 + (tweenValue * dy);
         arrow.my = tmy + (tweenValue * dmy);
@@ -67,16 +71,24 @@ Arrow.prototype.animate = function(dx, dy, dmy, sequence) {
         arrow.p2x = tp2x + tweenValue * dx;
         arrow.p2y = tp2y + tweenValue * dy;
 
-        elements[0].setAttribute(
+        self.target[0].setAttribute(
             "d", "M " + arrow.x0 + " " + arrow.y0 + " Q " + arrow.mx + " " + arrow.my + " " + (arrow.x1) + " " + arrow.y1
         );
-        elements[1].setAttribute(
+        self.target[1].setAttribute(
             "d", "M " + arrow.p0x + " " + arrow.p0y + " L " + arrow.p1x + " " + arrow.p1y + " L " + arrow.p2x + " " + arrow.p2y + " Z"
         );
 
     };
 
-    var animationToBeReturned = { e: this.arrow.children(), p: { tween: 1 }, o: { duration: animationTime, progress: progressAnimation, sequenceQueue: sequence } };
+    (sequence) ? sequence = 1 : sequence = 0;
+
+    var animationToBeReturned = {
+        e: this.arrow.children(),
+        p: { onUpdate: progressAnimation, onUpdateParams: ["{self}"] },
+        o: { duration: animationTime, position: "-=" + sequence }
+    };
+
+
     arrow.x1 = tx1 + (dx);
     arrow.y1 = ty1 + dy;
     arrow.my = tmy + (dmy);
