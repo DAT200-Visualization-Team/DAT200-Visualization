@@ -9,8 +9,8 @@ var arrElementWidth = 50;
 var arrElementHeight = 50;
 
 //Animation
-var cmd = [];
-var currentCmd = 0;
+var animationTime = 0.25;
+var tl = new TimelineMax();
 
 //Max value in dataset
 var maxValue = Math.max.apply(null, data);
@@ -18,34 +18,6 @@ var maxValue = Math.max.apply(null, data);
 var countArray = Array.apply(null, Array(maxValue + 1)).map(Number.prototype.valueOf, 0);
 //Sorted array
 var sortedArray = Array.apply(null, Array(data.length)).map(String.prototype.valueOf, "");
-
-//PH - Code TODO get code from another source
-var codeContent = [
-    "",
-    "function countingSort(array, maxValue) {",
-    "    if (array.constructor !== Array || array.length == 0)",
-    "        return [];",
-    "",
-    "    var valueCount = Array.apply(null, Array(maxValue)).map(Number.prototype.valueOf, 0);",
-    "    var value;",
-    "",
-    "    for (var i = 0; i < array.length; i++) {",
-    "        value = array[i];",
-    "        valueCount[value] += 1;",
-    "    }",
-    "",
-    "    var result = new Array(array.list);",
-    "    var index = 0;",
-    "    for (var i = 0; i < valueCount.length; i++) {",
-    "        for (var j = 0; j < valueCount[i]; j++) {",
-    "            result[index] = i;",
-    "            index++;",
-    "        }",
-    "    }",
-    "",
-    "    return result;",
-    "}"
-    ];
 
 var code = d3.select("#code-text");
 
@@ -100,7 +72,7 @@ function createArray(array) {
         .attr("width", barWidth);
 
     //Create counting array
-    countingArray = drawingArea.append("g");
+    countingArray = drawingArea.append("g").attr("id", "countingArray");
     countingArray.selectAll("rect")
         .data(countArray)
         .enter()
@@ -109,7 +81,8 @@ function createArray(array) {
         .attr("y", function (d) { return height / 3; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(0, 127, 127)");
+        .attr("fill", "rgb(0, 127, 127)")
+        .attr("class", function(d, i) { return "rect" + i});
 
     countingArray.selectAll("text")
         .data(countArray)
@@ -118,7 +91,8 @@ function createArray(array) {
         .text(function (d) { return d; })
         .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 3; })
         .attr("y", height / 3 + 30)
-        .attr("width", barWidth);
+        .attr("width", barWidth)
+        .attr("class", function(d, i) { return "text" + i});
 
     countingArray.selectAll("text.label")
         .data(countArray)
@@ -131,7 +105,7 @@ function createArray(array) {
         .attr("width", barWidth);
 
     //Create sorted array
-    sortedArrayGUI = drawingArea.append("g");
+    sortedArrayGUI = drawingArea.append("g").attr("id", "sortedArray");
     sortedArrayGUI.selectAll("rect")
         .data(sortedArray)
         .enter()
@@ -140,7 +114,8 @@ function createArray(array) {
         .attr("y", function (d) { return 2 * height / 3; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(0, 127, 127)");
+        .attr("fill", "rgb(0, 127, 127)")
+        .attr("class", function(d, i) { return "rect" + i});
 
     sortedArrayGUI.selectAll("text")
         .data(sortedArray)
@@ -149,12 +124,14 @@ function createArray(array) {
         .text(function (d) { return d; })
         .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 3; })
         .attr("y", 2 * height / 3 + 30)
-        .attr("width", barWidth);
+        .attr("width", barWidth)
+        .attr("class", function(d, i) { return "text" + i});
 
     //Create arrow
     arrow = drawingArea.append("svg")
         .attr('y', arrElementHeight)
-        .attr('x', arrElementWidth / 2 - arrowWidth);
+        .attr('x', arrElementWidth / 2 - arrowWidth)
+        .attr('id', "arrow");
 
     //Arrowhead
     var arrowHead = arrow.append("path")
@@ -173,23 +150,11 @@ function createArray(array) {
         .attr("y2", arrowHeight)
         .attr("stroke", "red")
         .attr("stroke-width", "4");
-
-    cmd = [];
-    currentCmd = 0;
 }
 
 function startSorting() {
     sort();
-    play();
 }
-
-$( document ).ready(function() {
-    initCode();
-});
-
-$(document).on("sort", function(event, newCommands) {
-    cmd = newCommands.split('!');
-});
 
 function sort() {
     countingSort(data.slice(), maxValue+1);
@@ -198,133 +163,49 @@ function sort() {
 function countUpdate(index) {
     countArray[index]++;
 
-    countingArray.selectAll("rect").filter(":nth-child(" + (index+1) + ")")
-        .data(countArray)
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(0, 127, 0)")
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(0, 127, 127)");
+    var rect = $("#countingArray rect").filter(".rect" + index);
+    var text = $("#countingArray text").filter(".text" + index);
 
-    countingArray.selectAll("text")
-        .data(countArray)
-        .transition()
-        .duration(500)
-        .text(function(d) { return d; });
+    tl.to(rect, animationTime, {attr:{fill:"rgb(0, 127, 0)"}, ease:Linear.easeNone})
+        .to(text, animationTime, {text:countArray[index].toString(), ease:Linear.easeNone})
+        .to(rect, animationTime, {attr:{fill:"rgb(0, 127, 127)"}, ease:Linear.easeNone});
 }
 
 function sortedUpdate(index, value) {
     //Highlight current value in counting array
-    clearHighlight(countingArray);
-    highlight(value, countingArray);
+    clearHighlight("#countingArray");
+    highlight(value, "#countingArray");
     //Highlight the changes in sorted array
-    clearHighlight(sortedArrayGUI);
-    highlight(index, sortedArrayGUI);
+    clearHighlight("#sortedArray");
+    highlight(index, "#sortedArray");
     sortedArray[index] = value;
 
-    sortedArrayGUI.selectAll("text")
-        .data(sortedArray)
-        .transition()
-        .duration(500)
-        .text(function(d) { return d; })
+    var text = $("#sortedArray text").filter(".text" + index);
+    tl.to(text, animationTime, {text:sortedArray[index].toString(), ease:Linear.easeNone})
 }
 
 function showArrow() {
-    arrow.transition()
-        .duration(500)
-        .attr("opacity", 1);
+    tl.to($("#arrow"), animationTime, {attr:{opacity:1}, ease:Linear.easeNone});
 }
 
 function hideArrow() {
-    arrow.transition()
-        .duration(500)
-        .attr('opacity', 0);
+    tl.to($("#arrow"), animationTime, {attr:{opacity:0}, ease:Linear.easeNone});
 }
 
 function pointArrow(index) {
-    arrow.transition()
-        .duration(500)
-        .attr('x', index * (width / data.length) + arrElementWidth / 3 - arrowWidth / 2);
+    tl.to($("#arrow"), animationTime, {attr:{x:(index * (width / data.length) + arrElementWidth / 3 - arrowWidth / 2)}, ease:Linear.easeNone});
 }
 
 function highlight(index, array) {
-    pointArrow(index);
-    array.selectAll("rect").filter(":nth-child(" + (index+1) + ")")
-        .data(data)
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(255, 0, 0)");
+    if(array == "#unsortedArray") {
+        pointArrow(index);
+    } else {
+        hideArrow();
+    }
+    tl.to($(array + " rect").filter(".rect" + index), animationTime, {attr:{fill:"rgb(255, 0, 0)"}, ease:Linear.easeNone});
 }
 
 function clearHighlight(array) {
-    array.selectAll("rect")
-        .data(data)
-        .transition()
-        .duration(500)
-        .attr("fill", function(d) { return "rgb(0, 127, 127)"; });
-}
-
-function runCommand() {
-    unHighlightCode();
-    switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
-        case "coun":
-            eval(cmd[currentCmd]);
-            clearHighlight(unsortedArray);
-            break;
-        case "sort":
-            //Hide arrow, no longer needed
-            eval(cmd[currentCmd]);
-            hideArrow();
-            break;
-        case "high":
-            eval(cmd[currentCmd]);
-            break;
-        case "code":
-            eval(cmd[currentCmd]);
-            break;
-        case "clea":
-            eval(cmd[currentCmd]);
-            break;
-        default:
-            console.log("Unknown command" + cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4)));
-    }
-    currentCmd++;
-}
-
-function play() {
-    setTimeout(function(){
-        runCommand();
-        //Run next command if there is one
-        if(currentCmd < cmd.length) play();
-    }, 1000);
-}
-
-function initCode() {
-    code.selectAll("span")
-        .data(codeContent)
-        .enter()
-        .append("span")
-        .attr("id", function(d, i) { return "codeLine" + i})
-        .text(function (d) { return d })
-        .append("br");
-
-    //Restart code highlightning
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-}
-
-function codeLineHighlight(lineNr) {
-    code.selectAll("span").filter("#codeLine" + lineNr)
-        .transition()
-        .duration(500)
-        .style("background-color", "yellow");
-}
-
-function unHighlightCode() {
-    code.selectAll("span")
-        .transition()
-        .duration(500)
-        .style("background-color", "transparent");
+    tl.to($(array + " rect"), animationTime, {attr:{fill:"rgb(0, 127, 127)"}, ease:Linear.easeNone});
 }
 
