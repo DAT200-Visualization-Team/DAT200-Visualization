@@ -36,5 +36,7 @@ function countingSort(array, maxValue) {
     }
 
     highlightCode([20]);
+    clearHighlight("#countingArray");
+    clearHighlight("#sortedArray");
     return result;
 }
