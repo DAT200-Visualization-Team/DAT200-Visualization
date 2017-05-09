@@ -132,13 +132,10 @@ function executeCommands(commands) {
                             var cell = findNodeCellFromId(node.id);
                             if(cell.html() == '')
                                 cell.html('\u221E');
-
-                            //insertPreviousValueIfExists(data.vertex.name);
                         }
                         else {
                             if (node.id == data.vertex.name)
                                 findNodeCellFromId(node.id).html('');
-                            //insertPreviousValueIfExists(data.vertex.name);
                         }
                     });
                     
@@ -165,10 +162,8 @@ function insertPreviousValueIfExists(nodeId) {
 }
 
 function fillInAllOldValues() {
-    console.log(finishedColumns);
     matrixColumns.forEach(function (id) {
         if (!(id in finishedColumns)) {
-            console.log(id);
             var cell = findNodeCellFromId(id);
             var content = cell.html();
             var prevValue = findPreviousValue(id);
