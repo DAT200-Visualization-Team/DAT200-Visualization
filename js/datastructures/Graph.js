@@ -90,13 +90,16 @@ Graph.prototype.dijkstra = function (startName) {
         commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
+
     commands.push({ name: "highlightLines", data: { lines: [6, 7] } });
+
     this.clearAll();
     pq.add(new Path(start, 0));
     start.dist = 0;
-    commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
 
+    commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
     commands.push({ name: "highlightLines", data: { lines: [10] } });
+
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
         commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
@@ -106,7 +109,10 @@ Graph.prototype.dijkstra = function (startName) {
             commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
+
         commands.push({ name: "newNode", data: { vertex: v } });
+        commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
+
         commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
         v.scratch = 1;
         nodesSeen++;
@@ -140,6 +146,7 @@ Graph.prototype.dijkstra = function (startName) {
                     commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 33 } });
             }
 
+            console.log(w.name, w.dist);
             commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
 
             if(!itr.hasNext())
