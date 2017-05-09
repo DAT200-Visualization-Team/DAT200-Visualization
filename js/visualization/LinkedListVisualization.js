@@ -302,6 +302,7 @@ function addByIndex(idx, data) {
 //STATUS: not converted to GSAP
 //TODO: find a meaningful variable to take in
 function removeNode(idx) {
+    redraw();
     if (linkedList.size() === 0) {
         throw new Error("Linked List has not yet been initialized");
     }
@@ -323,31 +324,18 @@ function removeNode(idx) {
 
     codeDisplayManager.loadFunctions("removeNode");
     codeDisplayManager.changeFunction("removeNode");
-    var line0 = codeDisplayManager.getVelocityFramesForHighlight(0, animationTime);
-    var line1 = codeDisplayManager.getVelocityFramesForHighlight(1, animationTime);
-    var line2 = codeDisplayManager.getVelocityFramesForHighlight(2, animationTime);
-    var line3 = codeDisplayManager.getVelocityFramesForHighlight(3, animationTime);
-    var line4 = codeDisplayManager.getVelocityFramesForHighlight(4, animationTime);
 
-    $.Velocity.RunSequence([
-        line0[0],
-        rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60),
-        line0[1],
-        line1[0],
+    appendAnimation(0, [rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60)], codeDisplayManager);
+
+    appendAnimation(1, [
         leftArrow.animate((nodeWidth + nodeSpace), 0, -60),
-        { e: $("#linkedlist").children().eq(idx), p: "fadeOut", o: { duration: animationTime} },
-        rightArrow.animate((nodeWidth + nodeSpace), 0, -60, false),
-        leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, false),
-        { e: elementsToBeMoved, p: { translateX: "-" + (nodeWidth + nodeSpace) }, o: { duration: animationTime, sequenceQueue: false } },
-        line1[1],
-        line2[0],
-        line2[1],
-        line3[0],
-        line3[1],
-        line4[0],
-        line4[1],
-        { e: $("#linkedlist"), p: { translateY: "+=0" }, o: { duration: 1, complete: function (elements) { redraw() } } }
-    ]);
+         { e: $("#linkedlist").children().eq(idx), p: { autoAlpha: 0, ease: Power0.easeNone }, o: { duration: animationTime } },
+         rightArrow.animate((nodeWidth + nodeSpace), 0, -60, true),
+         leftArrow.animate(-(nodeWidth + nodeSpace), 0, 60, true),
+         { e: elementsToBeMoved, p: { x: -(nodeWidth + nodeSpace), ease: Power0.easeNone }, o: { duration: animationTime, position: '-=' + animationTime } }
+    ], codeDisplayManager);
+
+    appendCodeLines([2, 3, 4], codeDisplayManager);
 }
 
 //STATUS: not converted to GSAP
