@@ -12,7 +12,36 @@
         },
         {
           "id": "linkedlist",
-          "name": "Linked List"
+          "name": "Linked List",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "fastInitialize",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "arrayValues",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Add",
+              "function": "addByIndex",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                },
+                {
+                  "type": "string",
+                  "name": "value",
+                  "placeholder": "Value"
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "stack",

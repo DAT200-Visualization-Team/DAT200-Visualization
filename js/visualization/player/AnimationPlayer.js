@@ -78,6 +78,7 @@ function appendAnimation(line, animations, codeDisplayManager) {
     for (var i = 0; i < animations.length; i++) {
         var info = animations[i];
         if (Array.isArray(info.p)) {
+            info.p[1].immediateRender = false;
             AnimationPlayer.tl().fromTo(info.e, info.o.duration, info.p[0], info.p[1], info.o.position ? info.o.position : "+=0");
         }
         else {

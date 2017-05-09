@@ -4,6 +4,7 @@ var codeDisplayManager = new CodeDisplayManager('javascript', 'graph');
 var currentAlgorithm;
 var matrixColumns;
 var finishedColumns;
+var lockedColumns;
 
 var currentStartNode;
 
@@ -65,7 +66,7 @@ function buildGraph() {
     graph = new Graph();
     for (var i = 0; i < links.length; i++) {
         if (links[i].left)
-            graph.addEdge(links[i].target.id, links[i].source.id, parseInit(links[i].cost));
+            graph.addEdge(links[i].target.id, links[i].source.id, parseInt(links[i].cost));
         if (links[i].right)
             graph.addEdge(links[i].source.id, links[i].target.id, parseInt(links[i].cost));
     }
@@ -118,24 +119,64 @@ function executeCommands(commands) {
                 break;
             case 'newNode':
                 if ($('#matrix')) {
-                    var current = data.vertex.name;
-                    $('#current-row').children().each(function () {
-                        if (this.innerHTML == '')
-                            this.innerHTML = '\u221E';
-                    });
-                    setCellBorder(data.vertex.name, 'blue');
                     createNewRow(data.vertex.name);
-                    console.log('new node', data.vertex.name);
+                    setCellBorder(data.vertex.name, 'blue');
+
+                    lockedColumns = finishedColumns.slice();
+                    finishedColumns.push(data.vertex.name);
+
+                    fillInAllOldValues();
+
+                    nodes.forEach(function (node) {
+                        if (!(node.id in finishedColumns)) {
+                            var cell = findNodeCellFromId(node.id);
+                            if(cell.html() == '')
+                                cell.html('\u221E');
+
+                            //insertPreviousValueIfExists(data.vertex.name);
+                        }
+                        else {
+                            if (node.id == data.vertex.name)
+                                findNodeCellFromId(node.id).html('');
+                            //insertPreviousValueIfExists(data.vertex.name);
+                        }
+                    });
+                    
+                    updateNodeCell(data.vertex.name, data.vertex.dist);
                 }
                 break;
             case 'updateMatrixCost':
                 if ($('matrix')) {
-                    console.log('updating', data.id);
-                    updateNodeCell(data.id, data.newCost);
+                    insertPreviousValueIfExists(data.id);
+                    if (!(data.id in lockedColumns)) {
+                        updateNodeCell(data.id, data.newCost);
+                    }
                 }
                 break;
         }
     }
+}
+
+function insertPreviousValueIfExists(nodeId) {
+    var previousValue = findPreviousValue(nodeId);
+
+    if (previousValue != null && previousValue != '' && previousValue != '\u221E')
+        findNodeCellFromId(nodeId).html(previousValue);
+}
+
+function fillInAllOldValues() {
+    console.log(finishedColumns);
+    matrixColumns.forEach(function (id) {
+        if (!(id in finishedColumns)) {
+            console.log(id);
+            var cell = findNodeCellFromId(id);
+            var content = cell.html();
+            var prevValue = findPreviousValue(id);
+            if ((prevValue != null && prevValue != '' && prevValue != '\u221E') && (content == '' || content == '\u221E')) {
+                insertPreviousValueIfExists(id);
+            }
+        }
+    });
 }
 
 function toggleMatrixHiding() {
@@ -145,6 +186,7 @@ function toggleMatrixHiding() {
 function initializeHeader() {
     matrixColumns = [];
     finishedColumns = [];
+    lockedColumns = [];
     $('#matrix-header').append('<th>V</th>');
     nodes.forEach(function (node) {
         $('#matrix-header').append('<th>' + node.id + '</th>');
@@ -161,6 +203,20 @@ function createNewRow(label) {
     });
 }
 
+function findPreviousValue(nodeId) {
+    var colIndex = matrixColumns.indexOf(nodeId) + 1;
+    var newestNumber = null;
+    $('#current-row').parent().children().each(function (rowIndex) {
+        $(this).find('td').each(function (cellIndex) {
+            if (colIndex == cellIndex) {
+                if (!isNaN(parseInt($(this).html())))
+                    newestNumber = $(this).html();
+            }
+        });
+    });
+    return newestNumber;
+}
+
 function findNodeCellFromId(nodeId) {
     var index = matrixColumns.indexOf(nodeId) + 1; // Add one to compensate for label
     if (index == -1) return null;
@@ -168,11 +224,9 @@ function findNodeCellFromId(nodeId) {
 }
 
 function updateNodeCell(nodeId, newCost) {
-    if(!(nodeId in finishedColumns))
-        findNodeCellFromId(nodeId).text(newCost);
+    findNodeCellFromId(nodeId).text(newCost);
 }
 
 function setCellBorder(nodeId, color) {
     findNodeCellFromId(nodeId).css('border', '3px solid ' + color);
-    finishedColumns.push(nodeId);
 }
