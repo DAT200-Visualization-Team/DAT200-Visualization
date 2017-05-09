@@ -156,6 +156,7 @@ function createArray(array) {
 function startSorting() {
     codeDisplayManager.loadFunctions("countingSort");
     codeDisplayManager.changeFunction("countingSort");
+    createArray(data);
     sort();
 }
 
