@@ -391,23 +391,37 @@ function getNode(idx) {
     appendCodeLines([12], codeDisplayManager);
 }
 
-//STATUS: not converted to GSAP
+//STATUS: converted to GSAP
 function findPos(data) {
     redraw();
+    codeDisplayManager.loadFunctions("findPos");
+    codeDisplayManager.changeFunction("findPos");
+
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 80);
     updateDrawingArea();
-    p = new Arrow($("#linkedlist").children().last());
-    var loadingSequence = [];
+    p.attr("opacity", 0);
 
-    for (var i = 1; i < linkedList.size() - 1; i++) {
+    var p1 = new Arrow($("#linkedlist").children().last());
+
+    var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
+    appendAnimation(0, tmp, codeDisplayManager);
+
+    var isFound = false;
+    for (var i = 1; i < linkedList.size() - 2; i++) {
+        appendCodeLines([1, 6], codeDisplayManager);
         if($("#linkedlist").children().eq(i).children().first().text() == data) {
+            appendCodeLines([7], codeDisplayManager);
+            isFound = true;
             break;
         }
-        loadingSequence.push(p.translateStraightArrow(nodeWidth + nodeSpace, 0));
+        var tmp = [p1.translateStraightArrow(nodeWidth + nodeSpace, 0)];
+        appendAnimation(0, tmp, codeDisplayManager);
     }
-    $.Velocity.RunSequence(loadingSequence);
+    if(!isFound) {
+        appendCodeLines([0, 9, 10], codeDisplayManager);
+    }
 }
 
 

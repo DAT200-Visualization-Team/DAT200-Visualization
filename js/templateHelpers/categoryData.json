@@ -66,6 +66,17 @@
                   "placeholder": "Index"
                 }
               ]
+            },
+            {
+              "name": "Find Position",
+              "function": "findPos",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Data",
+                  "placeholder": "Data"
+                }
+              ]
             }
           ]
         },
