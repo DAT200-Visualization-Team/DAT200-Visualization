@@ -14,6 +14,7 @@ QuickSort.prototype.sort = function() {
 
     //commands.push("merge()");
     merge();
+    console.log(this.a);
     return this.a;
 };
 
@@ -93,7 +94,7 @@ function useInsertionSort(a, low, high) {
         var tmp = a[p];
         var j = p;
 
-        for(; j > 0 && highlight(j, j-1) && tmp < a[j - 1]; j--) {
+        for(; j > low && highlight(j, j-1) && tmp < a[j - 1]; j--) {
             a[j] = a[j - 1];
             console.log(j);
 

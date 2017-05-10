@@ -215,7 +215,7 @@
     "fibonacci": {
       "naiveFib": {
         "header": "function naiveFib(n) {",
-        "lines": [ "    if (n < 1)", "        throw new { name: \"IllegalArgumentException\", message: \"The Fibonacci numbers start at 1.\" };", "    if (n === 1) return 1;", "    if (n === 2) return 1;", "     ", "    return naiveFib(n - 1) + naiveFib(n - 2);", "}" ]
+        "lines": [ "    if (n < 1)", "        throw new { name: \"IllegalArgumentException\", message: \"The Fibonacci numbers start at 1.\" };", "    if (n === 1)", "        return 1;", "    if (n === 2)", "        return 1;", "     ", "    return naiveFib(n - 1) + naiveFib(n - 2);", "}" ]
       },
       "iterativeFib": {
         "header": "function iterativeFib(n) {",

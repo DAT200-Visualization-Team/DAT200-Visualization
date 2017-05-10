@@ -110,7 +110,6 @@ function executeCommands(commands) {
             case 'colorLine':
                 var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
-                if(path != null)
                     addPathColorFrame(data.line, path, data.color);
                 break;
             case 'highlightLines':

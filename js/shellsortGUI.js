@@ -71,12 +71,12 @@ function sublist(gap) {
             selector = selector + ".element" + i;
         }
 
-        tl.to($(selector), animationTime, {attr:{transform: "translate(0," + (k * 1.2 * arrElementHeight) + ")"}, ease:Linear.easeNone});
+        tl.to($(selector), animationTime, { y: (k * 1.2 * arrElementHeight), ease:Linear.easeNone });
     }
 }
 
 function mergeSublists() {
-    tl.to($("#arrayGroup rect, #arrayGroup text"), animationTime, {attr:{transform: "translate(0,0)"}, ease:Linear.easeNone});
+    tl.to($("#arrayGroup rect, #arrayGroup text"), animationTime, {y: 0, ease:Linear.easeNone});
 }
 
 function clearAllHighlight() {

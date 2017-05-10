@@ -417,12 +417,29 @@
                   "placeholder": "Integer"
                 }
               ]
+            },
+            {
+              "name": "Recursive",
+              "function": "runNaiveFib",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "n",
+                  "placeholder": "Integer"
+                }
+              ]
             }
           ]
         },
         {
-          "id": "practicaldijkstra",
-          "name": "Practical Dijkstra"
+          "id": "dijkstramap",
+          "name": "Practical Dijkstra",
+          "commands": [
+            {
+              "name": "Find Path",
+              "function": "start"
+            }
+          ]
         },
         {
           "id": "filetree",
@@ -445,11 +462,25 @@
             },
             {
               "name": "Linear Search",
-              "function": "visualizeLinearSearch"
+              "function": "visualizeLinearSearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "82"
+                }
+              ]
             },
             {
               "name": "Binary Search",
-              "function": "visualizeBinarySearch"
+              "function": "visualizeBinarySearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "82"
+                }
+              ]
             }
           ]
         }

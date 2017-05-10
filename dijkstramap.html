@@ -1,4 +1,4 @@
-<!doctype html>
+    <!doctype html>
 <html class="no-js" lang="">
 <head>
     <meta charset="utf-8">
@@ -10,39 +10,14 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="css/vs.css">
-    <style>
-        path {
-            stroke: #000000;
-            stroke-width: 2;
-            fill: none;
-        }
-        .intersection {
-            stroke-width: 2;
-            fill: yellow;
-            stroke: blue;
-        }
-        .area {
-            fill: none;
-            stroke: none;
-        }
-        .building {
-            fill: orange;
-            stroke: red;
-            stroke-width: 1;
-        }
-        .grass {
-            fill: lawngreen;
-            stroke: none;
-            opacity: 0.35;
-        }
-    </style>
+    <link rel="stylesheet" href="css/visualization/map.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body>
@@ -51,17 +26,9 @@
 <![endif]-->
 
 <div id="view">
-    <div id="graphics" class="left">
-        <div class="drawingArea">
+    <div id="graphics" class="left" style="width: 100%; border: none;">
+        <div class="map">
 
-        </div>
-    </div>
-    <div id="code" class="right">
-
-        <div style="margin-bottom:4px;">
-            <h3>Pathfinding using Dijkstra's algorithm</h3>
-            <pre><code id="code-text">
-                 </code></pre>
         </div>
     </div>
 </div>
@@ -77,7 +44,6 @@
 <script src="js/vendor/GSAP/TweenMax.js"></script>
 <script src="js/vendor/GSAP/plugins/TextPlugin.js"></script>
 <script src="js/codedisplay/CodeDisplayManager.js"></script>
-<script src="js/vendor/topojson.min.js"></script>
 <script src="js/vendor/velocity.min.js"></script>
 <script src="js/vendor/velocity.ui.min.js"></script>
 <script src="js/datastructures/Node.js"></script>
@@ -91,7 +57,6 @@
 <script src="js/vendor/handlebars-v4.0.5.js"></script>
 <script src="js/templateHelpers/templateController.js"></script>
 <script src="js/settings.js"></script>
-<script src="js/resize.js"></script>
 <script src="js/vendor/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 <script src="js/visualization/player/AnimationPlayer.js"></script>

@@ -6,19 +6,8 @@ var roads;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
 
-var width = 960,
-    height = 650;
-
-//Book vars
-var lineColors = {
-    currentPath: '#255eba',
-    pendingPath: '#d8d10a',
-    slowPath: '#cc181b',
-    fastPath: '#1ece21'
-};
-
-var loadingSequence = [];
-var animationTime = 200;
+var width = $('#graphics').width(),
+    height = $('#graphics').height();
 
 // Hele Norge
 //var projection = d3.geoMercator()
@@ -35,7 +24,7 @@ var path = d3.geoPath()
     .projection(projection)
     .pointRadius(2);
 
-var svg = d3.select(".drawingArea").append("svg")
+var svg = d3.select(".map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
@@ -50,7 +39,7 @@ var zoom = d3.zoom()
 
 svg.call(zoom);
 
-d3.json("js/geojson/output_roads.geojson", function(error, norway) {
+d3.json("js/geojson/output_roads.json", function(error, norway) {
 
     road_json = norway;
 
@@ -61,15 +50,13 @@ d3.json("js/geojson/output_roads.geojson", function(error, norway) {
         .attr("class", "roads")
         .attr("d", path)
         .attr("stroke", "blue")
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 3)
         .attr("fill", "none");
 
-    //buildGraph(roads._groups[0]);
     roads_data = roads._groups[0];
-    //performPathFinding('dijkstra', 50, 49);
 });
 
-d3.json("js/geojson/output_intersection_with_id.geojson", function(error, intersections) {
+d3.json("js/geojson/output_intersection_with_id.json", function(error, intersections) {
 
     intersection_json = intersections;
 
@@ -83,7 +70,7 @@ d3.json("js/geojson/output_intersection_with_id.geojson", function(error, inters
 });
 
 //TODO the rest of the data to the map
-d3.json("js/geojson/buildings.geojson", function(error, buildings) {
+d3.json("js/geojson/buildings.json", function(error, buildings) {
 
     var building_json = buildings;
 
@@ -147,13 +134,13 @@ function start() {
     if(selectedStartNode != undefined && selectedEndNode != undefined) {
         performPathFinding('dijkstra', selectedStartNode, selectedEndNode);
     } else {
-        //TODO show error
+        alert("Two points need to be selected.");
     }
 
 }
 
 function zoomed() {
-    //console.log(d3.event.transform);
+    //console.log(d3.event.transform.k);
     map.attr("transform", d3.event.transform);
     buildingLayer.attr("transform", d3.event.transform);
     intersectionLayer.attr("transform", d3.event.transform);
@@ -167,11 +154,8 @@ function zoomed() {
     //path.pointRadius(3/d3.event.transform.k);
 }
 
-//Book code
 function resetLinkColors() {
     d3.selectAll('.roads')
-    //.transition()
-    //.duration(1000)
         .style('stroke', '#000000');
 }
 
@@ -180,68 +164,59 @@ function getLink(linkNr) {
 }
 
 Graph.prototype.dijkstrav2 = function (startName, endName) {
-    console.log("dijkstrav2 started");
-    commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     var pq = new BinaryHeap();
 
     var start = this.vertexMap[startName];
     if (start === undefined || start === null) {
-        commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
-    commands.push({ name: "highlightLines", data: { lines: [6, 7, 8, 10] } });
+
     this.clearAll();
     pq.add(new Path(start, 0));
     start.dist = 0;
 
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
-        commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
         var vrec = pq.remove();
-        //console.log(vrec.dest.name);
+
         if(vrec.dest.name == endName) {
             nodesSeen = Object.keys(this.vertexMap).length;
-            continue;
+            break;
         }
+
         var v = vrec.dest;
         if (v.scratch !== 0) { // already processed v
-            commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
-        commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
+
         v.scratch = 1;
         nodesSeen++;
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
-            commands.push({ name: "highlightLines", data: { lines: [20, 21, 22, 23, 25] } });
             var e = itr.next();
-            //console.log(e);
             var w = e.dest;
             var cvw = e.cost;
 
             if (w != v.prev)
-                commands.push({ name: "colorCurrent", data: { vertices: [v, w]} });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba"} });
 
             if (cvw < 0) {
-                commands.push({ name: "highlightLines", data: { lines: [26] } });
                 throw {name: "GraphException", message: "Graph has negative edges"};
             }
 
-            commands.push({ name: "highlightLines", data: { lines: [29] } });
             if (w.dist > v.dist + cvw) {
-                commands.push({ name: "highlightLines", data: { lines: [30, 31, 32] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 pq.add(new Path(w, w.dist));
-                commands.push({ name: "colorPending", data: { vertices: [v, w] } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a" } });
+                if (w.name == endName) {
+                    return;
+                }
             }
             else {
                 if (w != v.prev)
-                    commands.push({ name: "colorSlow", data: { vertices: [v, w], totalCost: v.dist + cvw } });
+                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b"} });
             }
-
-            if(!itr.hasNext())
-                commands.push({ name: "highlightLines", data: { lines: [20] } });
         }
     }
 };
@@ -271,18 +246,9 @@ function performPathFinding(algorithm, start, end) {
     graph.getPath(end);
 }
 
-function addPathColorFrame(path, color, time) {
-    loadingSequence.push({ e: path, p: { stroke: color }, o: { duration: time } });
-}
-
-function playAnimation() {
-    console.log($(".roads").queue());
-    $(".roads").velocity("stop", true);
-    $(".roads").removeClass(".velocity-animating");
-    $(document).clearQueue();
-
-    resetLinkColors();
-    $.Velocity.RunSequence(loadingSequence);
+function addPathColorFrame(path, color) {
+    appendAnimation(null, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
+    //TODO add intersection highlighting
 }
 
 function getLinkElement(a, b) {
@@ -302,34 +268,14 @@ function getLinkElement(a, b) {
 
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
+        var data = commands[i].data;
         switch (commands[i].name) {
-            case 'colorCurrent':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+            case 'colorLine':
+                console.log(data);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
-                    addPathColorFrame(path, lineColors.currentPath, animationTime);
-                break;
-            case 'colorPending':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame($(path), lineColors.pendingPath, animationTime);
-                break;
-            case 'colorSlow':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.slowPath, animationTime);
-                break;
-            case 'colorFast':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.fastPath, animationTime * 5);
-                break;
-            case 'highlightLines':
-                //loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(commands[i].data.lines, animationTime));
-                break;
-            case 'setVariable':
-
+                    addPathColorFrame(path, data.color);
                 break;
         }
     }
-    playAnimation();
 }

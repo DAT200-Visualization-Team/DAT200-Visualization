@@ -117,11 +117,16 @@ function add(index, textContent) {
 function move(from, size, capacity) {
     //TODO improve?
     var element = $(".text" + from);
+    var oldElement = $(".text" + (from-1));
 
-    if(from != 0) {
-        tl.to(element, animationTime, {attr:{class: "text" + (from-1), x:((from-1) * (width / capacity) + arrElementWidth / 3 + 5)}, ease:Linear.easeNone});
+    if(from-1 >= 0) {
+        tl.to(element, animationTime, {attr:{x:((from-1) * (width / capacity) + arrElementWidth / 3 + 5)}, ease:Linear.easeNone})
+        .to(oldElement, animationTime, {text:"", ease:Linear.easeNone}, '-=' + animationTime);
+
+        element.attr('class', "text" + (from-1));
     } else {
-        tl.to(element, 0, {attr:{class:"text" + (capacity)}, text:"", ease:Linear.easeNone});
+        tl.to(element, 0, {attr:{text:""}, ease:Linear.easeNone});
+        element.attr('class', "text" + (capacity));
     }
 
     if(from-1 == capacity) {

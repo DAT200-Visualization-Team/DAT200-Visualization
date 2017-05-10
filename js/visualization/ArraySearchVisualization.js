@@ -14,6 +14,7 @@ function setArray(array) {
 }
 
 function visualizeLinearSearch(search) {
+    clear();
     codeDisplayManager.loadFunctions("linearSearch");
     codeDisplayManager.changeFunction("linearSearch");
 
@@ -49,33 +50,135 @@ function visualizeLinearSearch(search) {
 }
 
 function visualizeBinarySearch(search) {
-    var sortedArray = arr; //TODO: Sort array
+    var sortedArray = arr;
+    function compareNumbers(a, b) {
+        return a - b;
+    }
+    arr = arr.sort(compareNumbers);
+    clear();
+    codeDisplayManager.loadFunctions("binarySearch");
+    codeDisplayManager.changeFunction("binarySearch");
+    createDivsForArrows(arr.length);
+    binSearch(search, arr);
 
-    var testIndex = Math.floor(sortedArray.length / 2);
-    var max = sortedArray.length - 1;
-    var min = 0;
+    function binSearch(search, sortedArray) {
+        var testIndex = Math.floor(sortedArray.length / 2);
+        var tmp = {e: $("#testIndex"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(0, [tmp], codeDisplayManager);
 
-    if (search > sortedArray[max]) return -1;
-    if (search < sortedArray[min]) return -1;
-    while (true) {
-        if (sortedArray[testIndex] > search) {
-            max = testIndex;
-        }
-        else if (sortedArray[testIndex] === search) {
-            return testIndex;
-        }
-        else {
-            min = testIndex;
-        }
+        var max = sortedArray.length - 1;
+        var tmp = {e: $("#max"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(1, [tmp], codeDisplayManager);
 
-        testIndex = Math.floor((max + min) / 2);
+        var min = 0;
+        var tmp = {e: $("#min"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(2, [tmp], codeDisplayManager);
 
-        if (max - min <= 1) {
-            if (sortedArray[max] === search) return max;
-            if (sortedArray[min] === search) return min;
+        appendCodeLines([4], codeDisplayManager);
+        if (search > sortedArray[max]) {
+            var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+            appendAnimation(5, [tmp], codeDisplayManager);
             return -1;
         }
+
+        appendCodeLines([6], codeDisplayManager);
+        if (search < sortedArray[min]) {
+            var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+            appendAnimation(7, [tmp], codeDisplayManager);
+            return -1;
+        }
+
+        appendCodeLines([9], codeDisplayManager);
+        while (true) {
+            var hasBeenInIfBefore = false;
+            appendCodeLines([10], codeDisplayManager);
+            if (sortedArray[testIndex] > search) {
+                hasBeenInIfBefore = true;
+                max = testIndex;
+                var tmp = {e: $("#max"), p: {left: moveArrowToIdx("max", max)}, o: {duration: animationTime}};
+                appendAnimation(11, [tmp], codeDisplayManager);
+            }
+
+            appendCodeLines([12], codeDisplayManager);
+            if (sortedArray[testIndex] === search && !hasBeenInIfBefore) {
+                hasBeenInIfBefore = true;
+                var tmp = {
+                    e: $("#arraySearch").children().eq(testIndex),
+                    p: {backgroundColor: "#00FF00"},
+                    o: {duration: animationTime}
+                };
+                appendAnimation(13, [tmp], codeDisplayManager);
+                return testIndex;
+            }
+            appendCodeLines([14], codeDisplayManager);
+            if(!hasBeenInIfBefore) {
+                hasBeenInIfBefore = true;
+                min = testIndex;
+                var tmp = {e: $("#min"), p: {left: moveArrowToIdx("min", min)}, o: {duration: animationTime}};
+                appendAnimation(15, [tmp], codeDisplayManager);
+            }
+
+            testIndex = Math.floor((max + min) / 2);
+            var tmp = {e: $("#testIndex"), p: {left: moveArrowToIdx("testIndex", testIndex)}, o: {duration: animationTime}};
+            appendAnimation(17, [tmp], codeDisplayManager);
+
+            appendCodeLines([19], codeDisplayManager);
+            if (max - min <= 1) {
+                appendCodeLines([20], codeDisplayManager);
+                if (sortedArray[max] === search) {
+                    var tmp = {
+                        e: $("#arraySearch").children().eq(max),
+                        p: {backgroundColor: "#00FF00"},
+                        o: {duration: animationTime}
+                    };
+                    appendAnimation(21, [tmp], codeDisplayManager);
+                    return max;
+                }
+                appendCodeLines([22], codeDisplayManager);
+                if (sortedArray[min] === search) {
+                    var tmp = {
+                        e: $("#arraySearch").children().eq(min),
+                        p: {backgroundColor: "#00FF00"},
+                        o: {duration: animationTime}
+                    };
+                    appendAnimation(23, [tmp], codeDisplayManager);
+                    return min;
+                }
+                var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+                appendAnimation(25, [tmp], codeDisplayManager);
+                return -1;
+            }
+            appendCodeLines([26, 9], codeDisplayManager);
+
+        }
     }
+
+    function createDivsForArrows(arrLength) {
+        $("#arraySearch-wrapper").prepend('<div id="testIndex-wrapper"><div class="arrow-down" id="testIndex"></div></div>');
+        $("#arraySearch-wrapper").append('<div id="minMax-wrapper"><div class="arrow-up" id="min"></div><div class="arrow-up" id="max"></div></div>');
+
+
+        $("#min").css("left", moveArrowToIdx("min", 0)).css("opacity", 0);
+        $("#max").css("left", moveArrowToIdx("max", arr.length - 1)).css("opacity", 0);
+        $("#testIndex").css("left", moveArrowToIdx("testIndex", Math.floor(arr.length / 2))).css("opacity", 0);
+    }
+
+    function moveArrowToIdx(arrow, idx) {
+        var a;
+        if(arrow == "testIndex") a = $("#testIndex");
+        else if(arrow == "min") a = $("#min");
+        else if(arrow == "max") a = $("#max");
+
+        var element = $("#arraySearch").children().eq(idx).get(0);
+        var position = element.getBoundingClientRect().left;
+        return position + 32 - 15; //+half of box -padding
+    }
+}
+
+function clear() {
+    $("#testIndex-wrapper").remove();
+    $("#minMax-wrapper").remove();
+    setArray(arr);
 }
 
 setArray();
