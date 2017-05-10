@@ -18,8 +18,8 @@ function swap(a, b) {
 }
 
 function highlight(a, b, colorA, colorB) {
-    colorA = colorA || "blue";
-    colorB = colorB || "blue";
+    colorA = colorA || "#87CEFA";
+    colorB = colorB || "#87CEFA";
 
     var elementA = $(".element" + a).filter("rect");
     var elementB = $(".element" + b).filter("rect");
