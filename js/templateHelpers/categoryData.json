@@ -417,6 +417,17 @@
                   "placeholder": "Integer"
                 }
               ]
+            },
+            {
+              "name": "Recursive",
+              "function": "runNaiveFib",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "n",
+                  "placeholder": "Integer"
+                }
+              ]
             }
           ]
         },

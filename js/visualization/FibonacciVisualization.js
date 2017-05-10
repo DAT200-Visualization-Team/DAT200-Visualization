@@ -11,6 +11,24 @@ function runIterativeFib(n) {
     iterativeFib(n);
 }
 
+function runNaiveFib(n) {
+    $("#fibonacci").empty();
+
+    codeDisplayManager.loadFunctions("naiveFib");
+    codeDisplayManager.changeFunction("naiveFib");
+
+    $("#fibonacci").append('<h4 class="fibonacci-value noselect" style="font-size: 16px">' +
+        'There is no animation for this algorithm yet,<br /> just code highlighting.</h4>');
+
+    if(n < 17)
+        naiveFib(n);
+    else if(n > 16) {
+        if (confirm("This input will potentially make your browser slow and/or crash it. Do you want to continue?") == true)
+            naiveFib(n);
+    }
+
+}
+
 function iterativeFib(n) {
     //TODO: make it so that the visualization handles n == 1 or 2
     if(n < 3) return;
@@ -61,6 +79,29 @@ function iterativeFib(n) {
     appendAnimation(15, markResult(), codeDisplayManager);
 
     appendCodeLines([16], codeDisplayManager);
+}
+
+function naiveFib(n) {
+    appendCodeLines([0], codeDisplayManager);
+    if (n < 1) {
+        appendCodeLines([1], codeDisplayManager);
+        throw new {name: "IllegalArgumentException", message: "The Fibonacci numbers start at 1."};
+    }
+    appendCodeLines([2], codeDisplayManager);
+    if (n === 1) {
+        appendCodeLines([3], codeDisplayManager);
+        return 1;
+    }
+    appendCodeLines([4], codeDisplayManager);
+    if (n === 2) {
+        appendCodeLines([5], codeDisplayManager);
+        return 1;
+    }
+
+    appendCodeLines([7], codeDisplayManager);
+    var tmp =  naiveFib(n - 1) + naiveFib(n - 2);
+    appendCodeLines([7], codeDisplayManager);
+    return;
 }
 
 function initialize() {
