@@ -9,15 +9,16 @@ var lockedColumns;
 var currentStartNode;
 
 $(document).ready(function () {
-    switch (window.location.pathname) {
-        case '/dijkstra.html':
+    var location = window.location.pathname.split('/').slice(-1)[0];
+    switch (location) {
+        case 'dijkstra.html':
             codeDisplayManager.loadFunctions('dijkstra');
             codeDisplayManager.changeFunction('dijkstra');
             currentAlgorithm = 'dijkstra';
             $('#matrix-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
             $('#matrix-window').draggable({ containment: 'document', handle: '#controls' });
             break;
-        case '/bellmanford.html':
+        case 'bellmanford.html':
             codeDisplayManager.loadFunctions('bellmanford');
             codeDisplayManager.changeFunction('bellmanford');
             currentAlgorithm = 'bellmanford';
@@ -108,6 +109,7 @@ function executeCommands(commands) {
         switch (commands[i].name) {
             case 'colorLine':
                 var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
+                if(path != null)
                 if(path != null)
                     addPathColorFrame(data.line, path, data.color);
                 break;
@@ -214,7 +216,6 @@ function findPreviousValue(nodeId) {
 
 function findNodeCellFromId(nodeId) {
     var index = matrixColumns.indexOf(nodeId) + 1; // Add one to compensate for label
-    if (index == -1) return null;
     return $('#current-row').children().eq(index);
 }
 
