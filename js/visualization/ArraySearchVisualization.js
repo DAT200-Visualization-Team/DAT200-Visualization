@@ -14,6 +14,7 @@ function setArray(array) {
 }
 
 function visualizeLinearSearch(search) {
+    clear();
     codeDisplayManager.loadFunctions("linearSearch");
     codeDisplayManager.changeFunction("linearSearch");
 
@@ -54,21 +55,24 @@ function visualizeBinarySearch(search) {
         return a - b;
     }
     arr = arr.sort(compareNumbers);
-    setArray(arr);
+    clear();
     codeDisplayManager.loadFunctions("binarySearch");
     codeDisplayManager.changeFunction("binarySearch");
+    createDivsForArrows(arr.length);
     binSearch(search, arr);
 
     function binSearch(search, sortedArray) {
-        appendCodeLines([0, 1, 2], codeDisplayManager);
         var testIndex = Math.floor(sortedArray.length / 2);
-        //TODO: sett testindex-variabelen
+        var tmp = {e: $("#testIndex"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(0, [tmp], codeDisplayManager);
 
         var max = sortedArray.length - 1;
-        //TODO: sett max-variabelen
+        var tmp = {e: $("#max"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(1, [tmp], codeDisplayManager);
 
         var min = 0;
-        //TODO: sett min-variabelen
+        var tmp = {e: $("#min"), p: {opacity: 1}, o: {duration: animationTime}};
+        appendAnimation(2, [tmp], codeDisplayManager);
 
         appendCodeLines([4], codeDisplayManager);
         if (search > sortedArray[max]) {
@@ -90,9 +94,9 @@ function visualizeBinarySearch(search) {
             appendCodeLines([10], codeDisplayManager);
             if (sortedArray[testIndex] > search) {
                 hasBeenInIfBefore = true;
-                appendCodeLines([11], codeDisplayManager);
                 max = testIndex;
-                //TODO: sett max-variabelen
+                var tmp = {e: $("#max"), p: {left: moveArrowToIdx("max", max)}, o: {duration: animationTime}};
+                appendAnimation(11, [tmp], codeDisplayManager);
             }
 
             appendCodeLines([12], codeDisplayManager);
@@ -109,14 +113,14 @@ function visualizeBinarySearch(search) {
             appendCodeLines([14], codeDisplayManager);
             if(!hasBeenInIfBefore) {
                 hasBeenInIfBefore = true;
-                appendCodeLines([15], codeDisplayManager);
                 min = testIndex;
-                //TODO: sett min-variabelen
+                var tmp = {e: $("#min"), p: {left: moveArrowToIdx("min", min)}, o: {duration: animationTime}};
+                appendAnimation(15, [tmp], codeDisplayManager);
             }
 
-            appendCodeLines([17], codeDisplayManager);
             testIndex = Math.floor((max + min) / 2);
-            //TODO: sett testindex-variabelen
+            var tmp = {e: $("#testIndex"), p: {left: moveArrowToIdx("testIndex", testIndex)}, o: {duration: animationTime}};
+            appendAnimation(17, [tmp], codeDisplayManager);
 
             appendCodeLines([19], codeDisplayManager);
             if (max - min <= 1) {
@@ -149,9 +153,32 @@ function visualizeBinarySearch(search) {
         }
     }
 
-    /*function createDivsForArrows() {
-    $("#arraySearch-wrapper").append('<div></div>')
-    }*/
+    function createDivsForArrows(arrLength) {
+        $("#arraySearch-wrapper").prepend('<div id="testIndex-wrapper"><div class="arrow-down" id="testIndex"></div></div>');
+        $("#arraySearch-wrapper").append('<div id="minMax-wrapper"><div class="arrow-up" id="min"></div><div class="arrow-up" id="max"></div></div>');
+
+
+        $("#min").css("left", moveArrowToIdx("min", 0)).css("opacity", 0);
+        $("#max").css("left", moveArrowToIdx("max", arr.length - 1)).css("opacity", 0);
+        $("#testIndex").css("left", moveArrowToIdx("testIndex", Math.floor(arr.length / 2))).css("opacity", 0);
+    }
+
+    function moveArrowToIdx(arrow, idx) {
+        var a;
+        if(arrow == "testIndex") a = $("#testIndex");
+        else if(arrow == "min") a = $("#min");
+        else if(arrow == "max") a = $("#max");
+
+        var element = $("#arraySearch").children().eq(idx).get(0);
+        var position = element.getBoundingClientRect().left;
+        return position + 32 - 15; //+half of box -padding
+    }
+}
+
+function clear() {
+    $("#testIndex-wrapper").remove();
+    $("#minMax-wrapper").remove();
+    setArray(arr);
 }
 
 setArray();
