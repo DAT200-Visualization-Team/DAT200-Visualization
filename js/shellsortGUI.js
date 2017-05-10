@@ -39,7 +39,7 @@ function createArray(array) {
         .attr("y", function (d) { return 0; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(255, 0, 127)")
+        .attr("fill", "red")
         .attr("transform", "translate(0,0)")
         .attr("class", function (d, i) { return "element" + i });
 
@@ -80,5 +80,5 @@ function mergeSublists() {
 }
 
 function clearAllHighlight() {
-    tl.to($("#arrayGroup rect"), animationTime, {attr:{fill: "rgb(255, 0, 127)"}, ease:Linear.easeNone});
+    tl.to($("#arrayGroup rect"), animationTime, {attr:{fill: "red"}, ease:Linear.easeNone});
 }
