@@ -46,10 +46,11 @@ function visualizeLinearSearch(search) {
     }
     var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
     appendAnimation(4, [tmp], codeDisplayManager);
-    //return -1;
 }
 
-function visualizeBinarySearch(sortedArray, search) {
+function visualizeBinarySearch(search) {
+    var sortedArray = arr; //TODO: Sort array
+
     var testIndex = Math.floor(sortedArray.length / 2);
     var max = sortedArray.length - 1;
     var min = 0;
@@ -76,3 +77,5 @@ function visualizeBinarySearch(sortedArray, search) {
         }
     }
 }
+
+setArray();

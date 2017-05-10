@@ -429,12 +429,29 @@
           "name": "File Tree"
         },
         {
-          "id": "maxsubsequencesum",
-          "name": "Max Subsequence Sum"
-        },
-        {
           "id": "arraysearch",
-          "name": "Array Search"
+          "name": "Array Search",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "setArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Linear Search",
+              "function": "visualizeLinearSearch"
+            },
+            {
+              "name": "Binary Search",
+              "function": "visualizeBinarySearch"
+            }
+          ]
         }
       ]
     }
