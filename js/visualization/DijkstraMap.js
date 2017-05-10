@@ -50,7 +50,7 @@ var zoom = d3.zoom()
 
 svg.call(zoom);
 
-d3.json("js/geojson/output_roads.geojson", function(error, norway) {
+d3.json("js/geojson/output_roads.json", function(error, norway) {
 
     road_json = norway;
 
@@ -69,7 +69,7 @@ d3.json("js/geojson/output_roads.geojson", function(error, norway) {
     //performPathFinding('dijkstra', 50, 49);
 });
 
-d3.json("js/geojson/output_intersection_with_id.geojson", function(error, intersections) {
+d3.json("js/geojson/output_intersection_with_id.json", function(error, intersections) {
 
     intersection_json = intersections;
 
@@ -83,7 +83,7 @@ d3.json("js/geojson/output_intersection_with_id.geojson", function(error, inters
 });
 
 //TODO the rest of the data to the map
-d3.json("js/geojson/buildings.geojson", function(error, buildings) {
+d3.json("js/geojson/buildings.json", function(error, buildings) {
 
     var building_json = buildings;
 
