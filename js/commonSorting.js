@@ -1,4 +1,5 @@
 function swap(a, b) {
+    console.log("swap", a, b);
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
 
@@ -18,6 +19,7 @@ function swap(a, b) {
 }
 
 function highlight(a, b, colorA, colorB) {
+    console.log("highlight", a, b);
     colorA = colorA || "blue";
     colorB = colorB || "blue";
 
