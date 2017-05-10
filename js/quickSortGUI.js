@@ -4,30 +4,12 @@ var barWidth = 40;
 var width = (barWidth + 10) * input.length;
 var height = 350;
 
-//Animation
-var cmd = [];
-var currentCmd = 0;
-
-//PH - Code TODO get code from another source
-var codeContent = [
-    "",
-    "function insertionSort(a) {",
-    "    for(var p = 1; p < a.length; p++) {",
-    "        var tmp = a[p];",
-    "        var j = p;",
-    "        for(; j > 0 && tmp < a[j - 1]; j--) {",
-    "            a[j] = a[j - 1];",
-    "        }",
-    "        a[j] = tmp;",
-    "    }",
-    "    return a;",
-    "}"];
-
 var code = d3.select("#code-text");
 var barChart = d3.select(".drawingArea")
     .append("svg:svg")
     .attr("width", width + 200)
-    .attr("height", height + 200);
+    .attr("height", height + 200)
+    .attr("id", "barChart");
 
 createRects(input);
 
@@ -36,7 +18,8 @@ var pivotMarkerLeft = barChart.append("polygon")
     .attr("fill", "yellow")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
-    .attr("points", "05,30 15,10 25,30");
+    .attr("points", "05,30 15,10 25,30")
+    .attr("id", "pivotMarkerLeft");
     //markPivot(0, "left");
 
 //Pivot marker Right
@@ -44,7 +27,8 @@ var pivotMarkerRight = barChart.append("polygon")
     .attr("fill", "yellow")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
-    .attr("points", "05,30 15,10 25,30");
+    .attr("points", "05,30 15,10 25,30")
+    .attr("id", "pivotMarkerRight");
     //markPivot(input.length-1, "right");
 
 //Panning
@@ -52,6 +36,10 @@ var pan = d3.zoom()
     .on("zoom", panning);
 
 barChart.call(pan);
+
+//Animation
+var animationTime = 1;
+var tl = new TimelineMax();
 
 function createRects(data) {
     barChart.selectAll("rect")
@@ -82,46 +70,11 @@ function panning() {
     barChart.attr("transform", d3.event.transform);
 }
 
-$( document ).ready(function() {
-    initCode();
-});
-
-$(document).on("sort", function(event, newCommands) {
-    console.log("sorted");
-    console.log(newCommands);
-    cmd = newCommands.split('!');
-});
 var test;
 function sort(median) {
     test = new QuickSort(input.slice());
     if(median == true) test.medianOfThree = true;
     test.sort();
-}
-
-function runCommand() {
-    console.log(cmd[currentCmd]);
-    unHighlightCode();
-    switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
-        case "mark":
-            eval(cmd[currentCmd]);
-            break;
-        case "swap":
-            codeLineHighlight(6);
-            eval(cmd[currentCmd]);
-            //redraw();
-            break;
-        case "high":
-            codeLineHighlight(5);
-            clearHighlight();
-            eval(cmd[currentCmd]);
-            break;
-        case "code":
-            eval(cmd[currentCmd]);
-            break;
-        default:
-            console.log("Unknown command" + cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4)));
-    }
-    currentCmd++;
 }
 
 function markPivot(a, pivot) {
@@ -132,15 +85,11 @@ function markPivot(a, pivot) {
     var targetY = parseInt(text.attr("y")) + parseInt(translation[1]);
 
     if(pivot == 'left') {
-        pivotMarkerLeft.transition()
-            .duration(500)
-            .attr('transform', "translate(" + (targetX) + ", " + targetY + ")");
+        tl.to($("#pivotMarkerLeft"), animationTime, {attr:{transform: "translate(" + (targetX) + ", " + targetY + ")"}, ease:Linear.easeNone});
     } else {
-        pivotMarkerRight.transition()
-            .duration(500)
-            .attr('transform', "translate(" + (targetX) + ", " + targetY + ")");
+        tl.to($("#pivotMarkerRight"), animationTime, {attr:{transform: "translate(" + (targetX) + ", " + targetY + ")"}, ease:Linear.easeNone});
     }
-
+    return true;
 }
 
 function colorElement(from, to, type) {
@@ -151,13 +100,9 @@ function colorElement(from, to, type) {
     }
     var elements = barChart.selectAll("rect").filter(selector);
     if(type == "less") {
-        elements.transition()
-            .duration(500)
-            .attr("fill", "magenta");
+        tl.to($(selector), animationTime, {attr:{fill:"magenta"}, ease:Linear.easeNone});
     } else {
-        elements.transition()
-            .duration(500)
-            .attr("fill", "lime");
+        tl.to($(selector), animationTime, {attr:{fill:"lime"}, ease:Linear.easeNone});
     }
 }
 
@@ -173,53 +118,55 @@ function resetColor(from, to) {
 
 function highlightPivot(index) {
     removeHighlightPivot();
-    barChart.selectAll("rect").filter(".element" + index)
-        .transition()
-        .duration(500)
-        .attr('stroke', "green")
-        .attr('stroke-width', "4");
+    tl.to($(".element" + index), animationTime, {attr:{stroke:"green", strokeDashWidth:"4"}, ease:Linear.easeNone});
 }
 
 function removeHighlightPivot() {
-    barChart.selectAll("rect")
-        .attr('stroke', "none");
+    tl.to($("#barChart rect"), 0, {attr:{stroke:"none"}, ease:Linear.easeNone});
 }
 
 function swap(a, b) {
-    var bar1 = barChart.selectAll("rect").filter(".element" + a);
-    var bar2 = barChart.selectAll("rect").filter(".element" + b);
-    var bar1Text = barChart.selectAll("text").filter(".element" + a);
-    var bar2Text = barChart.selectAll("text").filter(".element" + b);
-    var oldBar1_X = bar1.attr('x');
-    var oldBar1Text_X = bar1Text.attr('x');
+    var elementA = $(".element" + a);
+    var elementB = $(".element" + b);
 
-    bar1.attr("class", "element" + b)
-        .transition()
-        .duration(500)
-        .attr('x', bar2.attr('x'));
-    bar1Text.attr("class", "element" + b)
-        .transition()
-        .duration(500)
-        .attr('x', bar2Text.attr('x'));
+    var oldRectA_X = parseInt(elementA.filter('rect').attr('x'));
+    var oldTextA_X = elementA.filter('text').attr('x');
 
-    bar2.attr("class", "element" + a)
-        .transition()
-        .duration(500)
-        .attr('x', oldBar1_X);
-    bar2Text.attr("class", "element" + a)
-        .transition()
-        .duration(500)
-        .attr('x', oldBar1Text_X);
+    var oldRectB_X = parseInt(elementB.filter('rect').attr('x'));
+    var oldTextB_X = elementB.filter('text').attr('x');
+
+    //var dxA = oldRectA_X - oldRectB_X;
+    //var dxB = oldRectB_X - oldRectA_X;
+
+    //console.log("dxA: " + dxA);
+    //console.log("dxB: " + dxB);
+
+    tl.to(elementA, animationTime, {attr:{x:oldRectB_X}, ease:Linear.easeNone})
+        .to(elementB, animationTime, {attr:{x:oldRectA_X}, ease:Linear.easeNone}, '-=' + animationTime);
+    elementA.attr('class', 'element' + b);
+    elementB.attr('class', 'element' + a);
 }
 
 function colorPartition(from, to, direction) {
     //resetColor(from, to);
-    var selector = "";
+    //var selector = "";
     for(var i = from; i <= to; i++) {
-        if(i != from) selector += ", ";
-        selector = selector + ".element" + i;
+        //if(i != from) selector += ", ";
+        //selector = selector + ".element" + i;
+        var element = d3.select(".element" + i);
+        var currentTranslation = getTranslate(element);
+        var y = parseInt(currentTranslation[1]);
+        var x = parseInt(currentTranslation[0]);
+        y = y + 50;
+        if(direction == "left") {
+            x = x - 50/(y/50);
+        } else if(direction == "right") {
+            x = x + 50/(y/50);
+        }
+        tl.to($("#barChart .element" + i), animationTime, {attr:{transform:"translate(" + x + ", " + y + ")"}});
     }
-    barChart.selectAll("*").filter(selector)
+
+    /*barChart.selectAll("*").filter(selector)
         //.attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
         .transition()
         .duration(500)
@@ -240,7 +187,7 @@ function colorPartition(from, to, direction) {
                     }
                     return "translate(" + x + ", " + y + ")";
                 });
-        });
+        });*/
 }
 
 function getTranslate(element) {
@@ -255,74 +202,28 @@ function getTranslate(element) {
 }
 
 function merge() {
-    barChart.selectAll("rect")
-        .transition()
-        .duration(500)
-        .attr("transform", "translate(0,0)");
-
-    barChart.selectAll("text")
-        .transition()
-        .duration(500)
-        .attr("transform", "translate(0,0)");
+    tl.to($("#barChart rect, #barChart text"), animationTime, {attr:{transform: "translate(0,0)"}, ease:Linear.easeNone});
 }
 
-function highlight(a, b, color) {
-    color = color || "rgb(0, 255, 0)";
-    barChart.selectAll("rect").filter(".element" + a)
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(0,0,255)");
-    barChart.selectAll("rect").filter(".element" + b)
-        .transition()
-        .duration(500)
-        .attr("fill", color);
+function highlight(a, b, colorA, colorB) {
+    colorA = colorA || "blue";
+    colorB = colorB || "blue";
+
+    var elementA = $(".element" + a).filter("rect");
+    var elementB = $(".element" + b).filter("rect");
+
+    tl.addLabel('highlight')
+        .to(elementA.filter("rect"), animationTime, {attr:{fill: colorA}, ease:Linear.easeNone}, 'highlight')
+        .to(elementB.filter("rect"), animationTime, {attr:{fill: colorB}, ease:Linear.easeNone}, 'highlight');
+
 }
 
-function clearHighlight(data) {
-    barChart.selectAll("rect")
-        .data(data)
-        .transition()
-        .duration(500);
-        //.attr("fill", function(d) { return "rgb(" + (d * 3) + ", 0, 0)"; });
+function clearAllHighlight() {
+    tl.to($("#barChart rect"), animationTime, {attr:{fill: "rgb(255, 0, 127)"}, ease:Linear.easeNone});
 }
 
-function play() {
-    setTimeout(function(){
-        //runCommand();
-        eval(commands[currentCmd]);
-        console.log(commands[currentCmd]);
-        currentCmd++;
-        //Run next command if there is one
-        if(currentCmd < commands.length) play();
-    }, 1000);
-}
-
-function initCode() {
-    code.selectAll("span")
-        .data(codeContent)
-        .enter()
-        .append("span")
-        .attr("id", function(d, i) { return "codeLine" + i})
-        .text(function (d) { return d })
-        .append("br");
-
-    //Restart code highlightning
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-}
-
-function codeLineHighlight(lineNr) {
-    //console.log(code);
-    code.selectAll("span").filter("#codeLine" + lineNr)
-        .transition()
-        .duration(500)
-        .style("background-color", "yellow");
-}
-
-function unHighlightCode() {
-    code.selectAll("span")
-        .transition()
-        .duration(500)
-        .style("background-color", "transparent");
+function clearHighlight(element, origColor) {
+    origColor = origColor || "red";
+    tl.to($(".element" + element).filter("rect"), animationTime, {attr:{fill: origColor}, ease:Linear.easeNone});
 }
 

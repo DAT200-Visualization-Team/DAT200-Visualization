@@ -1,4 +1,4 @@
-var data = [35, 33, 40];
+var data = ["35", "33", "40"];
 
 var barWidth = 40;
 var width = (barWidth + 10) * data.length;
@@ -9,13 +9,13 @@ var arrElementWidth = 50;
 var arrElementHeight = 50;
 
 //Animation
-var cmd = [];
-var currentCmd = 0;
+var animationTime = 0.5;
+var tl = new TimelineMax();
+tl.pause();
 
-//Max value in dataset
-var maxValue = Math.max.apply(null, data);
-
-var arrayList = new ArrayList(data);
+//var arrayList = new ArrayList(data);
+var theSize = 3;
+var capacity = 5;
 
 //PH - Code TODO get code from another source
 var codeContent = [
@@ -42,216 +42,122 @@ var drawingArea = d3.select(".drawingArea").append("svg:svg");
 var theSizeBlock = drawingArea.append("g");
 
 theSizeBlock.append("rect")
-    .attr("width", arrayList.theSize * ((width+12.5) / arrayList.theItems.length))
-    .attr("height", arrElementHeight + 40 + 10)
+    .attr("width", 0)
+    .attr("height", (arrElementHeight + 40 + 10))
+    .attr("id", "theSizeBlock")
     .attr("fill", "lime");
 
 theSizeBlock.append("text")
     .attr("y", 25)
     .attr("x", 10)
+    .attr("id", "theSizeBlockText")
+    .attr("opacity", "0")
     .text("theSize");
 
-var mainArray = drawingArea.append("g");
+var mainArray = drawingArea.append("g")
+    .attr("id", "mainArray");
 
-createArray(getElements(), 0, true);
+createArray(getElements().length, 0, 0);
 
-function createArray(data, y, addLabels) {
-    //$("g").empty();
+var arrayList = new ArrayList(data);
 
-    width = (barWidth + 10) * data.length;
+function createArray(length, oldlength, y) {
 
-    drawingArea.transition()
-        .duration(250)
-        .attr("width", width + 150)
+    width = (barWidth + 10) * length;
+
+    drawingArea.attr("width", width + 150)
         .attr("height", height);
-    //arrayGroup = drawingArea.insert("g",":first-child");
-    arrayGroup = mainArray;
 
-    //Create unsorted array
-    arrayGroup.selectAll("rect:not([class])")
-        .data(data)
-        .enter()
-        .insert("svg:rect", ":first-child")
-        .attr("x", function (d, index) { return index * ((width+20) / data.length) + 5; })
-        .attr("y", function (d) { return 40; })
-        .attr("transform", "translate(0," + y + ")")
-        .attr("height", arrElementHeight)
-        .attr("width", arrElementWidth - 5)
-        .attr("fill", "red")
-        .attr("class", function (d, i) { return "element" + i });
+    for(var i = 0; i < length; i++) {
+        mainArray.insert("svg:rect", ":first-child")
+            .attr("x", i * ((width+20) / length) + 5 )
+            .attr("y", 40)
+            .attr("transform", "translate(0," + y + ")")
+            .attr("height", arrElementHeight)
+            .attr("width", arrElementWidth - 5)
+            .attr("fill", "red")
+            .attr("opacity", "0")
+            .attr("class", "rect" + i );
+    }
 
-    //if(addLabels) {
-        arrayGroup.selectAll("text")
-            .data(data)
-            .enter()
-            .append("text")
-            .text(function (d) { return ""; })
-            .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 3 + 5; })
+    for(var j = oldlength; j < length; j++) {
+        mainArray.append("text")
+            .text("")
+            .attr("x",j * (width / length) + arrElementWidth / 3 + 5)
             .attr("y", 30+40)
             .attr("transform", "translate(0," + y + ")")
             .attr("width", barWidth)
-            .attr("class", function (d, i) { return "element" + i });
-    //}
+            .attr("opacity", "0")
+            .attr("class", "text" + j);
+    }
 
-    return arrayGroup;
+    tl.to($("#mainArray").find("text, rect"), animationTime, {opacity:1});
 }
 
 function getElements() {
     var displayArr = [];
-    for(var i = 0; i < arrayList.capacity; i++) {
-        if(arrayList.theItems[i] == undefined) {
+    for(var i = 0; i < capacity; i++) {
+        if(data[i] == undefined) {
             displayArr[i] = "";
         } else {
-            displayArr[i] = arrayList.theItems[i];
+            displayArr[i] = data[i];
         }
     }
     console.log(displayArr);
     return displayArr;
 }
 
-function add(index, element) {
-    mainArray.selectAll("text").filter(".element" + index)
-        .attr("opacity", "0")
-        .text(element)
-        .transition()
-        .duration(500)
-        .attr("opacity", "1");
+function add(index, textContent) {
+    console.log("adding " + textContent + ", to index: " + index);
+    var textbox = $(".text" + index);
+    tl.to(textbox, animationTime, {text:{value:textContent}, ease:Linear.easeNone});
+    //tl.to(textbox, animationTime, {opacity:1});
 }
 
-function move(to, from) {
-    var fromText = mainArray.selectAll("text").filter(".element" + from).text();
-    mainArray.selectAll("text").filter(".element" + to)
-        .text(fromText);
+function move(from, size, capacity) {
+    //TODO improve?
+    var element = $(".text" + from);
+
+    if(from != 0) {
+        tl.to(element, animationTime, {attr:{class: "text" + (from-1), x:((from-1) * (width / capacity) + arrElementWidth / 3 + 5)}, ease:Linear.easeNone});
+    } else {
+        tl.to(element, 0, {attr:{class:"text" + (capacity)}, text:"", ease:Linear.easeNone});
+    }
+
+    if(from-1 == capacity) {
+        console.log("test");
+        tl.to($(".text" + size), 0, {attr:{class:"text" + (size-2)}, ease:Linear.easeNone});
+    }
+
 }
 
-function set(index, element) {
-    mainArray.selectAll("text").filter(".element" + index)
-        .transition()
-        .duration(250)
-        .attr("opacity", "0")
-        .transition()
-        .duration(500)
-        .text(element)
-        .attr("opacity", "1")
+function set(index, textContent) {
+    var textbox = $(".text" + index);
+    tl.to(textbox, animationTime, {text:{value:textContent}, ease:Linear.easeNone});
 }
 
-function extendCapacity(newCapacity) {
-    var newArray = Array.apply(0, new Array(newCapacity)).map( function() { return ''; });
-    var oldArray = mainArray.selectAll("rect");
-    createArray(newArray, 100, false);
+function extendCapacity(newCapacity, oldCapacity) {
+    var oldArray = $("#mainArray").find("rect");
+    createArray(newCapacity, oldCapacity, 100);
 
-    mainArray.selectAll("text")
-        .transition()
-        .delay(250)
-        .duration(500)
-        .attr("transform", "translate(0, 100)");
+    var texts = $("#mainArray").find("text");
+    tl.to(texts, animationTime, {attr:{transform:"translate(0,100)"}});
 
-    oldArray.transition()
-        .delay(750)
-        .duration(250)
-        .attr("opacity", "0")
-        .transition()
-        .delay(1000)
-        .duration(0)
-        .remove();
+    tl.to(oldArray, animationTime, {opacity:0});
+    //Remove old array?
 
-    mainArray.selectAll("*")
-        .transition()
-        .delay(750)
-        .duration(250)
-        .attr("transform", "translate(0,0)")
+    tl.to($("#mainArray").find("rect, text"), animationTime, {attr:{transform:"translate(0,0)"}});
 }
 
 function updateTheSize(newSize, length) {
-    theSizeBlock.selectAll("rect")
-        .transition()
-        .duration(500)
-        .attr("width", newSize * ((width+12.5) / length) + 5);
+    tl.to($("#theSizeBlock"), animationTime, {attr:{width:(newSize * ((width) / length) + 5)}});
+    if(newSize >= 1) {
+        tl.to($("#theSizeBlockText"), animationTime, {opacity:1});
+    } else {
+        tl.to($("#theSizeBlockText"), animationTime, {opacity:0});
+    }
 }
 
 $( document ).ready(function() {
-    initCode();
+    //initCode();
 });
-
-function highlight(a, b, color) {
-    color = color || "rgb(0, 255, 0)";
-    mainArray.selectAll("rect").filter(".element" + a)
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(0,0,255)");
-    mainArray.selectAll("rect").filter(".element" + b)
-        .transition()
-        .duration(500)
-        .attr("fill", color);
-}
-
-function clearHighlight() {
-    mainArray.selectAll("rect")
-        .transition()
-        .duration(500)
-        .attr("fill", "rgb(255, 0, 127)");
-}
-
-function runCommand() {
-    unHighlightCode();
-    switch(cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4))) {
-        case "swap":
-            eval(cmd[currentCmd]);
-            break;
-        case "subl":
-            eval(cmd[currentCmd]);
-            break;
-        case "merg":
-            eval(cmd[currentCmd]);
-            break;
-        case "high":
-            eval(cmd[currentCmd]);
-            break;
-        case "code":
-            eval(cmd[currentCmd]);
-            break;
-        case "clea":
-            eval(cmd[currentCmd]);
-            break;
-        default:
-            console.log("Unknown command" + cmd[currentCmd].substring(0, Math.min(cmd[currentCmd].length, 4)));
-    }
-    currentCmd++;
-}
-
-function play() {
-    setTimeout(function(){
-        eval(commands[currentCmd]);
-        currentCmd++;
-        //Run next command if there is one
-        if(currentCmd < commands.length) play();
-    }, 1000);
-}
-
-function initCode() {
-    code.selectAll("span")
-        .data(codeContent)
-        .enter()
-        .append("span")
-        .attr("id", function(d, i) { return "codeLine" + i})
-        .text(function (d) { return d })
-        .append("br");
-
-    //Restart code highlightning
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-}
-
-function codeLineHighlight(lineNr) {
-    code.selectAll("span").filter("#codeLine" + lineNr)
-        .transition()
-        .duration(500)
-        .style("background-color", "yellow");
-}
-
-function unHighlightCode() {
-    code.selectAll("span")
-        .transition()
-        .duration(500)
-        .style("background-color", "transparent");
-}

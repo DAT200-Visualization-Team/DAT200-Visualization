@@ -73,15 +73,18 @@ ArrayList.prototype.add = function (x) {
             this.theItems[i] = old[i];
     }
 
+    //Ensure capacity
+    if(this.capacity == this.theSize) {
+        extendCapacity(this.capacity*2+1, this.capacity);
+        this.capacity = this.capacity * 2 + 1;
+    }
+
+    add(this.theSize, x);
     this.theItems[this.theSize++] = x;
+    updateTheSize(this.theSize, this.capacity);
+    //Update modcount
     this.modCount++;
 
-    //Update gui
-    //Ensure capacity
-    if(this.capacity == this.theSize - 1) {
-        var temp = this.theSize;
-    } else {
-    }
 
     return true;
 };
@@ -98,12 +101,16 @@ ArrayList.prototype.remove = function (x) {
 
 ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
-    for (var i = index; i < this.size() - 1; i++) {
+    for (var i = index; i <= this.theSize - 1; i++) {
+        console.log("moving" + i);
+        move(i, this.theSize, this.capacity);
         this.theItems[i] = this.theItems[i + 1];
     }
 
     this.theSize--;
     this.modCount++;
+    //update modcount
+    updateTheSize(this.theSize, this.capacity);
 
     return removedItem;
 };

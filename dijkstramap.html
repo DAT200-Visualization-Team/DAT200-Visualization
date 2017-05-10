@@ -16,8 +16,33 @@
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="css/arraylist.css">
     <link rel="stylesheet" href="css/vs.css">
+    <style>
+        path {
+            stroke: #000000;
+            stroke-width: 2;
+            fill: none;
+        }
+        .intersection {
+            stroke-width: 2;
+            fill: yellow;
+            stroke: blue;
+        }
+        .area {
+            fill: none;
+            stroke: none;
+        }
+        .building {
+            fill: orange;
+            stroke: red;
+            stroke-width: 1;
+        }
+        .grass {
+            fill: lawngreen;
+            stroke: none;
+            opacity: 0.35;
+        }
+    </style>
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body>
@@ -27,14 +52,14 @@
 
 <div id="view">
     <div id="graphics" class="left">
-        <div class="drawingArea" style="top: 50px">
+        <div class="drawingArea">
 
         </div>
     </div>
     <div id="code" class="right">
 
         <div style="margin-bottom:4px;">
-            <h3>Array List</h3>
+            <h3>Pathfinding using Dijkstra's algorithm</h3>
             <pre><code id="code-text">
                  </code></pre>
         </div>
@@ -49,20 +74,26 @@
 <script src="js/d3.js"></script>
 <script src="js/materialize.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="js/vendor/velocity.min.js"></script>
-<script src="js/vendor/velocity.ui.min.js"></script>
 <script src="js/vendor/GSAP/TweenMax.js"></script>
 <script src="js/vendor/GSAP/plugins/TextPlugin.js"></script>
-<script src="js/vendor/GSAP/plugins/AttrPlugin.js"></script>
-<script src="js/datastructures/ArrayList.js"></script>
-<script src="js/visualization/ArrayListVisualization.js"></script>
+<script src="js/codedisplay/CodeDisplayManager.js"></script>
+<script src="js/vendor/topojson.min.js"></script>
+<script src="js/vendor/velocity.min.js"></script>
+<script src="js/vendor/velocity.ui.min.js"></script>
+<script src="js/datastructures/Node.js"></script>
+<script src="js/datastructures/LinkedList.js"></script>
+<script src="js/datastructures/BinaryHeap.js"></script>
+<script src="js/datastructures/Vertex.js"></script>
+<script src="js/datastructures/Edge.js"></script>
+<script src="js/datastructures/Path.js"></script>
+<script src="js/datastructures/Graph.js"></script>
+<script src="js/visualization/DijkstraMap.js"></script>
 <script src="js/vendor/handlebars-v4.0.5.js"></script>
 <script src="js/templateHelpers/templateController.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/resize.js"></script>
 <script src="js/vendor/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script src="js/visualization/player/Step.js"></script>
 <script src="js/visualization/player/AnimationPlayer.js"></script>
 
 
