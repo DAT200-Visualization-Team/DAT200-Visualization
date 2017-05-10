@@ -422,7 +422,13 @@
         },
         {
           "id": "dijkstramap",
-          "name": "Practical Dijkstra"
+          "name": "Practical Dijkstra",
+          "commands": [
+            {
+              "name": "Find Path",
+              "function": "start"
+            }
+          ]
         },
         {
           "id": "filetree",

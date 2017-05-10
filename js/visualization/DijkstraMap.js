@@ -9,8 +9,6 @@ var selectedEndNode = undefined;
 var width = $('#graphics').width(),
     height = $('#graphics').height();
 
-var animationTime = 1;
-
 // Hele Norge
 //var projection = d3.geoMercator()
 //    .center([18.0, 65.5])
@@ -209,7 +207,10 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 pq.add(new Path(w, w.dist));
-                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a"} });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a" } });
+                if (w.name == endName) {
+                    return;
+                }
             }
             else {
                 if (w != v.prev)

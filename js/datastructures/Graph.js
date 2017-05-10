@@ -53,10 +53,8 @@ var commands = [];
 
 Graph.prototype.getPathInner = function(dest, pathMap) {
     if (dest.prev !== null) {
-        console.log(dest);
-        commands.push({ name: "colorLine", data: { vertices: [dest.prev, dest], color: "#1ece21", line: 0 } });
         this.getPathInner(dest.prev, pathMap);
-
+        commands.push({ name: "colorLine", data: { vertices: [dest.prev, dest], color: "#1ece21", line: 0 } });
     }
     pathMap[dest.name] = dest.dist;
 
