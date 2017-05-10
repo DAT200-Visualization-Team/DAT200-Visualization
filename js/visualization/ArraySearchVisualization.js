@@ -49,33 +49,109 @@ function visualizeLinearSearch(search) {
 }
 
 function visualizeBinarySearch(search) {
-    var sortedArray = arr; //TODO: Sort array
+    var sortedArray = arr;
+    function compareNumbers(a, b) {
+        return a - b;
+    }
+    arr = arr.sort(compareNumbers);
+    setArray(arr);
+    codeDisplayManager.loadFunctions("binarySearch");
+    codeDisplayManager.changeFunction("binarySearch");
+    binSearch(search, arr);
 
-    var testIndex = Math.floor(sortedArray.length / 2);
-    var max = sortedArray.length - 1;
-    var min = 0;
+    function binSearch(search, sortedArray) {
+        appendCodeLines([0, 1, 2], codeDisplayManager);
+        var testIndex = Math.floor(sortedArray.length / 2);
+        //TODO: sett testindex-variabelen
 
-    if (search > sortedArray[max]) return -1;
-    if (search < sortedArray[min]) return -1;
-    while (true) {
-        if (sortedArray[testIndex] > search) {
-            max = testIndex;
-        }
-        else if (sortedArray[testIndex] === search) {
-            return testIndex;
-        }
-        else {
-            min = testIndex;
-        }
+        var max = sortedArray.length - 1;
+        //TODO: sett max-variabelen
 
-        testIndex = Math.floor((max + min) / 2);
+        var min = 0;
+        //TODO: sett min-variabelen
 
-        if (max - min <= 1) {
-            if (sortedArray[max] === search) return max;
-            if (sortedArray[min] === search) return min;
+        appendCodeLines([4], codeDisplayManager);
+        if (search > sortedArray[max]) {
+            var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+            appendAnimation(5, [tmp], codeDisplayManager);
             return -1;
         }
+
+        appendCodeLines([6], codeDisplayManager);
+        if (search < sortedArray[min]) {
+            var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+            appendAnimation(7, [tmp], codeDisplayManager);
+            return -1;
+        }
+
+        appendCodeLines([9], codeDisplayManager);
+        while (true) {
+            var hasBeenInIfBefore = false;
+            appendCodeLines([10], codeDisplayManager);
+            if (sortedArray[testIndex] > search) {
+                hasBeenInIfBefore = true;
+                appendCodeLines([11], codeDisplayManager);
+                max = testIndex;
+                //TODO: sett max-variabelen
+            }
+
+            appendCodeLines([12], codeDisplayManager);
+            if (sortedArray[testIndex] === search && !hasBeenInIfBefore) {
+                hasBeenInIfBefore = true;
+                var tmp = {
+                    e: $("#arraySearch").children().eq(testIndex),
+                    p: {backgroundColor: "#00FF00"},
+                    o: {duration: animationTime}
+                };
+                appendAnimation(13, [tmp], codeDisplayManager);
+                return testIndex;
+            }
+            appendCodeLines([14], codeDisplayManager);
+            if(!hasBeenInIfBefore) {
+                hasBeenInIfBefore = true;
+                appendCodeLines([15], codeDisplayManager);
+                min = testIndex;
+                //TODO: sett min-variabelen
+            }
+
+            appendCodeLines([17], codeDisplayManager);
+            testIndex = Math.floor((max + min) / 2);
+            //TODO: sett testindex-variabelen
+
+            appendCodeLines([19], codeDisplayManager);
+            if (max - min <= 1) {
+                appendCodeLines([20], codeDisplayManager);
+                if (sortedArray[max] === search) {
+                    var tmp = {
+                        e: $("#arraySearch").children().eq(max),
+                        p: {backgroundColor: "#00FF00"},
+                        o: {duration: animationTime}
+                    };
+                    appendAnimation(21, [tmp], codeDisplayManager);
+                    return max;
+                }
+                appendCodeLines([22], codeDisplayManager);
+                if (sortedArray[min] === search) {
+                    var tmp = {
+                        e: $("#arraySearch").children().eq(min),
+                        p: {backgroundColor: "#00FF00"},
+                        o: {duration: animationTime}
+                    };
+                    appendAnimation(23, [tmp], codeDisplayManager);
+                    return min;
+                }
+                var tmp = {e: $("#arraySearch").children(), p: {backgroundColor: "#FF0000"}, o: {duration: animationTime}};
+                appendAnimation(25, [tmp], codeDisplayManager);
+                return -1;
+            }
+            appendCodeLines([26, 9], codeDisplayManager);
+
+        }
     }
+
+    /*function createDivsForArrows() {
+    $("#arraySearch-wrapper").append('<div></div>')
+    }*/
 }
 
 setArray();
