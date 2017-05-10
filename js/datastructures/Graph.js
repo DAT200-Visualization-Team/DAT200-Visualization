@@ -53,11 +53,13 @@ var commands = [];
 
 Graph.prototype.getPathInner = function(dest, pathMap) {
     if (dest.prev !== null) {
-        this.getPathInner(dest.prev, pathMap);
+        console.log(dest);
         commands.push({ name: "colorLine", data: { vertices: [dest.prev, dest], color: "#1ece21", line: 0 } });
+        this.getPathInner(dest.prev, pathMap);
+
     }
     pathMap[dest.name] = dest.dist;
-        
+
     return pathMap;
 };
 
@@ -157,7 +159,7 @@ Graph.prototype.dijkstra = function (startName) {
 Graph.prototype.negative = function (startName) { // also called the Bellman-Ford algorithm
     commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     this.clearAll();
-    
+
     var start = this.vertexMap[startName];
     if (start == null) {
         commands.push({ name: "highlightLines", data: { lines: [4] } })
@@ -170,7 +172,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
     commands.push({ name: "setCurrentCost", data: { line: 9, id: start.name, newCost: start.dist } });
     commands.push({ name: "highlightLines", data: { lines: [10] } });
     start.scratch++;
-    
+
     while (!q.isEmpty()) {
         commands.push({ name: "highlightLines", data: { lines: [12, 13, 14] } });
         var v = q.removeFirst();
@@ -178,7 +180,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
             commands.push({ name: "highlightLines", data: { lines: [15] } });
             throw {name: "GraphException", message: "Negative cycle detected"};
         }
-        
+
         commands.push({ name: "newNode", data: { vertex: v } });
         commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
 
@@ -188,7 +190,7 @@ Graph.prototype.negative = function (startName) { // also called the Bellman-For
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
-            
+
             if (w != v.prev)
                 commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba", line: 19 } });
 

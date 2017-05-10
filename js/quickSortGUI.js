@@ -11,6 +11,9 @@ var barChart = d3.select(".drawingArea")
     .attr("height", height + 200)
     .attr("id", "barChart");
 
+var positions = [];
+var textPositions = [];
+
 createRects(input);
 
 //Pivot marker left
@@ -19,6 +22,7 @@ var pivotMarkerLeft = barChart.append("polygon")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30")
+    .attr("opacity", "0")
     .attr("id", "pivotMarkerLeft");
     //markPivot(0, "left");
 
@@ -28,6 +32,7 @@ var pivotMarkerRight = barChart.append("polygon")
     .attr("stroke",  "blue")
     .attr("stroke-width", "2")
     .attr("points", "05,30 15,10 25,30")
+    .attr("opacity", "0")
     .attr("id", "pivotMarkerRight");
     //markPivot(input.length-1, "right");
 
@@ -63,6 +68,11 @@ function createRects(data) {
         .attr("y", height - 30 )
         .attr("width", barWidth)
         .attr("class", function(d, i) { return "element" + i});
+
+    for(var i = 0; i < data.length; i++) {
+        positions.push([i * (width / data.length) + 100, height - (data[i]/Math.max.apply(null, data)) * 250 - 50]);
+        textPositions.push([i * (width / data.length) + barWidth / 4 + 100, height - 30]);
+    }
 }
 
 function panning() {
@@ -71,23 +81,26 @@ function panning() {
 }
 
 var test;
+var sorted;
 function sort(median) {
     test = new QuickSort(input.slice());
     if(median == true) test.medianOfThree = true;
-    test.sort();
+    sorted = test.sort();
 }
 
 function markPivot(a, pivot) {
     //var currentPivot = barChart.selectAll("rect").filter(".element" + a);
     var text = barChart.selectAll("text").filter(".element" + a);
     var translation = getTranslate(text);
-    var targetX = parseInt(text.attr("x")) + parseInt(translation[0]) - 7;
-    var targetY = parseInt(text.attr("y")) + parseInt(translation[1]);
+    //var targetX = parseInt(text.attr("x")) + parseInt(translation[0]) - 7;
+    //var targetY = parseInt(text.attr("y")) + parseInt(translation[1]);
+    var targetX = textPositions[a][0] - 7;
+    var targetY = textPositions[a][1];
 
     if(pivot == 'left') {
-        tl.to($("#pivotMarkerLeft"), animationTime, {attr:{transform: "translate(" + (targetX) + ", " + targetY + ")"}, ease:Linear.easeNone});
+        tl.to($("#pivotMarkerLeft"), animationTime, {attr:{opacity: "1"}, x: targetX, y: targetY, ease:Linear.easeNone});
     } else {
-        tl.to($("#pivotMarkerRight"), animationTime, {attr:{transform: "translate(" + (targetX) + ", " + targetY + ")"}, ease:Linear.easeNone});
+        tl.to($("#pivotMarkerRight"), animationTime, {attr:{opacity: "1"}, x: targetX, y: targetY, ease:Linear.easeNone});
     }
     return true;
 }
@@ -118,7 +131,7 @@ function resetColor(from, to) {
 
 function highlightPivot(index) {
     removeHighlightPivot();
-    tl.to($(".element" + index), animationTime, {attr:{stroke:"green", strokeDashWidth:"4"}, ease:Linear.easeNone});
+    tl.to($(".element" + index).filter("rect"), animationTime, {attr:{stroke:"green", "stroke-width":"5"}, ease:Linear.easeNone});
 }
 
 function removeHighlightPivot() {
@@ -128,28 +141,38 @@ function removeHighlightPivot() {
 function swap(a, b) {
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
+    //console.log(JSON.parse(JSON.stringify(elementA[0])));
+    //console.log(JSON.parse(JSON.stringify(elementB[0])));
 
-    var oldRectA_X = parseInt(elementA.filter('rect').attr('x'));
-    var oldTextA_X = elementA.filter('text').attr('x');
+    //var oldRectA_X = //parseInt(elementA.filter('rect').attr('x'));
+    //var oldTextA_X = elementA.filter('text').attr('x');
 
-    var oldRectB_X = parseInt(elementB.filter('rect').attr('x'));
-    var oldTextB_X = elementB.filter('text').attr('x');
+    //var oldRectB_X = //parseInt(elementB.filter('rect').attr('x'));
+    //var oldTextB_X = elementB.filter('text').attr('x');
 
-    //var dxA = oldRectA_X - oldRectB_X;
-    //var dxB = oldRectB_X - oldRectA_X;
+    //var dxA = Math.abs(positions[a] - positions[b]);
+    //var dxB = Math.abs(positions[b] - positions[a]);
 
     //console.log("dxA: " + dxA);
     //console.log("dxB: " + dxB);
+    console.log(positions);
 
-    tl.to(elementA, animationTime, {attr:{x:oldRectB_X}, ease:Linear.easeNone})
-        .to(elementB, animationTime, {attr:{x:oldRectA_X}, ease:Linear.easeNone}, '-=' + animationTime);
+    tl.to(elementA.filter("rect"), animationTime, {attr:{x: positions[b][0]}, ease:Linear.easeNone})
+        .to(elementA.filter("text"), animationTime, {attr:{x: positions[b][0] + barWidth/4}, ease:Linear.easeNone}, '-=' + animationTime)
+        .to(elementB.filter("rect"), animationTime, {attr:{x: positions[a][0]}, ease:Linear.easeNone}, '-=' + animationTime)
+        .to(elementB.filter("text"), animationTime, {attr:{x: positions[a][0] + barWidth/4}, ease:Linear.easeNone}, '-=' + animationTime);
     elementA.attr('class', 'element' + b);
     elementB.attr('class', 'element' + a);
+
+    //var tempA = positions[a];
+    //positions[a] = positions[b];
+    //positions[b] = tempA;
 }
 
 function colorPartition(from, to, direction) {
     //resetColor(from, to);
     //var selector = "";
+    tl.addLabel('partition');
     for(var i = from; i <= to; i++) {
         //if(i != from) selector += ", ";
         //selector = selector + ".element" + i;
@@ -157,14 +180,24 @@ function colorPartition(from, to, direction) {
         var currentTranslation = getTranslate(element);
         var y = parseInt(currentTranslation[1]);
         var x = parseInt(currentTranslation[0]);
+        //var x = positions[i][0];
+        //var y = positions[i][1];
         y = y + 50;
+        var test;
         if(direction == "left") {
             x = x - 50/(y/50);
+            test = - 50/(y/50);
         } else if(direction == "right") {
             x = x + 50/(y/50);
+            test = 50/(y/50);
         }
-        tl.to($("#barChart .element" + i), animationTime, {attr:{transform:"translate(" + x + ", " + y + ")"}});
+        //positions[i][0] = x;
+        //positions[i][1] = y;
+        textPositions[i][0] += test;
+        textPositions[i][1] += 50;
+        tl.to($("#barChart .element" + i), animationTime, {x: '+=' + test, y: '+=50'}, 'partition');
     }
+    hideArrows();
 
     /*barChart.selectAll("*").filter(selector)
         //.attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
@@ -190,19 +223,23 @@ function colorPartition(from, to, direction) {
         });*/
 }
 
+function hideArrows() {
+    tl.to($("#pivotMarkerLeft, #pivotMarkerRight"), animationTime, {attr:{opacity:"0"}, ease:Linear.easeNone}, '-=' + animationTime);
+}
+
 function getTranslate(element) {
     var transformString = element.attr("transform");
     if(transformString != "" && transformString != null) {
         var res = transformString.substring(transformString.indexOf("(")+1, transformString.indexOf(")")).split(",");
-        if(res[0] == null) res[0] = 0;
-        if(res[1] == null) res[1] = 0;
+        if(res[4] == null) res[4] = 0;
+        if(res[5] == null) res[5] = 0;
         return res;
     }
-    return [0, 0];
+    return [0, 0, 0, 0, 0, 0];
 }
 
 function merge() {
-    tl.to($("#barChart rect, #barChart text"), animationTime, {attr:{transform: "translate(0,0)"}, ease:Linear.easeNone});
+    tl.to($("#barChart rect, #barChart text"), animationTime, {x:0, y:0, ease:Linear.easeNone});
 }
 
 function highlight(a, b, colorA, colorB) {
@@ -216,10 +253,11 @@ function highlight(a, b, colorA, colorB) {
         .to(elementA.filter("rect"), animationTime, {attr:{fill: colorA}, ease:Linear.easeNone}, 'highlight')
         .to(elementB.filter("rect"), animationTime, {attr:{fill: colorB}, ease:Linear.easeNone}, 'highlight');
 
+    return true;
 }
 
 function clearAllHighlight() {
-    tl.to($("#barChart rect"), animationTime, {attr:{fill: "rgb(255, 0, 127)"}, ease:Linear.easeNone});
+    tl.to($("#barChart rect"), animationTime, {attr:{fill: "red"}, ease:Linear.easeNone});
 }
 
 function clearHighlight(element, origColor) {
