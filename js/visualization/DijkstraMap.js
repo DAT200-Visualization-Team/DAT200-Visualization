@@ -180,80 +180,80 @@ function getLink(linkNr) {
 }
 
 Graph.prototype.dijkstrav2 = function (startName, endName) {
-    commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
+    //commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     var pq = new BinaryHeap();
 
     var start = this.vertexMap[startName];
     if (start === undefined || start === null) {
-        commands.push({ name: "highlightLines", data: { lines: [4] } });
+        //commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
 
-    commands.push({ name: "highlightLines", data: { lines: [6, 7] } });
+    //commands.push({ name: "highlightLines", data: { lines: [6, 7] } });
 
     this.clearAll();
     pq.add(new Path(start, 0));
     start.dist = 0;
 
-    commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
-    commands.push({ name: "highlightLines", data: { lines: [10] } });
+    //commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
+    //commands.push({ name: "highlightLines", data: { lines: [10] } });
 
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
-        commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
+        //commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
         var vrec = pq.remove();
 
         if(vrec.dest.name == endName) {
             nodesSeen = Object.keys(this.vertexMap).length;
-            continue;
+            break;
         }
 
         var v = vrec.dest;
         if (v.scratch !== 0) { // already processed v
-            commands.push({ name: "highlightLines", data: { lines: [15] } });
+            //commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
 
-        commands.push({ name: "newNode", data: { vertex: v } });
-        commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
+        //commands.push({ name: "newNode", data: { vertex: v } });
+        //commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
 
-        commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
+        //commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
         v.scratch = 1;
         nodesSeen++;
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
-            commands.push({ name: "highlightLines", data: { lines: [20] } });
+            //commands.push({ name: "highlightLines", data: { lines: [20] } });
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
 
             if (w != v.prev)
-                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba", line: 21 } });
-            commands.push({ name: "highlightLines", data: { lines: [22, 23, 25] } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba"} });
+            //commands.push({ name: "highlightLines", data: { lines: [22, 23, 25] } });
 
             if (cvw < 0) {
-                commands.push({ name: "highlightLines", data: { lines: [26] } });
+                //commands.push({ name: "highlightLines", data: { lines: [26] } });
                 throw {name: "GraphException", message: "Graph has negative edges"};
             }
 
-            commands.push({ name: "highlightLines", data: { lines: [29] } });
+            //commands.push({ name: "highlightLines", data: { lines: [29] } });
             if (w.dist > v.dist + cvw) {
-                commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: v.dist + cvw, line: 30 } });
-                commands.push({ name: "highlightLines", data: { lines: [31] } });
+                //commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: v.dist + cvw, line: 30 } });
+                //commands.push({ name: "highlightLines", data: { lines: [31] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 pq.add(new Path(w, w.dist));
-                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a", line: 32 } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a"} });
             }
             else {
                 if (w != v.prev)
-                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b", line: 33 } });
+                    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b"} });
             }
 
-            commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
+            //commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
 
-            if(!itr.hasNext())
-                commands.push({ name: "highlightLines", data: { lines: [20] } });
+            //if(!itr.hasNext())
+                //commands.push({ name: "highlightLines", data: { lines: [20] } });
         }
     }
 };
@@ -283,18 +283,8 @@ function performPathFinding(algorithm, start, end) {
     graph.getPath(end);
 }
 
-function addPathColorFrame(path, color, time) {
-    loadingSequence.push({ e: path, p: { stroke: color }, o: { duration: time } });
-}
-
-function playAnimation() {
-    console.log($(".roads").queue());
-    $(".roads").velocity("stop", true);
-    $(".roads").removeClass(".velocity-animating");
-    $(document).clearQueue();
-
-    resetLinkColors();
-    $.Velocity.RunSequence(loadingSequence);
+function addPathColorFrame(line, path, color) {
+    appendAnimation(line, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
 }
 
 function getLinkElement(a, b) {
@@ -314,34 +304,14 @@ function getLinkElement(a, b) {
 
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
+        var data = commands[i].data;
         switch (commands[i].name) {
-            case 'colorCurrent':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
+            case 'colorLine':
+                console.log(data);
+                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
-                    addPathColorFrame(path, lineColors.currentPath, animationTime);
-                break;
-            case 'colorPending':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame($(path), lineColors.pendingPath, animationTime);
-                break;
-            case 'colorSlow':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.slowPath, animationTime);
-                break;
-            case 'colorFast':
-                var path = getLinkElement(commands[i].data.vertices[0].name, commands[i].data.vertices[1].name);
-                if (path != null)
-                    addPathColorFrame(path, lineColors.fastPath, animationTime * 5);
-                break;
-            case 'highlightLines':
-                //loadingSequence = loadingSequence.concat(codeDisplayManager.getMultipleVelocityFrameHighlights(commands[i].data.lines, animationTime));
-                break;
-            case 'setVariable':
-
+                    addPathColorFrame(data.line, path, data.color);
                 break;
         }
     }
-    playAnimation();
 }
