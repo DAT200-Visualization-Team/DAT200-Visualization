@@ -1,4 +1,4 @@
-<!doctype html>
+    <!doctype html>
 <html class="no-js" lang="">
 <head>
     <meta charset="utf-8">
@@ -42,6 +42,9 @@
             stroke: none;
             opacity: 0.35;
         }
+        .drawingArea{
+            top:0;
+        }
     </style>
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
@@ -52,7 +55,7 @@
 
 <div id="view">
     <div id="graphics" class="left">
-        <div class="drawingArea">
+        <div class="map">
 
         </div>
     </div>
@@ -77,7 +80,6 @@
 <script src="js/vendor/GSAP/TweenMax.js"></script>
 <script src="js/vendor/GSAP/plugins/TextPlugin.js"></script>
 <script src="js/codedisplay/CodeDisplayManager.js"></script>
-<script src="js/vendor/topojson.min.js"></script>
 <script src="js/vendor/velocity.min.js"></script>
 <script src="js/vendor/velocity.ui.min.js"></script>
 <script src="js/datastructures/Node.js"></script>

@@ -421,7 +421,7 @@
           ]
         },
         {
-          "id": "practicaldijkstra",
+          "id": "dijkstramap",
           "name": "Practical Dijkstra"
         },
         {
