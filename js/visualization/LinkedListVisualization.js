@@ -10,7 +10,8 @@ var codeDisplayManager;
 
 // (non-animation) initializer, adds some nodes
 function fastInitialize(n) {
-    console.log(n);
+    clear();
+    linkedList = new LinkedList();
     codeDisplayManager = new CodeDisplayManager("javascript", "linkedlist");
     linkedList.addFirst("H");
     if(n.length != 0) {
@@ -185,7 +186,7 @@ function redraw() {
     updateDrawingArea();
 }
 
-//STATUS: converted to GSAP
+//STATUS: not converted to GSAP
 function initialize() {
     clear();
     linkedList = new LinkedList();
@@ -205,25 +206,23 @@ function initialize() {
     head.attr("opacity", "0");
     tail.attr("opacity", "0");
 
-    var hArrow = head.children().eq(1);
-    var tArrow = tail.children().eq(2);
+    var hArrow = new Arrow(head.children().eq(1));
+    var tArrow = new Arrow(tail.children().eq(2));
 
     appendAnimation(0, [{ e: head, p: {opacity: 1}, o: { duration: animationTime }}], codeDisplayManager);
 
     var tmp = [
         { e: tail, p: {opacity: 1}, o: { duration: animationTime } },
-        GSAPArrowAnimate(tArrow, -45, 0)[0],
-        GSAPArrowAnimate(tArrow, -45, 0)[1]
+        tArrow.animate(-45, 0)
     ];
     appendAnimation(1, tmp, codeDisplayManager);
 
-    appendAnimation(2, GSAPArrowAnimate(hArrow, 45, 0), codeDisplayManager);
+    appendAnimation(2, [hArrow.animate(45, 0)], codeDisplayManager);
 
     appendCodeLines([3, 4], codeDisplayManager);
 }
 
-
-
+//STATUS: converted to GSAP
 function addByIndex(idx, data) {
     redraw();
 
@@ -299,8 +298,7 @@ function addByIndex(idx, data) {
     appendCodeLines([4, 5], codeDisplayManager);
 }
 
-//STATUS: not converted to GSAP
-//TODO: find a meaningful variable to take in
+//STATUS: converted to GSAP
 function removeNode(idx) {
     redraw();
     if (linkedList.size() === 0) {
@@ -338,21 +336,15 @@ function removeNode(idx) {
     appendCodeLines([2, 3, 4], codeDisplayManager);
 }
 
-//STATUS: not converted to GSAP
-//TODO: finish this together with highlightCode
+//STATUS: converted to GSAP
 function getNode(idx) {
-    var loadingSequence = [];
+    redraw();
     codeDisplayManager.loadFunctions("getNode");
     codeDisplayManager.changeFunction("getNode");
-    var lines = [];
-    for(var i = 0; i <= 12; i++) {
-        lines[i] = codeDisplayManager.getVelocityFramesForHighlight(i, animationTime);
-    }
-    loadingSequence.push(lines[0][0], lines[0][1]);
-    loadingSequence.push(lines[1][0], lines[1][1]);
+
+    appendCodeLines([0,1], codeDisplayManager);
 
     if (idx < (linkedList.size() - 1) / 2) {
-        loadingSequence.push(lines[2][0]);
         var p = createPointer('south',
             offsetX + nodeWidth + nodeSpace + nodeWidth / 2,
             50, offsetX + nodeWidth + nodeSpace + nodeWidth / 2, 80);
@@ -360,53 +352,74 @@ function getNode(idx) {
         p = $("#linkedlist").children().last();
         p.attr("opacity", 0);
 
-        loadingSequence.push({e: p, p: "transition.expandIn", o: { duration: animationTime }});
+        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
+        appendAnimation(2, tmp, codeDisplayManager);
+
         p = new Arrow($("#linkedlist").children().last());
-        loadingSequence.push(lines[2][1], lines[3][0]);
+
+        appendCodeLines([3], codeDisplayManager);
         for (var i = 0; i < idx ; i++) {
-            loadingSequence.push(lines[3][1], lines[4][0]);
-            loadingSequence.push(p.translateStraightArrow((nodeWidth + nodeSpace), 0));
-            loadingSequence.push(lines[4][1], lines[3][0]);
+            tmp = [p.translateStraightArrow((nodeWidth + nodeSpace), 0)];
+            appendAnimation(4, tmp, codeDisplayManager);
+            appendCodeLines([5, 3], codeDisplayManager);
         }
-        loadingSequence.push(lines[3][1], lines[5][0], lines[5][1], lines[6][0]);
+
+        appendCodeLines([6], codeDisplayManager);
     }
     else {
-        loadingSequence.push(lines[6][0], lines[6][1], lines[7][0], lines[7][1]);
+        appendCodeLines([6], codeDisplayManager);
+
         var p = createPointer('south',
             offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2,
             50, offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2, 80);
-        loadingSequence.push(lines[7][0]);
         updateDrawingArea();
-
         p = $("#linkedlist").children().last();
         p.attr("opacity", 0);
-        loadingSequence.push({e: p, p: "transition.expandIn", o: { duration: animationTime }});
+        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
+        appendAnimation(7, tmp, codeDisplayManager);
+
         p = new Arrow($("#linkedlist").children().last());
+
+        appendCodeLines([8], codeDisplayManager);
         for (var i = linkedList.size() - 2; i > idx ; i--) {
-            loadingSequence.push(p.translateStraightArrow(-(nodeWidth + nodeSpace), 0));
+            tmp = [p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)];
+            appendAnimation(9, tmp, codeDisplayManager);
+            appendCodeLines([10, 8], codeDisplayManager);
         }
+        appendCodeLines([11], codeDisplayManager);
     }
-    loadingSequence.push(lines[6][1], lines[12][0], lines[12][1]);
-
-    $.Velocity.RunSequence(loadingSequence);
-
+    appendCodeLines([12], codeDisplayManager);
 }
 
-//STATUS: not converted to GSAP
+//STATUS: converted to GSAP
 function findPos(data) {
     redraw();
+    codeDisplayManager.loadFunctions("findPos");
+    codeDisplayManager.changeFunction("findPos");
+
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 80);
     updateDrawingArea();
-    p = new Arrow($("#linkedlist").children().last());
-    var loadingSequence = [];
+    p.attr("opacity", 0);
 
-    for (var i = 1; i < linkedList.size() - 1; i++) {
-        if($("#linkedlist").children().eq(i).children().first().text() == data) {
+    var p1 = new Arrow($("#linkedlist").children().last());
+
+    var tmp = [{ e: p, p: { opacity: 1 }, o: { duration: animationTime } }];
+    appendAnimation(0, tmp, codeDisplayManager);
+
+    var isFound = false;
+    for (var i = 1; i < linkedList.size() - 2; i++) {
+        appendCodeLines([1, 6], codeDisplayManager);
+        if ($("#linkedlist").children().eq(i).children().first().text() == data) {
+            appendCodeLines([7], codeDisplayManager);
+            isFound = true;
             break;
         }
-        loadingSequence.push(p.translateStraightArrow(nodeWidth + nodeSpace, 0));
+        var tmp = [p1.translateStraightArrow(nodeWidth + nodeSpace, 0)];
+        appendAnimation(0, tmp, codeDisplayManager);
     }
-    $.Velocity.RunSequence(loadingSequence);
+    if (!isFound) {
+        appendCodeLines([0, 9, 10], codeDisplayManager);
+    }
 }
