@@ -6,19 +6,10 @@ var roads;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
 
-var width = 960,
-    height = 650;
+var width = $('#graphics').width(),
+    height = $('#graphics').height();
 
-//Book vars
-var lineColors = {
-    currentPath: '#255eba',
-    pendingPath: '#d8d10a',
-    slowPath: '#cc181b',
-    fastPath: '#1ece21'
-};
-
-var loadingSequence = [];
-var animationTime = 200;
+var animationTime = 1;
 
 // Hele Norge
 //var projection = d3.geoMercator()
@@ -64,9 +55,7 @@ d3.json("js/geojson/output_roads.json", function(error, norway) {
         .attr("stroke-width", 2)
         .attr("fill", "none");
 
-    //buildGraph(roads._groups[0]);
     roads_data = roads._groups[0];
-    //performPathFinding('dijkstra', 50, 49);
 });
 
 d3.json("js/geojson/output_intersection_with_id.json", function(error, intersections) {
@@ -147,13 +136,12 @@ function start() {
     if(selectedStartNode != undefined && selectedEndNode != undefined) {
         performPathFinding('dijkstra', selectedStartNode, selectedEndNode);
     } else {
-        //TODO show error
+        alert("Two points need to be selected.");
     }
 
 }
 
 function zoomed() {
-    //console.log(d3.event.transform);
     map.attr("transform", d3.event.transform);
     buildingLayer.attr("transform", d3.event.transform);
     intersectionLayer.attr("transform", d3.event.transform);
@@ -167,11 +155,8 @@ function zoomed() {
     //path.pointRadius(3/d3.event.transform.k);
 }
 
-//Book code
 function resetLinkColors() {
     d3.selectAll('.roads')
-    //.transition()
-    //.duration(1000)
         .style('stroke', '#000000');
 }
 
@@ -180,27 +165,19 @@ function getLink(linkNr) {
 }
 
 Graph.prototype.dijkstrav2 = function (startName, endName) {
-    //commands.push({ name: "highlightLines", data: { lines: [0, 2, 3] } });
     var pq = new BinaryHeap();
 
     var start = this.vertexMap[startName];
     if (start === undefined || start === null) {
-        //commands.push({ name: "highlightLines", data: { lines: [4] } });
         throw {name: "NoSuchElementException", message: "Start vertex not found"};
     }
-
-    //commands.push({ name: "highlightLines", data: { lines: [6, 7] } });
 
     this.clearAll();
     pq.add(new Path(start, 0));
     start.dist = 0;
 
-    //commands.push({ name: "setCurrentCost", data: { line: 8, id: start.name, newCost: start.dist } });
-    //commands.push({ name: "highlightLines", data: { lines: [10] } });
-
     var nodesSeen = 0;
     while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {
-        //commands.push({ name: "highlightLines", data: { lines: [11, 12, 13, 14] } });
         var vrec = pq.remove();
 
         if(vrec.dest.name == endName) {
@@ -210,36 +187,25 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
 
         var v = vrec.dest;
         if (v.scratch !== 0) { // already processed v
-            //commands.push({ name: "highlightLines", data: { lines: [15] } });
             continue;
         }
 
-        //commands.push({ name: "newNode", data: { vertex: v } });
-        //commands.push({ name: "updateMatrixCost", data: { id: v.name, newCost: v.dist } });
-
-        //commands.push({ name: "highlightLines", data: { lines: [17, 18] } });
         v.scratch = 1;
         nodesSeen++;
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
-            //commands.push({ name: "highlightLines", data: { lines: [20] } });
             var e = itr.next();
             var w = e.dest;
             var cvw = e.cost;
 
             if (w != v.prev)
                 commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba"} });
-            //commands.push({ name: "highlightLines", data: { lines: [22, 23, 25] } });
 
             if (cvw < 0) {
-                //commands.push({ name: "highlightLines", data: { lines: [26] } });
                 throw {name: "GraphException", message: "Graph has negative edges"};
             }
 
-            //commands.push({ name: "highlightLines", data: { lines: [29] } });
             if (w.dist > v.dist + cvw) {
-                //commands.push({ name: "setCurrentCost", data: { id: w.name, newCost: v.dist + cvw, line: 30 } });
-                //commands.push({ name: "highlightLines", data: { lines: [31] } });
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 pq.add(new Path(w, w.dist));
@@ -249,11 +215,6 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
                 if (w != v.prev)
                     commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#cc181b"} });
             }
-
-            //commands.push({ name: "updateMatrixCost", data: { id: w.name, newCost: w.dist } });
-
-            //if(!itr.hasNext())
-                //commands.push({ name: "highlightLines", data: { lines: [20] } });
         }
     }
 };
@@ -283,8 +244,8 @@ function performPathFinding(algorithm, start, end) {
     graph.getPath(end);
 }
 
-function addPathColorFrame(line, path, color) {
-    appendAnimation(line, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
+function addPathColorFrame(path, color) {
+    appendAnimation(null, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
 }
 
 function getLinkElement(a, b) {
@@ -310,7 +271,7 @@ function executeCommands(commands) {
                 console.log(data);
                 var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 if(path != null)
-                    addPathColorFrame(data.line, path, data.color);
+                    addPathColorFrame(path, data.color);
                 break;
         }
     }
