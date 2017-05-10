@@ -445,11 +445,25 @@
             },
             {
               "name": "Linear Search",
-              "function": "visualizeLinearSearch"
+              "function": "visualizeLinearSearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "82"
+                }
+              ]
             },
             {
               "name": "Binary Search",
-              "function": "visualizeBinarySearch"
+              "function": "visualizeBinarySearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "82"
+                }
+              ]
             }
           ]
         }
