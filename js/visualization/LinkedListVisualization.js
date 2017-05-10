@@ -186,7 +186,6 @@ function redraw() {
     updateDrawingArea();
 }
 
-//STATUS: not converted to GSAP
 function initialize() {
     clear();
     linkedList = new LinkedList();
@@ -222,7 +221,6 @@ function initialize() {
     appendCodeLines([3, 4], codeDisplayManager);
 }
 
-//STATUS: converted to GSAP
 function addByIndex(idx, data) {
     redraw();
 
@@ -298,7 +296,6 @@ function addByIndex(idx, data) {
     appendCodeLines([4, 5], codeDisplayManager);
 }
 
-//STATUS: converted to GSAP
 function removeNode(idx) {
     redraw();
     if (linkedList.size() === 0) {
@@ -308,7 +305,7 @@ function removeNode(idx) {
         throw new Error("Index is out of range");
     }
 
-    idx = idx + 1; //'cause u can't remove the head
+    idx = idx + 1; //because you can't remove the head
     linkedList.removeByIdx(idx);
 
     var elementsToBeMoved;
@@ -336,7 +333,6 @@ function removeNode(idx) {
     appendCodeLines([2, 3, 4], codeDisplayManager);
 }
 
-//STATUS: converted to GSAP
 function getNode(idx) {
     redraw();
     codeDisplayManager.loadFunctions("getNode");
@@ -422,4 +418,4 @@ function findPos(data) {
     if (!isFound) {
         appendCodeLines([0, 9, 10], codeDisplayManager);
     }
-}
+}   
