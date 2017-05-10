@@ -52,7 +52,7 @@ d3.json("js/geojson/output_roads.json", function(error, norway) {
         .attr("class", "roads")
         .attr("d", path)
         .attr("stroke", "blue")
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 3)
         .attr("fill", "none");
 
     roads_data = roads._groups[0];
@@ -142,6 +142,7 @@ function start() {
 }
 
 function zoomed() {
+    //console.log(d3.event.transform.k);
     map.attr("transform", d3.event.transform);
     buildingLayer.attr("transform", d3.event.transform);
     intersectionLayer.attr("transform", d3.event.transform);
@@ -246,6 +247,7 @@ function performPathFinding(algorithm, start, end) {
 
 function addPathColorFrame(path, color) {
     appendAnimation(null, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
+    //TODO add intersection highlighting
 }
 
 function getLinkElement(a, b) {
