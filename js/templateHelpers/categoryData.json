@@ -26,6 +26,10 @@
               ]
             },
             {
+              "name": "Initialize",
+              "function": "initialize"
+            },
+            {
               "name": "Add",
               "function": "addByIndex",
               "arguments": [
@@ -38,6 +42,39 @@
                   "type": "string",
                   "name": "value",
                   "placeholder": "Value"
+                }
+              ]
+            },
+            {
+              "name": "Remove",
+              "function": "removeNode",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                }
+              ]
+            },
+            {
+              "name": "Get Node",
+              "function": "getNode",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                }
+              ]
+            },
+            {
+              "name": "Find Position",
+              "function": "findPos",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Data",
+                  "placeholder": "Data"
                 }
               ]
             }
@@ -239,11 +276,42 @@
         },
         {
           "id": "binarysearchtree",
-          "name": "Binary Search Tree"
-        },
-        {
-          "id": "avltree",
-          "name": "AVL Tree"
+          "name": "Binary Search Tree",
+          "commands": [
+            {
+              "name": "Insert",
+              "function": "visualizeInsert",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            },
+            {
+              "name": "Find",
+              "function": "visualizeSearch",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            },
+            {
+              "name": "Remove",
+              "function": "visualizeRemove",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Integer",
+                  "placeholder": "Integer"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -361,12 +429,29 @@
           "name": "File Tree"
         },
         {
-          "id": "maxsubsequencesum",
-          "name": "Max Subsequence Sum"
-        },
-        {
           "id": "arraysearch",
-          "name": "Array Search"
+          "name": "Array Search",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "setArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "1,2,3..."
+                }
+              ]
+            },
+            {
+              "name": "Linear Search",
+              "function": "visualizeLinearSearch"
+            },
+            {
+              "name": "Binary Search",
+              "function": "visualizeBinarySearch"
+            }
+          ]
         }
       ]
     }
