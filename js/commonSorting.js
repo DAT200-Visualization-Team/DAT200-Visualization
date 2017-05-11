@@ -1,5 +1,5 @@
 function swap(a, b) {
-    console.log("swap", a, b);
+    //console.log("swap", a, b);
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
 
