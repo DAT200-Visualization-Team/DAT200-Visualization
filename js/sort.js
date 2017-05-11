@@ -13,6 +13,9 @@ var texts = barChart.append("svg:g").selectAll("text");
 //Animation
 var animationTime = 1;
 var tl = new TimelineMax();
+var codeDisplayManager = new CodeDisplayManager('javascript', 'insertionSort');
+codeDisplayManager.loadFunctions('insertionSort');
+codeDisplayManager.changeFunction('insertionSort');
 
 createArray(data);
 
@@ -48,10 +51,11 @@ function createArray(array) {
 
 function clearAllHighlight(origColor) {
     origColor = origColor || "red";
-    tl.to($("#barChart rect"), animationTime, {attr:{fill: origColor}, ease:Linear.easeNone});
+    appendAnimation(null, [{ e: '#barChart rect', p: { attr: { fill: origColor } }, o: { duration: 1 } }], null);
 }
 
 function startSorting() {
+    createArray(data);
     insertionSort(data.slice());
 }
 

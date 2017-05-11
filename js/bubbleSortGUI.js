@@ -10,9 +10,9 @@ var barChart = d3.select(".drawingArea").append("svg:svg").attr("id", "barChart"
 var rects = barChart.append("svg:g").selectAll("rect");
 var texts = barChart.append("svg:g").selectAll("text");
 
-//Animation
-var animationTime = 1;
-var tl = new TimelineMax();
+var codeDisplayManager = new CodeDisplayManager('javascript', 'bubbleSort');
+codeDisplayManager.loadFunctions('bubbleSort');
+codeDisplayManager.changeFunction('bubbleSort');
 
 createArray(data);
 
@@ -47,6 +47,7 @@ function createArray(array) {
 }
 
 function startSorting() {
+    createArray(data);
     sort();
 }
 

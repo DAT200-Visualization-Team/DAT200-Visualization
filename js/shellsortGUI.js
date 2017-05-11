@@ -20,6 +20,9 @@ createArray(data);
 //Animation
 var animationTime = 1;
 var tl = new TimelineMax();
+var codeDisplayManager = new CodeDisplayManager('javascript', 'shellSort');
+codeDisplayManager.loadFunctions('shellSort');
+codeDisplayManager.changeFunction('shellSort');
 
 function createArray(array) {
     $("g").empty();
@@ -56,6 +59,7 @@ function createArray(array) {
 }
 
 function startSorting() {
+    createArray(data);
     sort();
 }
 
@@ -70,15 +74,15 @@ function sublist(gap) {
             if(i != k) selector += ", ";
             selector = selector + ".element" + i;
         }
-
-        tl.to($(selector), animationTime, { y: (k * 1.2 * arrElementHeight), ease:Linear.easeNone });
+        console.log("hello", selector);
+        appendAnimation(2, [{ e: selector, p: { y: (k * 1.2 * arrElementHeight) }, o: { duration: 1 } }], codeDisplayManager);
     }
 }
 
 function mergeSublists() {
-    tl.to($("#arrayGroup rect, #arrayGroup text"), animationTime, {y: 0, ease:Linear.easeNone});
+    appendAnimation(3, [{ e: '#arrayGroup rect, #arrayGroup text', p: { y: 0 }, o: { duration: 2 } }], codeDisplayManager);
 }
 
 function clearAllHighlight() {
-    tl.to($("#arrayGroup rect"), animationTime, {attr:{fill: "red"}, ease:Linear.easeNone});
+    appendAnimation(null, [{ e: '#arrayGroup rect', p: { attr: { fill: 'red' } }, o: { duration: 1 } }], null);
 }

@@ -42,9 +42,7 @@ var pan = d3.zoom()
 
 barChart.call(pan);
 
-//Animation
-var animationTime = 1;
-var tl = new TimelineMax();
+var codeDisplayManager = new CodeDisplayManager('javascript', 'quickSort');
 
 function createRects(data) {
     barChart.selectAll("rect")
@@ -76,8 +74,15 @@ function createRects(data) {
 }
 
 function panning() {
-    //barChart.attr("transform", "translate(" + d3.event.transform.x + ", " + d3.event.transform.y + ")");
     barChart.attr("transform", d3.event.transform);
+}
+
+function startMedianOfThree() {
+    sort(true);
+}
+
+function startSingleMedian() {
+    sort();
 }
 
 var test;
@@ -89,11 +94,9 @@ function sort(median) {
 }
 
 function markPivot(a, pivot) {
-    //var currentPivot = barChart.selectAll("rect").filter(".element" + a);
     var text = barChart.selectAll("text").filter(".element" + a);
     var translation = getTranslate(text);
-    //var targetX = parseInt(text.attr("x")) + parseInt(translation[0]) - 7;
-    //var targetY = parseInt(text.attr("y")) + parseInt(translation[1]);
+    
     var targetX = textPositions[a][0] - 7;
     var targetY = textPositions[a][1];
 
@@ -141,49 +144,26 @@ function removeHighlightPivot() {
 function swap(a, b) {
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
-    //console.log(JSON.parse(JSON.stringify(elementA[0])));
-    //console.log(JSON.parse(JSON.stringify(elementB[0])));
-
-    //var oldRectA_X = //parseInt(elementA.filter('rect').attr('x'));
-    //var oldTextA_X = elementA.filter('text').attr('x');
-
-    //var oldRectB_X = //parseInt(elementB.filter('rect').attr('x'));
-    //var oldTextB_X = elementB.filter('text').attr('x');
-
-    //var dxA = Math.abs(positions[a] - positions[b]);
-    //var dxB = Math.abs(positions[b] - positions[a]);
-
-    //console.log("dxA: " + dxA);
-    //console.log("dxB: " + dxB);
-    console.log(positions);
 
     tl.to(elementA.filter("rect"), animationTime, {attr:{x: positions[b][0]}, ease:Linear.easeNone})
         .to(elementA.filter("text"), animationTime, {attr:{x: positions[b][0] + barWidth/4}, ease:Linear.easeNone}, '-=' + animationTime)
         .to(elementB.filter("rect"), animationTime, {attr:{x: positions[a][0]}, ease:Linear.easeNone}, '-=' + animationTime)
-        .to(elementB.filter("text"), animationTime, {attr:{x: positions[a][0] + barWidth/4}, ease:Linear.easeNone}, '-=' + animationTime);
+        .to(elementB.filter("text"), animationTime, { attr: { x: positions[a][0] + barWidth / 4 }, ease: Linear.easeNone }, '-=' + animationTime);
+
     elementA.attr('class', 'element' + b);
     elementB.attr('class', 'element' + a);
-
-    //var tempA = positions[a];
-    //positions[a] = positions[b];
-    //positions[b] = tempA;
 }
 
 function colorPartition(from, to, direction) {
-    //resetColor(from, to);
-    //var selector = "";
-    tl.addLabel('partition');
+
     for(var i = from; i <= to; i++) {
-        //if(i != from) selector += ", ";
-        //selector = selector + ".element" + i;
         var element = d3.select(".element" + i);
         var currentTranslation = getTranslate(element);
         var y = parseInt(currentTranslation[1]);
         var x = parseInt(currentTranslation[0]);
-        //var x = positions[i][0];
-        //var y = positions[i][1];
         y = y + 50;
         var test;
+
         if(direction == "left") {
             x = x - 50/(y/50);
             test = - 50/(y/50);
@@ -191,36 +171,13 @@ function colorPartition(from, to, direction) {
             x = x + 50/(y/50);
             test = 50/(y/50);
         }
-        //positions[i][0] = x;
-        //positions[i][1] = y;
+
         textPositions[i][0] += test;
         textPositions[i][1] += 50;
         tl.to($("#barChart .element" + i), animationTime, {x: '+=' + test, y: '+=50'}, 'partition');
     }
-    hideArrows();
 
-    /*barChart.selectAll("*").filter(selector)
-        //.attr("fill", "hsl(" + (Math.random() * 360) + ",100%,50%)")
-        .transition()
-        .duration(500)
-        .each( function(d, index) {
-            d3.select(this)
-                .transition()
-                .duration(500)
-                .attr("transform", function(d, index) {
-                    var element = d3.select(this);
-                    var currentTranslation = getTranslate(element);
-                    var y = parseInt(currentTranslation[1]);
-                    var x = parseInt(currentTranslation[0]);
-                    y = y + 50;
-                    if(direction == "left") {
-                        x = x - 50/(y/50);
-                    } else if(direction == "right") {
-                        x = x + 50/(y/50);
-                    }
-                    return "translate(" + x + ", " + y + ")";
-                });
-        });*/
+    hideArrows();
 }
 
 function hideArrows() {

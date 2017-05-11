@@ -1,4 +1,4 @@
-function swap(a, b) {
+function swap(a, b, line) {
     console.log("swap", a, b);
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
@@ -12,36 +12,39 @@ function swap(a, b) {
     var dxA = oldRectA_X - oldRectB_X;
     var dxB = oldRectB_X - oldRectA_X;
 
-    tl.to(elementA, animationTime, { x: '-=' + dxA})
-        .to(elementB, animationTime, { x: '-=' + dxB }, '-=' + animationTime);
+    appendAnimation(line, [{ e: elementA, p: { x: '-=' + dxA }, o: { duration: 1 }},
+    { e: elementB, p: { x: '-=' + dxB }, o: { duration: 1, position: '-=1' } }], codeDisplayManager);
+
     elementA.attr('class', 'element' + b);
     elementB.attr('class', 'element' + a);
 }
 
-function highlight(a, b, colorA, colorB) {
+function highlight(a, b, colorA, colorB, line) {
     colorA = colorA || "#87CEFA";
     colorB = colorB || "#87CEFA";
 
     var elementA = $(".element" + a).filter("rect");
     var elementB = $(".element" + b).filter("rect");
 
-    tl.addLabel('highlight')
-        .to(elementA.filter("rect"), animationTime, {attr:{fill: colorA}, ease:Linear.easeNone}, 'highlight')
-        .to(elementB.filter("rect"), animationTime, {attr:{fill: colorB}, ease:Linear.easeNone}, 'highlight');
+    appendAnimation(line, [{ e: elementA, p: { attr: { fill: colorA } }, o: { duration: 1 } },
+        { e: elementB, p: { attr: { fill: colorB } }, o: { duration: 1, position: '-=1' } }], codeDisplayManager);
 
     return true;
 }
 
 function clearHighlight(element, origColor) {
     origColor = origColor || "red";
-    tl.to($(".element" + element).filter("rect"), animationTime, {attr:{fill: origColor}, ease:Linear.easeNone});
+    appendAnimation(null, [{ e: $('.element' + element).filter('rect'), p: { attr: { fill: origColor } }, o: { duration: 1 } }], null);
 }
 
-function markAsSorted(a) {
-    console.log("mark as sorted" + a);
+function markAsSorted(a, line) {
     var selector = ".element" + a;
     if(a == 0) selector = "*";
     var element = $(selector).filter("rect");
 
-    tl.to(element, animationTime, {attr:{fill: "purple", class: element.attr('class') + " sorted"}, ease:Linear.easeNone})
+    appendAnimation(line, [{ e: element, p: { attr: { fill: 'purple', class: '+=sorted' } }, o: { duration: 1 } }], codeDisplayManager);
+}
+
+function highlightCode(lines) {
+    appendCodeLines(lines, codeDisplayManager);
 }
