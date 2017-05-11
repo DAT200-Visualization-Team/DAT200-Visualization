@@ -5,10 +5,7 @@ function swap(a, b, line) {
     var elementB = $(".element" + b);
 
     var oldRectA_X = a * (width / data.length);
-    var oldTextA_X = a * (width / data.length) + barWidth / 4;
-
     var oldRectB_X = b * (width / data.length);
-    var oldTextB_X = b * (width / data.length) + barWidth / 4;
 
     var dxA = oldRectA_X - oldRectB_X;
     var dxB = oldRectB_X - oldRectA_X;

@@ -58,4 +58,3 @@ function startSorting() {
     createArray(data);
     insertionSort(data.slice());
 }
-

@@ -1,12 +1,12 @@
 var data = [35, 33, 42, 10, 14, 19, 20, 40];
 
-var barWidth = 40;
-var width = (barWidth + 10) * data.length;
-var height = 350;
-
 //Array size
 var arrElementWidth = 50;
 var arrElementHeight = 50;
+
+var width = (arrElementWidth + 10) * data.length;
+var height = 350;
+
 
 //Max value in dataset
 var maxValue = Math.max.apply(null, data);
@@ -28,7 +28,7 @@ function createArray(array) {
     $("g").empty();
     data = array;
 
-    width = (barWidth + 10) * data.length;
+    width = (arrElementWidth + 10) * data.length;
 
     drawingArea.attr("width", width).attr("height", height);
     arrayGroup = drawingArea.append("g").attr("id", "arrayGroup");
@@ -38,10 +38,10 @@ function createArray(array) {
         .data(data)
         .enter()
         .append("svg:rect")
-        .attr("x", function (d, index) { return index * (width / data.length); })
+        .attr("x", function (d, index) { return index * (width / data.length) + 5; })
         .attr("y", function (d) { return 0; })
         .attr("height", arrElementHeight)
-        .attr("width", arrElementWidth - 5)
+        .attr("width", arrElementWidth)
         .attr("fill", "red")
         .attr("transform", "translate(0,0)")
         .attr("class", function (d, i) { return "element" + i });
@@ -51,9 +51,10 @@ function createArray(array) {
         .enter()
         .append("text")
         .text(function (d) { return d; })
-        .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 3; })
+        .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 2 + 5; })
         .attr("y", 30)
-        .attr("width", barWidth)
+        .attr("text-anchor", "middle")
+        .attr("width", arrElementWidth)
         .attr("transform", "translate(0,0)")
         .attr("class", function (d, i) { return "element" + i });
 }
@@ -68,15 +69,19 @@ function sort() {
 }
 
 function sublist(gap) {
+    var animations = [];
+
     for(var k = 0; k < gap; k++) {
         var selector = "";
         for(var i = k; i < data.length; i = i + gap) {
             if(i != k) selector += ", ";
             selector = selector + ".element" + i;
         }
-        console.log("hello", selector);
-        appendAnimation(2, [{ e: selector, p: { y: (k * 1.2 * arrElementHeight) }, o: { duration: 1 } }], codeDisplayManager);
+
+        animations.push({ e: selector, p: { y: (k * 1.2 * arrElementHeight), ease: Power3.easeOut }, o: { duration: 1, position: '-=1' } });
     }
+    animations[0].o.position = '+=0';
+    appendAnimation(2, animations, codeDisplayManager);
 }
 
 function mergeSublists() {

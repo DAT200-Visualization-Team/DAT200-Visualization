@@ -204,7 +204,17 @@
         },
         {
           "id": "quicksort",
-          "name": "Quick Sort"
+          "name": "Quick Sort",
+          "commands": [
+            {
+              "name": "Sort (Median of 3)",
+              "function": "startMedianOfThree"
+            },
+            {
+              "name": "Sort (Pivot left)",
+              "function": "startMedianOfOne"
+            }
+          ]
         },
         {
           "id": "shellsort",
