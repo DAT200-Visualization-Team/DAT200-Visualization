@@ -213,3 +213,8 @@ function clearHighlight(element, origColor) {
     appendAnimation(null, [{ e: $(".element" + element).filter("rect"), p: { attr: { fill: origColor } }, o: { duration: 1 } }], null);
 }
 
+function highlightCode(lines, functionName) {
+    if (functionName)
+        codeDisplayManager.changeFunction(functionName);
+    appendCodeLines(lines, codeDisplayManager);
+}
