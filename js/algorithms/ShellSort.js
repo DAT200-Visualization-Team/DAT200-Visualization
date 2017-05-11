@@ -8,10 +8,9 @@ function shellSort(a) {
         for(var i = gap; i < a.length; i++) {
             var tmp = a[i];
             highlightCode([5, 6]);
-            console.log('outside', j - gap);
+
             for(var j = i; j >= gap && highlight(j, j-gap, null, null, 7) && tmp < a[j - gap]; j-= gap) {
                 a[j] = a[j - gap];
-                console.log('inside', j - gap);
                 swap(j-gap, j, 8);
                 clearAllHighlight();
             }
