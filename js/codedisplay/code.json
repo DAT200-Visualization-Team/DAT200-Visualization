@@ -570,14 +570,17 @@
         "header": "QuickSort.prototype.quickSort = function(low, high) {",
         "lines": [ "    if(low + 3 > high) {", "        this.a = insertionSort(this.a);", "    }", "    else {", "        var middle = Math.floor(parseInt(low + high) / 2);", "        if (this.a[middle] < this.a[low]) {", "            this.a = swapReferences(this.a, low, middle);", "        }", "        if (this.a[high] < this.a[low]) {", "            this.a = swapReferences(this.a, low, high);", "        }", "        if (this.a[high] < this.a[middle]) {", "            this.a = swapReferences(this.a, middle, high);", "        }", "", "        this.a = swapReferences(this.a, middle, high - 1);", "        var pivot = this.a[high - 1];", "", "        var i, j;", "        for (i = low, j = high - 1; ;) {", "            while (this.a[++i] < pivot) {", "            }", "            while (pivot < this.a[--j]) {", "            }", "            if (i >= j)", "                break;", "            this.a = swapReferences(this.a, i, j);", "        }", "        this.a = swapReferences(this.a, i, high - 1);", "", "        this.quickSort(low, i - 1);", "        this.quickSort(i + 1, high);", "    }", "};" ]
       },
-      "quickSortMedianOfOne": {
+      "quickSortLeftPivot": {
         "header": "QuickSort.prototype.quickSort = function(low, high) {",
-        "lines": [ "    if(low + 3 > high) {", "        this.a = insertionSort(this.a);", "    }", "    else {", "        var pivot = this.a[high - 1];", "        *", "        var i, j;", "        for (i = low, j = high - 1; ;) {", "            while (this.a[++i] < pivot) {", "            }", "            while (pivot < this.a[--j]) {", "            }", "            if (i >= j)", "                break;", "            this.a = swapReferences(this.a, i, j);", "        }", "        this.a = swapReferences(this.a, i, high - 1);", "        *", "        this.quickSort(low, i - 1);", "        this.quickSort(i + 1, high);", "    }", "};" ]
-
+        "lines": [ "    if(low + 3 > high) {", "        this.a = insertionSort(this.a);", "    }", "    else {", "        var pivot = this.a[high - 1];", "", "        var i, j;", "        for (i = low, j = high - 1; ;) {", "            while (this.a[++i] < pivot) {", "            }", "            while (pivot < this.a[--j]) {", "            }", "            if (i >= j)", "                break;", "            this.a = swapReferences(this.a, i, j);", "        }", "        this.a = swapReferences(this.a, i, high - 1);", "", "        this.quickSort(low, i - 1);", "        this.quickSort(i + 1, high);", "    }", "};" ]
       },
       "insertionSort": {
         "header": "function insertionSort(a) {",
         "lines": [ "    for(var p = 1; p < a.length; p++) {", "        var tmp = a[p];", "        var j = p;", "", "        for(; j > 0 && tmp < a[j - 1]; j--) {", "            a[j] = a[j - 1];", "        }", "", "        a[j] = tmp;", "    }", "", "    return a;", "}" ]
+      },
+      "partition": {
+        "header": "QuickSort.prototype.partition = function (low, high) {",
+        "lines": [ "    var pivot = this.a[high - 1];", "", "    var i, j;", "    for (i = low - 1, j = high + 1; ;) {", "        while (this.a[++i] < pivot) { }", "", "        while (pivot < this.a[--j]) { }", "", "        if (i >= j)", "            return j;", "", "        this.a = swapReferences(this.a, i, j);", "    }", "};" ]
       }
     },
     "shellSort": {
