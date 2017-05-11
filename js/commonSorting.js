@@ -1,5 +1,6 @@
 function swap(a, b, line) {
     console.log("swap", a, b);
+
     var elementA = $(".element" + a);
     var elementB = $(".element" + b);
 

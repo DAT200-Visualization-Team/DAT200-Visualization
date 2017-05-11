@@ -102,8 +102,8 @@ ArrayList.prototype.remove = function (x) {
 ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
     for (var i = index; i <= this.theSize - 1; i++) {
-        console.log("moving" + i);
-        move(i, this.theSize, this.capacity);
+        //console.log(i + "==" + this.theSize);
+        move(i+1, this.capacity, i == this.theSize-1);
         this.theItems[i] = this.theItems[i + 1];
     }
 
