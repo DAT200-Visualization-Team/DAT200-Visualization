@@ -14,13 +14,16 @@ MergeSort.prototype.sort = function() {
 MergeSort.prototype.mergeSort = function(a, left, right) {
     if(left < right) {
         var center = parseInt((left + right) / 2);
-        //commands.push("this.mergeSort(array, " + left + ", " + center + ");");
+
+        split(left, center, 'left');
         commands.push("split(" + left + ", " + center + ", 'left');");
         this.mergeSort(this.a, left, center);
 
-        //commands.push("this.mergeSort(array, " + (center + 1) + ", " + right + ");");
+
+        split(center+1, right, 'right');
         commands.push("split(" + right + "," + (center + 1) + ", 'right');");
         this.mergeSort(this.a, center + 1, right);
+
 
 
         this.merge(this.a, left, center + 1, right);
