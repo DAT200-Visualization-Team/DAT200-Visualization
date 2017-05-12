@@ -1,5 +1,5 @@
 const DEFAULT_TABLE_SIZE = 11;
-var cmd = [];
+//var cmd = [];
 
 function HashSet(other) {
     this.probingType = "linear";
@@ -44,7 +44,8 @@ HashSet.prototype.remove = function (x) {
         return false;
 
     this.array[currentPos].isActive = false;
-    cmd.push("removeElement(" + currentPos + ")");
+    //cmd.push("removeElement(" + currentPos + ")");
+    removeElement(currentPos);
     this.currentSize--;
     this.modCount++;
 
@@ -62,7 +63,8 @@ HashSet.prototype.clear = function () {
 };
 
 HashSet.prototype.add = function (x) {
-    cmd.push("add('" + x.toString() + "')");
+    //cmd.push("add('" + x.toString() + "')");
+    add(x.toString());
     var currentPos = this.findPos(x);
 
     if (this.isActive(this.array, currentPos))
@@ -71,7 +73,8 @@ HashSet.prototype.add = function (x) {
     if (this.array[currentPos] == null)
         this.occupied++;
     this.array[currentPos] = new HashEntry(x, true);
-    cmd.push("replaceElement(" + currentPos + ")");
+    //cmd.push("replaceElement(" + currentPos + ")");
+    replaceElement(currentPos);
     this.currentSize++;
     this.modCount++;
 
@@ -88,7 +91,8 @@ HashSet.prototype.rehash = function () {
     this.allocateArray(nextPrime(4 * this.size()));
     this.currentSize = 0;
     this.occupied = 0;
-    cmd.push("clearTable()");
+    //cmd.push("clearTable()");
+    renewTable(this.array.length);
 
     // Copy table over
     for (var i = 0; i < oldArray.length; i++)
@@ -99,20 +103,23 @@ HashSet.prototype.rehash = function () {
 HashSet.prototype.findPos = function (x) {
     var offset = 1;
     var currentPos = (x == null) ? 0 : Math.abs(getHashCode(x) % this.array.length);
-    cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", 0)");
-    cmd.push("updateArrow(" + currentPos + ")");
+    //cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", 0)");
+    //cmd.push("updateArrow(" + currentPos + ")");
+    displayHash(getHashCode(x), this.array.length, 0);
+    updateArrow(currentPos);
 
     var interation = 1;
     while (this.array[currentPos] != null) {
         if (x == null) {
             if (this.array[currentPos].element == null)
-                break;  
+                break;
         }
         else if (x == this.array[currentPos].element)
             break;
 
         currentPos += offset; // Compute ith probe
-        cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", " + offset + ")");
+        //cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", " + offset + ")");
+        displayHash(getHashCode(x), this.array.length, offset);
 
         //offset += 2;
 
@@ -126,7 +133,8 @@ HashSet.prototype.findPos = function (x) {
         if (currentPos >= this.array.length) // Implement the mod
             currentPos -= this.array.length;
 
-        cmd.push("updateArrow(" + currentPos + ")");
+        //cmd.push("updateArrow(" + currentPos + ")");
+        updateArrow(currentPos);
     }
 
     return currentPos;
