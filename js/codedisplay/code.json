@@ -1,5 +1,15 @@
 {
   "javascript": {
+    "arrayList": {
+      "removeAtPos": {
+        "header": "ArrayList.prototype.removeAtPos = function (index) {",
+        "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i <= this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
+      },
+      "add": {
+        "header": "ArrayList.prototype.add = function (x) {",
+        "lines": [ "    // Ensure capacity", "    if (this.theItems.length == this.size()) {", "        var old = this.theItems;", "        this.theItems = new Array(this.theSize * 2 + 1);", "        for (var i = 0; i < this.size() ; i++)", "            this.theItems[i] = old[i];", "    }", "", "    this.theItems[this.theSize++] = x;", "    this.modCount++;", "", "    return true;", "};" ]
+      }
+    },
     "stack": {
       "constructor": {
         "header": "function Stack() {",

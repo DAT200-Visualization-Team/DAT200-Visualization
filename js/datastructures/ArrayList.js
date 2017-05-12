@@ -1,8 +1,6 @@
 const DEFAULT_CAPACITY = 5;
 const NOT_FOUND = -1;
 
-var commands = [];
-
 function ArrayList(other) {
     this.theItems;
     this.theSize;
@@ -65,7 +63,7 @@ ArrayList.prototype.findPos = function (x) {
 };
 
 ArrayList.prototype.add = function (x) {
-    console.log(this.theItems);
+    // Ensure capacity
     if (this.theItems.length == this.size()) {
         var old = this.theItems;
         this.theItems = new Array(this.theSize * 2 + 1);
@@ -74,18 +72,18 @@ ArrayList.prototype.add = function (x) {
     }
 
     //Ensure capacity
-    if(this.capacity == this.theSize) {
+    highlightCode([1]);
+    if (this.capacity == this.theSize) {
         extendCapacity(this.capacity*2+1, this.capacity);
         this.capacity = this.capacity * 2 + 1;
     }
 
     add(this.theSize, x);
     this.theItems[this.theSize++] = x;
-    updateTheSize(this.theSize, this.capacity);
-    //Update modcount
+    updateTheSize(this.theSize, this.capacity, null, '-=2');
     this.modCount++;
 
-
+    highlightCode([9, 11]);
     return true;
 };
 
@@ -100,16 +98,20 @@ ArrayList.prototype.remove = function (x) {
 };
 
 ArrayList.prototype.removeAtPos = function (index) {
+    highlightCode([0, 2]);
     var removedItem = this.theItems[index];
+
     for (var i = index; i <= this.theSize - 1; i++) {
         move(i+1, this.capacity, i == this.theSize-1);
         this.theItems[i] = this.theItems[i + 1];
+        highlightCode([2]);
     }
 
     this.theSize--;
     this.modCount++;
-    //update modcount
-    updateTheSize(this.theSize, this.capacity);
+
+    updateTheSize(this.theSize, this.capacity, 6);
+    highlightCode([7, 9]);
 
     return removedItem;
 };
