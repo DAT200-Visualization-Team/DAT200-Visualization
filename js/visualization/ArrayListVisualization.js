@@ -40,8 +40,8 @@ var codeContent = [
 
 var code = d3.select("#code-text");
 var drawingArea = d3.select(".drawingArea").append("svg:svg");
-var theSizeBlock = drawingArea.append("g");
 
+var theSizeBlock = drawingArea.append("g");
 theSizeBlock.append("rect")
     .attr("width", 0)
     .attr("height", (arrElementHeight + 40 + 10))
@@ -58,11 +58,28 @@ theSizeBlock.append("text")
 var mainArray = drawingArea.append("g")
     .attr("id", "mainArray");
 
-createArray(5, 0, 0);
+var arrayList;
+start(data);
 
-var arrayList = new ArrayList(data);
+function start(newData) {
+    $("#mainArray").empty();
+    data = newData;
+    var capacity = DEFAULT_CAPACITY;
+    while(capacity < data.length) capacity = capacity * 2 + 1;
+    createArray(capacity, 0, 0, 1);
+    for(var i = 0; i < capacity; i++) {
+        if(i < data.length) createTextElement(i, capacity, 0, data[i], 1);
+        else createTextElement(i, capacity, 0, "", 1);
+    }
+    theSizeBlock.selectAll("*").attr("width", data.length * (width / capacity) + 1.25)
+        .style("opacity", 1);
+    arrayList = new ArrayList();
+    arrayList.theItems = data;
+    arrayList.capacity = capacity;
+    arrayList.theSize = data.length;
+}
 
-function createArray(length, oldlength, y) {
+function createArray(length, oldlength, y, opacity) {
 
     width = (arrElementWidth + 10) * length;
 
@@ -77,12 +94,12 @@ function createArray(length, oldlength, y) {
             .attr("height", arrElementHeight)
             .attr("width", arrElementWidth)
             .attr("fill", "red")
-            .style("opacity", "0")
+            .style("opacity", opacity)
             .attr("class", "rect" + i );
     }
 
     for(var j = oldlength; j < length; j++) {
-        createTextElement(j, length, y, "");
+        createTextElement(j, length, y, "", 0);
 /*        mainArray.append("text")
             .text("")
             .attr("x",j * (width / length) + arrElementWidth / 3 + 5)
@@ -96,7 +113,7 @@ function createArray(length, oldlength, y) {
     tl.to($("#mainArray").find("rect"), animationTime, {opacity:1});
 }
 
-function createTextElement(elementNr, length, startY, startValue) {
+function createTextElement(elementNr, length, startY, startValue, opacity) {
     mainArray.append("text")
         .text(startValue)
         .attr("x",elementNr * (width / length) + arrElementWidth / 2 + 5)
@@ -104,7 +121,7 @@ function createTextElement(elementNr, length, startY, startValue) {
         .attr("transform", "translate(0," + startY + ")")
         .attr("width", arrElementWidth)
         .attr("text-anchor", "middle")
-        .style("opacity", "0")
+        .style("opacity", opacity)
         .attr("class", "text" + elementNr);
 }
 
@@ -112,7 +129,7 @@ function add(index, textContent) {
     console.log("adding " + textContent + ", to index: " + index);
     var textbox = $(".text" + index);
     if(textbox.length == 0) {
-        createTextElement(index, arrayList.capacity, 0, "");
+        createTextElement(index, arrayList.capacity, 0, "", 0);
         textbox = $(".text" + index);
     }
     tl.to(textbox, animationTime, {text:{value:textContent}, opacity:1, ease:Linear.easeNone});
@@ -139,7 +156,7 @@ function set(index, textContent) {
 
 function extendCapacity(newCapacity, oldCapacity) {
     var oldArray = $("#mainArray rect");
-    createArray(newCapacity, oldCapacity, 100);
+    createArray(newCapacity, oldCapacity, 100, 0);
 
     //for(var j = 0; j < oldCapacity; j++) {
     //    createTextElement(j, oldCapacity, 0, arrayList.theItems[j]);
