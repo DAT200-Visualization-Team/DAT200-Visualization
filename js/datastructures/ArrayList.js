@@ -26,7 +26,7 @@ ArrayList.prototype.size = function () {
 
 ArrayList.prototype.clear = function () {
     this.theSize = 0;
-    this.theItems = [];
+    this.theItems = new Array(DEFAULT_CAPACITY);
     this.modCount++;
 
     this.capacity = DEFAULT_CAPACITY;
@@ -43,7 +43,6 @@ ArrayList.prototype.set = function (index, newVal) {
         throw { name: "ArrayIndexOutOfBoundsException", message: "The index was out of bounds" };
     old = this.theItems[index];
     this.theItems[index] = newVal;
-
 
     return old;
 };
@@ -66,9 +65,10 @@ ArrayList.prototype.findPos = function (x) {
 };
 
 ArrayList.prototype.add = function (x) {
+    console.log(this.theItems);
     if (this.theItems.length == this.size()) {
-        old = this.theItems;
-        this.theItems = [];
+        var old = this.theItems;
+        this.theItems = new Array(this.theSize * 2 + 1);
         for (var i = 0; i < this.size() ; i++)
             this.theItems[i] = old[i];
     }
@@ -102,7 +102,6 @@ ArrayList.prototype.remove = function (x) {
 ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
     for (var i = index; i <= this.theSize - 1; i++) {
-        //console.log(i + "==" + this.theSize);
         move(i+1, this.capacity, i == this.theSize-1);
         this.theItems[i] = this.theItems[i + 1];
     }
