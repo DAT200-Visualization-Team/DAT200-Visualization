@@ -9,9 +9,7 @@ var height = 350;
 var arrElementWidth = 50;
 var arrElementHeight = 50;
 
-//Animation
 var animationTime = 1;
-var tl = new TimelineMax();
 
 //Max value in dataset
 var maxValue = Math.max.apply(null, data);
@@ -19,8 +17,6 @@ var maxValue = Math.max.apply(null, data);
 var countArray = Array.apply(null, Array(maxValue + 1)).map(Number.prototype.valueOf, 0);
 //Sorted array
 var sortedArray = Array.apply(null, Array(data.length)).map(String.prototype.valueOf, "");
-
-var code = d3.select("#code-text");
 
 var drawingArea = d3.select(".drawingArea")
     .append("svg:svg");
@@ -61,7 +57,7 @@ function createArray(array) {
         .attr("y", function (d) { return 0; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(0, 127, 127)");
+        .attr("fill", "rgb(0, 202, 204)");
 
     unsortedArray.selectAll("text")
         .data(data)
@@ -82,7 +78,7 @@ function createArray(array) {
         .attr("y", function (d) { return height / 3; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(0, 127, 127)")
+        .attr("fill", "rgb(0, 202, 204)")
         .attr("class", function(d, i) { return "rect" + i});
 
     countingArray.selectAll("text")
@@ -115,7 +111,7 @@ function createArray(array) {
         .attr("y", function (d) { return 2 * height / 3; })
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth - 5)
-        .attr("fill", "rgb(0, 127, 127)")
+        .attr("fill", "rgb(0, 202, 204)")
         .attr("class", function(d, i) { return "rect" + i});
 
     sortedArrayGUI.selectAll("text")
@@ -185,7 +181,7 @@ function countUpdate(index) {
         },
         {
             e: rect,
-            p: { attr: { fill: "rgb(0, 127, 127)" }, ease: Power2.easeIn },
+            p: { attr: { fill: "rgb(0, 202, 204)" }, ease: Power2.easeIn },
             o: { duration: animationTime }
         },
     ], codeDisplayManager);
@@ -251,7 +247,7 @@ function highlight(index, array) {
 function clearHighlight(array) {
     appendAnimation(null, [{
         e: $(array + " rect"),
-        p: { attr: { fill: "rgb(0, 127, 127)" }, ease: Power2.easeOut },
+        p: { attr: { fill: "rgb(0, 202, 204)" }, ease: Power2.easeOut },
         o: { duration: animationTime }
     }], null);
 }
