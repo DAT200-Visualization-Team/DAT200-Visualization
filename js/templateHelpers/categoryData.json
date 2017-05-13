@@ -238,7 +238,24 @@
         },
         {
           "id": "mergesort",
-          "name": "Merge Sort"
+          "name": "Merge Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "1,2,3"
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "sort"
+            }
+          ]
         },
         {
           "id": "bubblesort",
@@ -251,7 +268,7 @@
                 {
                   "type": "array",
                   "name": "Data",
-                  "placeholder": "5,2,3..."
+                  "placeholder": "1,2,3..."
                 }
               ]
             },
