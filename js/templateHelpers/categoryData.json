@@ -181,7 +181,31 @@
         },
         {
           "id": "hash",
-          "name": "Hash Table"
+          "name": "Hash Set",
+          "commands": [
+            {
+              "name": "Add",
+              "function": "runAdd",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Value",
+                  "placeholder": "Value"
+                }
+              ]
+            },
+            {
+              "name": "Remove",
+              "function": "runRemove",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Value",
+                  "placeholder":  "Value"
+                }
+              ]
+            }
+          ]
         }
       ]
     },

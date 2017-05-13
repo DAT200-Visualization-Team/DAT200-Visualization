@@ -604,6 +604,20 @@
         "header": "function countingSort(array, maxValue) {",
         "lines": [ "    if (array.constructor !== Array || array.length == 0)", "        return [];", "", "    var valueCount = Array.apply(null, Array(maxValue)).map(Number.prototype.valueOf, 0);", "    var value;", "", "    for (var i = 0; i < array.length; i++) {", "        value = array[i];", "        valueCount[value] += 1;", "    }", "", "    var result = new Array(array.list);", "    var index = 0;", "    for (var i = 0; i < valueCount.length; i++) {", "        for (var j = 0; j < valueCount[i]; j++) {", "            result[index] = i;", "            index++;", "        }", "    }", "", "    return result;", "}" ]
       }
+    },
+    "hashSet": {
+      "remove": {
+        "header": "HashSet.prototype.remove = function (x) {",
+        "lines": [ "    var currentPos = this.findPos(x);", "    if (!this.isActive(this.array, currentPos))", "        return false;", "", "    this.array[currentPos].isActive = false;", "    this.currentSize--;", "    this.modCount++;", "", "    if (this.currentSize < this.array.length / 8)", "        this.rehash();", "", "    return true;", "};" ]
+      },
+      "add": {
+        "header": "HashSet.prototype.add = function (x) {",
+        "lines": [ "    var currentPos = this.findPos(x);", "    if (this.isActive(this.array, currentPos))", "        return false;", "", "    if (this.array[currentPos] == null)", "        this.occupied++;", "    this.array[currentPos] = new HashEntry(x, true);", "    this.currentSize++;", "    this.modCount++;", "", "    if (this.occupied > this.array.length / 2)", "        this.rehash();", "", "    return true;", "};" ]
+      },
+      "rehash": {
+        "header": "HashSet.prototype.rehash = function () {",
+        "lines": [ "    var oldArray = this.array;", "", "    // Create new empty table", "    this.allocateArray(nextPrime(4 * this.size()));", "    this.currentSize = 0;", "    this.occupied = 0;", "", "    // Copy table over", "    for (var i = 0; i < oldArray.length; i++)", "        if (this.isActive(oldArray, i))", "            this.add(oldArray[i].element);", "};" ]
+      }
     }
   }
 }
