@@ -4,23 +4,21 @@ var input = [60, 30, 90, 20, 80, 70];
 var arrElementWidth = 50;
 var arrElementHeight = 50;
 
-var barWidth = 40;
-var width = (arrElementWidth + 10) * input.length;
-var height = 350;
+var width = $('#graphics').width(),
+    height = $('#graphics').height();
 
-var code = d3.select("#code-text");
 var barChart = d3.select(".drawingArea")
     .append("svg:svg")
     .attr("width", width + 200)
     .attr("height", height + 200)
     .attr("id", "barChart");
 
-var rectPositions = new BinaryTree(new BinaryNode([]));
+var rectPositions = [];
 var textPositions = [];
+var elementPositions = [];
 
 resetPosition();
-createRects(input.length, 0);
-createTexts(input);
+createArray(input);
 
 //Panning
 var pan = d3.zoom()
@@ -30,17 +28,25 @@ barChart.call(pan);
 
 var codeDisplayManager = new CodeDisplayManager('javascript', 'mergeSort');
 
+function createArray(data) {
+    createRects(data.length, 0);
+    createTexts(data);
+}
+
 function resetPosition() {
     textPositions = [];
+    rectPositions[0] = [];
+    elementPositions = [];
     for(var i = 0; i < input.length; i++) {
-        rectPositions.root.element[i] = [i * (width / input.length) + 5, 0];
-        textPositions.push([i * (width / input.length) + arrElementWidth / 2 + 5, 30]);
+        rectPositions[0][i] = [i * (arrElementWidth + 5) + (arrElementWidth+5)/2, 30];
+        elementPositions[i] = 0;
+        textPositions.push([i * (arrElementWidth + 5) + arrElementWidth / 2 + 5, 30]);
     }
 }
 
 function createRects(length, y) {
     for(var i = 0; i < length; i++) {
-        createRect(i * (width / input.length) + 5, y, 1);
+        createRect(i * (arrElementWidth + 5), y, 1);
     }
 }
 
@@ -62,7 +68,7 @@ function createTexts(data) {
         .enter()
         .append("text")
         .text(function (d) { return d; })
-        .attr("x", function (d, index) { return index * (width / data.length) + arrElementWidth / 2 + 5; })
+        .attr("x", function (d, index) { return index * (arrElementWidth+5) + (arrElementWidth+5) / 2; })
         .attr("y", 30)
         .attr("text-anchor", "middle")
         .attr("width", arrElementWidth)
@@ -77,31 +83,19 @@ function panning() {
 function sort() {
     $('#barChart').empty();
     resetPosition();
-    createRects(input.length, 0);
-    createTexts(input);
+    createArray(input);
+    codeDisplayManager.loadFunctions('mergeSort', 'merge');
+    codeDisplayManager.changeFunction('mergeSort');
     var ms = new MergeSort(input.slice());
     ms.sort();
 }
 
-function split(from, to, direction) {
-    console.log("from: " + from + ", to: " + to + ", direction: " + direction);
-    var currentNode = rectPositions.root;
-    if(direction == 'left') {
-        while(currentNode.left != null) currentNode = currentNode.left;
-        currentNode.left = new BinaryNode([]);
-        currentNode = currentNode.left;
-    } else {
-        while(currentNode.right != null) currentNode = currentNode.right;
-        currentNode.right = new BinaryNode([]);
-        currentNode = currentNode.right;
-    }
-
+function split(from, to, direction, line) {
     var animations = [];
 
     for(var i = from; i <= to; i++) {
         var element = d3.select(".element" + i);
-        var currentTranslation = getTranslate(element);
-        var y = parseInt(currentTranslation[1]);
+        var y = textPositions[i][1];
         y = y + 2*50;
         var delta;
 
@@ -114,69 +108,35 @@ function split(from, to, direction) {
 
         textPositions[i][0] += delta;
         textPositions[i][1] += 2*50;
-        currentNode.element.push([textPositions[i][0] - arrElementWidth / 2, textPositions[i][1] - 30]);
+
+        elementPositions[i] += 1;
+
+        if(rectPositions[elementPositions[i]] == undefined) rectPositions[elementPositions[i]] = [];
+        rectPositions[elementPositions[i]][i] = [textPositions[i][0], textPositions[i][1]];
 
         createRect(textPositions[i][0] - arrElementWidth / 2, textPositions[i][1] - 30, 0);
-        animations.push({ e: $("#barChart .element" + i), p: { x: '+=' + delta, y: '+=100' }, o: { duration: 1, position: '-=1' } });
-        console.log("unhide level " + ((textPositions[i][1]-30)/100));
+        var movingElement = $("#barChart .element" + i);
+        animations.push({ e: movingElement, p: { attr: {x: textPositions[i][0], y: textPositions[i][1]} }, o: { duration: 1, position: '-=1' } });
+
+        movingElement.attr("class", ""); //Remove old classes
+        movingElement.addClass("element" + i + " " + "level" + elementPositions[i]);
+
         animations.push({ e: $("#barChart .level" + ((textPositions[i][1]-30)/100)), p: { opacity: "1" }, o: { duration: 1, position: '-=1' } });
     }
     animations[0].o.position = '+=0';
-    appendAnimation(null, animations, codeDisplayManager);
+    appendAnimation(line, animations, codeDisplayManager);
 }
 
-function merge(from, to) {
-    
-}
+function merge(dest, from) {
+    elementPositions[from] -= 1;
+    var level = elementPositions[from];
+    var position = rectPositions[level][dest];
 
-function swap(a, b, line) {
-    var elementA = $(".element" + a);
-    var elementB = $(".element" + b);
+    var movingElement = $(".element" + from + ".level" + (level+1));
+    appendAnimation(null, [{ e: movingElement, p: { attr: {x:position[0], y: position[1] } }, o: { duration: 1 } }], null);
 
-    appendAnimation(line, [
-        { e: elementA.filter("rect"), p: { attr: { x: positions[b][0] } }, o: { duration: 1 } },
-        { e: elementA.filter("text"), p: { attr: { x: positions[b][0] + barWidth / 4 } }, o: { duration: 1, position: '-=1' } },
-        { e: elementB.filter("rect"), p: { attr: { x: positions[a][0] } }, o: { duration: 1, position: '-=1' } },
-        { e: elementB.filter("text"), p: { attr: { x: positions[a][0] + barWidth / 4 } }, o: { duration: 1, position: '-=1' } }
-    ], codeDisplayManager);
-
-    elementA.attr('class', 'element' + b);
-    elementB.attr('class', 'element' + a);
-}
-
-function getTranslate(element) {
-    var transformString = element.attr("transform");
-    if(transformString != "" && transformString != null) {
-        var res = transformString.substring(transformString.indexOf("(")+1, transformString.indexOf(")")).split(",");
-        if(res[4] == null) res[4] = 0;
-        if(res[5] == null) res[5] = 0;
-        return res;
-    }
-    return [0, 0, 0, 0, 0, 0];
-}
-
-function highlight(a, b, colorA, colorB, line) {
-    colorA = colorA || "blue";
-    colorB = colorB || "blue";
-
-    var elementA = $(".element" + a).filter("rect");
-    var elementB = $(".element" + b).filter("rect");
-
-    appendAnimation(line, [
-        { e: elementA.filter("rect"), p: { attr: { fill: colorA } }, o: { duration: 1 } },
-        { e: elementB.filter("rect"), p: { attr: { fill: colorB } }, o: { duration: 1, position: '-=1' } }
-    ], codeDisplayManager);
-
-    return true;
-}
-
-function clearAllHighlight() {
-    appendAnimation(null, [{ e: '#barChart rect', p: { attr: { fill: "red" } }, o: { duration: 1 } }], null);
-}
-
-function clearHighlight(element, origColor) {
-    origColor = origColor || "red";
-    appendAnimation(null, [{ e: $(".element" + element).filter("rect"), p: { attr: { fill: origColor } }, o: { duration: 1 } }], null);
+    movingElement.attr("class", ""); //Remove old classes
+    movingElement.addClass("element" + dest + " " + "level" + level);
 }
 
 function highlightCode(lines, functionName) {

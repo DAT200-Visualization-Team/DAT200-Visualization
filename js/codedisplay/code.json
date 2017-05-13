@@ -1,5 +1,15 @@
 {
   "javascript": {
+    "arrayList": {
+      "removeAtPos": {
+        "header": "ArrayList.prototype.removeAtPos = function (index) {",
+        "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i <= this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
+      },
+      "add": {
+        "header": "ArrayList.prototype.add = function (x) {",
+        "lines": [ "    // Ensure capacity", "    if (this.theItems.length == this.size()) {", "        var old = this.theItems;", "        this.theItems = new Array(this.theSize * 2 + 1);", "        for (var i = 0; i < this.size() ; i++)", "            this.theItems[i] = old[i];", "    }", "", "    this.theItems[this.theSize++] = x;", "    this.modCount++;", "", "    return true;", "};" ]
+      }
+    },
     "stack": {
       "constructor": {
         "header": "function Stack() {",
@@ -556,7 +566,7 @@
       },
       "merge": {
         "header": "MergeSort.prototype.merge = function(a, leftPos, rightPos, rightEnd) {",
-        "lines": [ "    var tmpArray = [];", "    var leftEnd = rightPos - 1;", "    var tmpPos = leftPos;", "    var numElements = rightEnd - leftPos + 1;", "", "    while(leftPos <= leftEnd && rightPos <= rightEnd) {", "        if(this.a[leftPos] <= this.a[rightPos]) {", "            tmpArray[tmpPos++] = this.a[leftPos++];", "        } else {", "            tmpArray[tmpPos++] = this.a[rightPos++];", "        }", "    }", "", "    while(leftPos <= leftEnd) {", "        tmpArray[tmpPos++] = this.a[leftPos++];", "    }", "", "    while(rightPos <= rightEnd) {", "        tmpArray[tmpPos++] = this.a[rightPos++];", "    }", "", "    for(var i = 0; i < numElements; i++, rightEnd--) {", "        a[rightEnd] = tmpArray[rightEnd];", "    }", "};" ]
+        "lines": [ "    var tmpArray = [];", "    var leftEnd = rightPos - 1;", "    var tmpPos = leftPos;", "    var numElements = rightEnd - leftPos + 1;", "", "    while(leftPos <= leftEnd && rightPos <= rightEnd) {", "        if(this.a[leftPos] <= this.a[rightPos]) {", "            tmpArray[tmpPos++] = this.a[leftPos++];", "        }", "        else {", "            tmpArray[tmpPos++] = this.a[rightPos++];", "        }", "    }", "", "    while(leftPos <= leftEnd) {", "        tmpArray[tmpPos++] = this.a[leftPos++];", "    }", "", "    while(rightPos <= rightEnd) {", "        tmpArray[tmpPos++] = this.a[rightPos++];", "    }", "", "    for(var i = 0; i < numElements; i++, rightEnd--) {", "        a[rightEnd] = tmpArray[rightEnd];", "    }", "};" ]
       }
     },
     "bubbleSort": {
@@ -593,6 +603,20 @@
       "countingSort": {
         "header": "function countingSort(array, maxValue) {",
         "lines": [ "    if (array.constructor !== Array || array.length == 0)", "        return [];", "", "    var valueCount = Array.apply(null, Array(maxValue)).map(Number.prototype.valueOf, 0);", "    var value;", "", "    for (var i = 0; i < array.length; i++) {", "        value = array[i];", "        valueCount[value] += 1;", "    }", "", "    var result = new Array(array.list);", "    var index = 0;", "    for (var i = 0; i < valueCount.length; i++) {", "        for (var j = 0; j < valueCount[i]; j++) {", "            result[index] = i;", "            index++;", "        }", "    }", "", "    return result;", "}" ]
+      }
+    },
+    "hashSet": {
+      "remove": {
+        "header": "HashSet.prototype.remove = function (x) {",
+        "lines": [ "    var currentPos = this.findPos(x);", "    if (!this.isActive(this.array, currentPos))", "        return false;", "", "    this.array[currentPos].isActive = false;", "    this.currentSize--;", "    this.modCount++;", "", "    if (this.currentSize < this.array.length / 8)", "        this.rehash();", "", "    return true;", "};" ]
+      },
+      "add": {
+        "header": "HashSet.prototype.add = function (x) {",
+        "lines": [ "    var currentPos = this.findPos(x);", "    if (this.isActive(this.array, currentPos))", "        return false;", "", "    if (this.array[currentPos] == null)", "        this.occupied++;", "    this.array[currentPos] = new HashEntry(x, true);", "    this.currentSize++;", "    this.modCount++;", "", "    if (this.occupied > this.array.length / 2)", "        this.rehash();", "", "    return true;", "};" ]
+      },
+      "rehash": {
+        "header": "HashSet.prototype.rehash = function () {",
+        "lines": [ "    var oldArray = this.array;", "", "    // Create new empty table", "    this.allocateArray(nextPrime(4 * this.size()));", "    this.currentSize = 0;", "    this.occupied = 0;", "", "    // Copy table over", "    for (var i = 0; i < oldArray.length; i++)", "        if (this.isActive(oldArray, i))", "            this.add(oldArray[i].element);", "};" ]
       }
     }
   }
