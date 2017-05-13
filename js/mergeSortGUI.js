@@ -90,7 +90,7 @@ function sort() {
     ms.sort();
 }
 
-function split(from, to, direction) {
+function split(from, to, direction, line) {
     var animations = [];
 
     for(var i = from; i <= to; i++) {
@@ -124,7 +124,7 @@ function split(from, to, direction) {
         animations.push({ e: $("#barChart .level" + ((textPositions[i][1]-30)/100)), p: { opacity: "1" }, o: { duration: 1, position: '-=1' } });
     }
     animations[0].o.position = '+=0';
-    appendAnimation(null, animations, codeDisplayManager);
+    appendAnimation(line, animations, codeDisplayManager);
 }
 
 function merge(dest, from) {

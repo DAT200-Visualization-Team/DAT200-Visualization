@@ -566,7 +566,7 @@
       },
       "merge": {
         "header": "MergeSort.prototype.merge = function(a, leftPos, rightPos, rightEnd) {",
-        "lines": [ "    var tmpArray = [];", "    var leftEnd = rightPos - 1;", "    var tmpPos = leftPos;", "    var numElements = rightEnd - leftPos + 1;", "", "    while(leftPos <= leftEnd && rightPos <= rightEnd) {", "        if(this.a[leftPos] <= this.a[rightPos]) {", "            tmpArray[tmpPos++] = this.a[leftPos++];", "        } else {", "            tmpArray[tmpPos++] = this.a[rightPos++];", "        }", "    }", "", "    while(leftPos <= leftEnd) {", "        tmpArray[tmpPos++] = this.a[leftPos++];", "    }", "", "    while(rightPos <= rightEnd) {", "        tmpArray[tmpPos++] = this.a[rightPos++];", "    }", "", "    for(var i = 0; i < numElements; i++, rightEnd--) {", "        a[rightEnd] = tmpArray[rightEnd];", "    }", "};" ]
+        "lines": [ "    var tmpArray = [];", "    var leftEnd = rightPos - 1;", "    var tmpPos = leftPos;", "    var numElements = rightEnd - leftPos + 1;", "", "    while(leftPos <= leftEnd && rightPos <= rightEnd) {", "        if(this.a[leftPos] <= this.a[rightPos]) {", "            tmpArray[tmpPos++] = this.a[leftPos++];", "        }", "        else {", "            tmpArray[tmpPos++] = this.a[rightPos++];", "        }", "    }", "", "    while(leftPos <= leftEnd) {", "        tmpArray[tmpPos++] = this.a[leftPos++];", "    }", "", "    while(rightPos <= rightEnd) {", "        tmpArray[tmpPos++] = this.a[rightPos++];", "    }", "", "    for(var i = 0; i < numElements; i++, rightEnd--) {", "        a[rightEnd] = tmpArray[rightEnd];", "    }", "};" ]
       }
     },
     "bubbleSort": {
