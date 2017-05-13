@@ -7,12 +7,18 @@ var arrElementHeight = 50;
 var width = $('#graphics').width(),
     height = $('#graphics').height();
 
-var code = d3.select("#code-text");
 var barChart = d3.select(".drawingArea")
     .append("svg:svg")
     .attr("width", width + 200)
     .attr("height", height + 200)
     .attr("id", "barChart");
+
+var rectPositions = [];
+var textPositions = [];
+var elementPositions = [];
+
+resetPosition();
+createArray(input);
 
 //Panning
 var pan = d3.zoom()
@@ -22,17 +28,15 @@ barChart.call(pan);
 
 var codeDisplayManager = new CodeDisplayManager('javascript', 'mergeSort');
 
-var rectPositions = [];
-var elementPositions = [];
-var textPositions = [];
-
-resetPosition();
-createRects(input.length, 0);
-createTexts(input);
+function createArray(data) {
+    createRects(data.length, 0);
+    createTexts(data);
+}
 
 function resetPosition() {
     textPositions = [];
     rectPositions[0] = [];
+    elementPositions = [];
     for(var i = 0; i < input.length; i++) {
         rectPositions[0][i] = [i * (arrElementWidth + 5) + (arrElementWidth+5)/2, 30];
         elementPositions[i] = 0;
@@ -79,8 +83,9 @@ function panning() {
 function sort() {
     $('#barChart').empty();
     resetPosition();
-    createRects(input.length, 0);
-    createTexts(input);
+    createArray(input);
+    codeDisplayManager.loadFunctions('mergeSort', 'merge');
+    codeDisplayManager.changeFunction('mergeSort');
     var ms = new MergeSort(input.slice());
     ms.sort();
 }

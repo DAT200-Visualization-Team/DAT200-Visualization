@@ -1,4 +1,4 @@
-var table = new HashSet();
+var set = new HashSet();
 
 //Array size
 var arrElementWidth = 150;
@@ -19,6 +19,8 @@ var blockMargin = 30;
 //Animation
 var animationTime = 1 / 3;
 var tl = new TimelineMax();
+
+var codeDisplayManager = new CodeDisplayManager('javascript', 'hashSet');
 
 var drawingArea;
 
@@ -57,7 +59,8 @@ $(document).ready(function () {
         .attr("height", blockHeight)
         .attr("y", blockHeight - 10)
         .attr("x", width + 10 - arrElementWidth - keyWidth - blockWidth - blockMargin)
-        .text("");
+        .text("")
+        .attr("class", 'noselect');
 
     createKeysAndBuckets(DEFAULT_TABLE_SIZE, "1");
 
@@ -87,8 +90,20 @@ $(document).ready(function () {
 
     drawingArea.call(pan);
 
-    //drawingArea.attr("transform", "translate(50,20) scale(0.70)");
+    drawingArea.attr("transform", "translate(50,20) scale(0.70)");
 });
+
+function runAdd(x) {
+    codeDisplayManager.loadFunctions('add', 'rehash');
+    codeDisplayManager.changeFunction('add');
+    set.add(x);
+}
+
+function runRemove(x) {
+    codeDisplayManager.loadFunctions('remove', 'rehash', 'add');
+    codeDisplayManager.changeFunction('remove');
+    set.remove(x);
+}
 
 function panning() {
     drawingArea.attr("transform", d3.event.transform);
@@ -108,13 +123,13 @@ function updateArrow(index) {
         .x(function (d) { return d.x; })
         .y(function (d) { return d.y; });
 
-    tl.to($("#arrow"), animationTime, { attr: { d: lineFunction(lineData), opacity: "1" }, ease: Linear.easeNone });
+    appendAnimation(null, [{ e: '#arrow', p: { attr: { d: lineFunction(lineData), opacity: 1 } }, o: { duration: 1 } }], null);
 
     highlightKey(index);
 }
 
 function clearHighlight(array) {
-    tl.to($(array + " rect"), animationTime, { attr: { fill: "cornflowerBlue" }, ease: Linear.easeNone });
+    appendAnimation(null, [{ e: $(array + " rect"), p: { attr: { fill: "cornflowerBlue" } }, o: { duration: 1 } }], null);
 }
 
 function add(value) {
@@ -139,34 +154,38 @@ function add(value) {
         .attr("opacity", "0")
         .attr("class", "newElement");
 
-    tl.to($("#bucket .newElement"), animationTime, { attr: { opacity: "1" }, ease: Linear.easeNone });
+    appendAnimation(null, [{ e: $("#bucket .newElement"), p: { attr: { opacity: "1" } }, o: { duration: 1 } }], null);
 }
 
 function moveToHashFunctionBlock() {
-    tl.to($("#hash .newElement").filter("rect"), animationTime, { x: width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin, ease: Linear.easeNone })
-        .to($("#hash .newElement").filter("text"), animationTime, { x: width + 10 - blockWidth - arrElementWidth / 2 - keyWidth - blockMargin, ease: Linear.easeNone }, '-=' + animationTime);
+    appendAnimation(null, [
+        { e: $("#hash .newElement").filter("rect"), p: { x: width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin }, o: { duration: 1 } },
+        { e: $("#hash .newElement").filter("text"), p: { x: width + 10 - blockWidth - arrElementWidth / 2 - keyWidth - blockMargin }, o: { duration: 1, position: '-=1' } }
+    ], null);
 }
 
 function replaceElement(index) {
-    tl.to($("#bucket").filter(".element" + index), animationTime, { attr: { opacity: "0" }, ease: Linear.easeNone })
-        .to($("#hash .newElement").filter("rect"), animationTime, { attr: { x: width - arrElementWidth, y: index * (arrElementHeight + 5) }, ease: Linear.easeNone }, '-=' + animationTime)
-        .to($("#hash .newElement").filter("text"), animationTime, { attr: { x: width - arrElementWidth / 2, y: 2 * arrElementHeight / 3 + index * (arrElementHeight + 5) }, ease: Linear.easeNone }, '-=' + animationTime)
-        .to($("#arrow"), animationTime, { attr: { opacity: "0", d: "" }, ease: Linear.easeNone }, '-=' + animationTime);
+    appendAnimation(6, [
+        { e: $("#bucket").filter(".element" + index), p: { attr: { opacity: 0 } }, o: { duration: 1 } },
+        { e: $("#hash .newElement").filter("rect"), p: { attr: { x: width - arrElementWidth, y: index * (arrElementHeight + 5) } }, o: { duration: 1, position: '-=1' } },
+        { e: $("#hash .newElement").filter("text"), p: { attr: { x: width - arrElementWidth / 2, y: 2 * arrElementHeight / 3 + index * (arrElementHeight + 5) } }, o: { duration: 1, position: '-=1' } },
+        { e: $("#arrow"), p: { attr: { opacity: 0, d: "" } }, o: { duration: 1, position: '-=1' } }
+    ], codeDisplayManager);
 
     $("#bucket").filter(".element" + index).attr("class", "removed");
     $("#hash .newElement").attr("class", "element" + index);
 }
 
 function highlightKey(index) {
-    tl.to($("#keys rect").filter(".key" + index), animationTime, { attr: { stroke: "red" }, ease: Linear.easeNone });
+    appendAnimation(null, [{ e: $("#keys rect").filter(".key" + index), p: { attr: { stroke: "red" } }, o: { duration: 1 } }], null);
 }
 
 function unhighlightKey() {
-    tl.to($("#keys rect"), animationTime, { attr: { stroke: "none" }, ease: Linear.easeNone });
+    appendAnimation(null, [{ e: $("#keys rect"), p: { attr: { stroke: "none" } }, o: { duration: 1 } }], null);
 }
 
 function removeElement(index) {
-    tl.to($("#bucket rect").filter(".element" + index), animationTime, { attr: { stroke: "red", "stroke-width": "2" }, ease: Linear.easeNone });
+    appendAnimation(4, [{ e: $("#bucket rect").filter(".element" + index), p: { attr: { stroke: "red", "stroke-width": "2" } }, o: { duration: 1 } }], codeDisplayManager);
 }
 
 var prevOffset = 0;
@@ -178,25 +197,32 @@ function displayHash(hashValue, length, offset) {
     prevOffset += offset;
     hashString = hashValue + " % " + length + " + " + prevOffset + " = " + (Math.abs(hashValue % length) + prevOffset);
 
-    tl.to($("#hashFunctionBlock text"), animationTime, { attr: { fill: "red" }, text: hashString, ease: Linear.easeNone });
-    tl.to($("#hashFunctionBlock text"), animationTime, { attr: { fill: "black" }, ease: Linear.easeNone });
+    appendAnimation(null, [
+        { e: $("#hashFunctionBlock text"), p: { attr: { stroke: "red" }, text: hashString }, o: { duration: 1 } },
+        { e: $("#hashFunctionBlock text"), p: { attr: { stroke: "black" } }, o: { duration: 1 } }
+    ], null);
 }
 
 function hideHash() {
-    tl.to($("#hashFunctionBlock text"), animationTime, { text: "", ease: Linear.easeNone })
+    appendAnimation(null, [{ e: $("#hashFunctionBlock text"), p: { text: "" }, o: { duration: 1 } }], null);
 }
 
 function renewTable(length) {
-    tl.to($("#bucket, #bucket *"), animationTime, { attr: { opacity: "0" }, ease: Linear.easeNone })
-        .to($("#keys, #keys *"), animationTime, { attr: { opacity: "0" }, ease: Linear.easeNone }, '-=' + animationTime);
+
+    appendAnimation(null, [
+        { e: $("#bucket, #bucket *"), p: { attr: { opacity: 0 } }, o: { duration: 1 } },
+        { e: $("#keys, #keys *"), p: { attr: { opacity: 0 } }, o: { duration: 1, position: '-=1' } }
+    ], null);
 
     $("#bucket *").attr("class", "removed");
     $("#keys *").attr("class", "removed");
 
     createKeysAndBuckets(length, "0");
 
-    tl.to($("#bucket, #bucket *").filter(":not(.removed)"), animationTime, { attr: { opacity: "1" }, ease: Linear.easeNone })
-        .to($("#keys, #keys *").filter(":not(.removed)"), animationTime, { attr: { opacity: "1" }, ease: Linear.easeNone }, '-=' + animationTime);
+    appendAnimation(3, [
+        { e: $("#bucket, #bucket *").filter(":not(.removed)"), p: { attr: { opacity: 1 } }, o: { duration: 1 } },
+        { e: $("#keys, #keys *").filter(":not(.removed)"), p: { attr: { opacity: 1 } }, o: { duration: 1, position: '-=1' } }
+    ], codeDisplayManager);
 }
 
 function createKeysAndBuckets(length, opacity) {
@@ -240,3 +266,9 @@ function createKeysAndBuckets(length, opacity) {
     }
 }
 
+function highlightCode(lines, functionName) {
+    if (functionName)
+        codeDisplayManager.changeFunction(functionName);
+
+    appendCodeLines(lines, codeDisplayManager);
+}

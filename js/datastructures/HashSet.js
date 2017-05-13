@@ -1,5 +1,4 @@
 const DEFAULT_TABLE_SIZE = 11;
-//var cmd = [];
 
 function HashSet(other) {
     this.probingType = "linear";
@@ -39,19 +38,26 @@ HashSet.prototype.isActive = function (arr, pos) {
 };
 
 HashSet.prototype.remove = function (x) {
+    highlightCode([0]);
     var currentPos = this.findPos(x);
-    if (!this.isActive(this.array, currentPos))
+    highlightCode([1], 'remove');
+    if (!this.isActive(this.array, currentPos)) {
+        highlightCode([2]);
         return false;
+    }
 
     this.array[currentPos].isActive = false;
-    //cmd.push("removeElement(" + currentPos + ")");
     removeElement(currentPos);
+    highlightCode([5, 6, 8]);
     this.currentSize--;
     this.modCount++;
 
-    if (this.currentSize < this.array.length / 8)
+    if (this.currentSize < this.array.length / 8) {
+        highlightCode([9]);
         this.rehash();
+    }
 
+    highlightCode([11], 'remove');
     return true;
 };
 
@@ -63,48 +69,71 @@ HashSet.prototype.clear = function () {
 };
 
 HashSet.prototype.add = function (x) {
-    //cmd.push("add('" + x.toString() + "')");
     add(x.toString());
+    highlightCode([0], 'add');
     var currentPos = this.findPos(x);
 
-    if (this.isActive(this.array, currentPos))
+    highlightCode([1], 'add');
+    if (this.isActive(this.array, currentPos)) {
+        highlightCode([2]);
         return false;
+    }
 
-    if (this.array[currentPos] == null)
+    highlightCode([4]);
+    if (this.array[currentPos] == null) {
+        highlightCode([5]);
         this.occupied++;
+    }
+
     this.array[currentPos] = new HashEntry(x, true);
-    //cmd.push("replaceElement(" + currentPos + ")");
     replaceElement(currentPos);
+    highlightCode([7, 8, 10]);
     this.currentSize++;
     this.modCount++;
 
-    if (this.occupied > this.array.length / 2)
+    if (this.occupied > this.array.length / 2) {
+        highlightCode([11]);
         this.rehash();
+    }
 
+    highlightCode([13], 'add');
     return true;
 };
 
 HashSet.prototype.rehash = function () {
+    highlightCode([0], 'rehash');
     var oldArray = this.array;
 
     // Create new empty table
     this.allocateArray(nextPrime(4 * this.size()));
     this.currentSize = 0;
     this.occupied = 0;
-    //cmd.push("clearTable()");
     renewTable(this.array.length);
+    highlightCode([4, 5, 8]);
 
     // Copy table over
-    for (var i = 0; i < oldArray.length; i++)
-        if (this.isActive(oldArray, i))
+    for (var i = 0; i < oldArray.length; i++) {
+        highlightCode([9]);
+        if (this.isActive(oldArray, i)) {
+            highlightCode([10]);
             this.add(oldArray[i].element);
+        }
+        highlightCode([8], 'rehash');
+    }
 };
+
+HashSet.prototype.findPosLinear = function (x) {
+
+}
+
+HashSet.prototype.findPosQuadratic = function (x) {
+
+}
 
 HashSet.prototype.findPos = function (x) {
     var offset = 1;
     var currentPos = (x == null) ? 0 : Math.abs(getHashCode(x) % this.array.length);
-    //cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", 0)");
-    //cmd.push("updateArrow(" + currentPos + ")");
+
     displayHash(getHashCode(x), this.array.length, 0);
     updateArrow(currentPos);
 
@@ -118,10 +147,7 @@ HashSet.prototype.findPos = function (x) {
             break;
 
         currentPos += offset; // Compute ith probe
-        //cmd.push("displayHash(" + getHashCode(x) + ", " + this.array.length + ", " + offset + ")");
         displayHash(getHashCode(x), this.array.length, offset);
-
-        //offset += 2;
 
         interation += 1;
         if(this.probingType == "quadratic") {
@@ -133,7 +159,6 @@ HashSet.prototype.findPos = function (x) {
         if (currentPos >= this.array.length) // Implement the mod
             currentPos -= this.array.length;
 
-        //cmd.push("updateArrow(" + currentPos + ")");
         updateArrow(currentPos);
     }
 

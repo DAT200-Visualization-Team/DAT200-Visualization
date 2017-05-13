@@ -181,7 +181,31 @@
         },
         {
           "id": "hash",
-          "name": "Hash Table"
+          "name": "Hash Set",
+          "commands": [
+            {
+              "name": "Add",
+              "function": "runAdd",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Value",
+                  "placeholder": "Value"
+                }
+              ]
+            },
+            {
+              "name": "Remove",
+              "function": "runRemove",
+              "arguments": [
+                {
+                  "type": "string",
+                  "name": "Value",
+                  "placeholder":  "Value"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -214,7 +238,24 @@
         },
         {
           "id": "mergesort",
-          "name": "Merge Sort"
+          "name": "Merge Sort",
+          "commands": [
+            {
+              "name": "Create",
+              "function": "createArray",
+              "arguments": [
+                {
+                  "type": "array",
+                  "name": "Data",
+                  "placeholder": "1,2,3"
+                }
+              ]
+            },
+            {
+              "name": "Sort",
+              "function": "sort"
+            }
+          ]
         },
         {
           "id": "bubblesort",
@@ -227,7 +268,7 @@
                 {
                   "type": "array",
                   "name": "Data",
-                  "placeholder": "5,2,3..."
+                  "placeholder": "1,2,3..."
                 }
               ]
             },
