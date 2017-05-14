@@ -73,6 +73,7 @@ d3.json("js/geojson/output_intersection_with_id.json", function(error, intersect
 //TODO the rest of the data to the map
 d3.json("js/geojson/buildings.json", function(error, buildings) {
 
+    console.log(buildings);
     var building_json = buildings;
 
     buildingLayer.selectAll(".building, .area, .grass")
@@ -81,7 +82,7 @@ d3.json("js/geojson/buildings.json", function(error, buildings) {
         .append("path")
         .attr("d", path)
         .attr("class", function(data) {
-            if(data.properties.building != undefined) {
+            if(data.properties.fclass != undefined) {
                 return "building";
             } else if(data.properties.landuse == "grass" || data.properties.landuse == "forest")
             {
