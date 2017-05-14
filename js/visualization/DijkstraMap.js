@@ -51,7 +51,8 @@ d3.json("js/geojson/output_roads.json", function(error, norway) {
         .attr("d", path)
         .attr("stroke", "blue")
         .attr("stroke-width", 3)
-        .attr("fill", "none");
+        .attr("fill", "none")
+        .attr("id", function(d) { return d.start_node + "_" + d.end_node; });
 
     roads_data = roads._groups[0];
 });
@@ -251,7 +252,7 @@ function addPathColorFrame(path, color) {
     //TODO add intersection highlighting
 }
 
-function getLinkElement(a, b) {
+function getLinkElement2(a, b) {
     if(a == undefined || b == undefined) return null;
     var intersectionAEdges = intersection_json.features[a].properties;
 
@@ -264,6 +265,13 @@ function getLinkElement(a, b) {
         }
     }
     return null;
+}
+
+function getLinkElement(a, b) {
+    var link = $("#" + a + "_" + b);
+    if(link.length == 0) link = $("#" + b + "_" + a);
+    console.log(link);
+    return link;
 }
 
 function executeCommands(commands) {
