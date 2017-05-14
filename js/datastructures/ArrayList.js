@@ -101,7 +101,7 @@ ArrayList.prototype.removeAtPos = function (index) {
     highlightCode([0, 2]);
     var removedItem = this.theItems[index];
 
-    for (var i = index; i <= this.theSize - 1; i++) {
+    for (var i = index; i < this.theSize - 1; i++) {
         move(i+1, this.capacity, i == this.theSize-1);
         this.theItems[i] = this.theItems[i + 1];
         highlightCode([2]);

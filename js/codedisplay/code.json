@@ -3,7 +3,7 @@
     "arrayList": {
       "removeAtPos": {
         "header": "ArrayList.prototype.removeAtPos = function (index) {",
-        "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i <= this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
+        "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i < this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
       },
       "add": {
         "header": "ArrayList.prototype.add = function (x) {",
