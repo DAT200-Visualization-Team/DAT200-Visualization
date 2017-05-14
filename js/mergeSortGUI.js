@@ -11,7 +11,8 @@ var barChart = d3.select(".drawingArea")
     .append("svg:svg")
     .attr("width", width + 200)
     .attr("height", height + 200)
-    .attr("id", "barChart");
+    .append('g')
+        .attr("id", "barChart");
 
 var rectPositions = [];
 var textPositions = [];
