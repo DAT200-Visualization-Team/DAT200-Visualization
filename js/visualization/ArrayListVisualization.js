@@ -126,6 +126,7 @@ function add(index, textContent) {
 function move(from, capacity, NewTextNeeded) {
     var element = $(".text" + from);
     var oldElement = $(".text" + (from - 1));
+    createTextElement(from, arrayList.capacity, 0, element.text(), 1);
 
     appendAnimation(3, [
         { e: element, p: { attr: { x: ((from - 1) * (width / capacity) + arrElementWidth / 2 + 5) } }, o: { duration: 1 } },
@@ -145,6 +146,11 @@ function extendCapacity(newCapacity, oldCapacity) {
     var oldArray = $("#mainArray rect");
     highlightCode([2]);
     createArray(newCapacity, oldCapacity, 100, 0);
+
+ /*   for (var j = 0; j < oldCapacity; j++) {
+        $(".text" + j).attr('class', "oldText" + j);
+        createTextElement(j, oldCapacity, 0, $(".oldText" + j).text(), 1);
+    }*/
 
     for (var i = 0; i < oldCapacity; i++) {
         appendAnimation(5, [{ e: $(".text" + i), p: { y: 100 }, o: { duration: 1 } }], codeDisplayManager);
