@@ -14,6 +14,8 @@ var barChart = d3.select(".drawingArea")
     .append('g')
         .attr("id", "barChart");
 
+barChart.attr("transform", "translate(" + (width/2 - input.length/2 * (arrElementWidth + 5)) + ",10)");
+
 var rectPositions = [];
 var textPositions = [];
 var elementPositions = [];

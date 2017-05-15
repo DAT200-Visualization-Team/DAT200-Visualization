@@ -192,11 +192,19 @@ function removeElement(index) {
 var prevOffset = 0;
 function displayHash(hashValue, length, offset) {
     var hashString;
-    if (offset == 0) {
-        hashString = hashValue + " % " + length + " = " + Math.abs(hashValue % length);
+    if(set.probingType != "quadratic") {
+        if (offset == 0) {
+            hashString = hashValue + " % " + length + " = " + Math.abs(hashValue % length);
+        }
+        prevOffset += offset;
+        hashString = hashValue + " % " + length + " + " + prevOffset + " = " + (Math.abs(hashValue % length) + prevOffset);
+    } else {
+        if (offset == 0) {
+            hashString = hashValue + " % " + length + " = " + Math.abs(hashValue % length);
+        }
+        prevOffset += offset;
+        hashString = hashValue + " % " + length + " + " + offset + " * " + offset + " = " + (Math.abs(hashValue % length) + offset*offset);
     }
-    prevOffset += offset;
-    hashString = hashValue + " % " + length + " + " + prevOffset + " = " + (Math.abs(hashValue % length) + prevOffset);
 
     appendAnimation(null, [
         { e: $("#hashFunctionBlock text"), p: { attr: { stroke: "red" }, text: hashString }, o: { duration: 1 } },
