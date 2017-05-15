@@ -98,6 +98,10 @@ function tree(rootLbl) {
         redraw();
     };
 
+    tree.redraw = function () {
+        redraw();
+    }
+
     tree.removeLeaf = function (_) {
         function removeLeaf(n) {
             n.forEach(function (t) {

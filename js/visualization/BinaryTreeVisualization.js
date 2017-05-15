@@ -25,7 +25,7 @@ function createMarker() {
 }
 
 function moveMarker(cx, cy) {
-    return [{ e: $("#marker"), p: { x: cx, y: cy, opacity: 1 }, o: { duration: animationTime/*, delay: 50*/} }];
+    return [{ e: $("#marker"), p: { x: cx, y: cy, opacity: 1 }, o: { duration: animationTime} }];
 }
 
 function visualizePreOrder() {
@@ -120,3 +120,17 @@ function visualizePostOrder() {
     createMarker();
     postOrder(bt.getRoot());
 }
+
+function processUploadedObject(object) {
+    treeGUI = tree();
+    for (var property in object.binarytree) {
+        if (object.binarytree.hasOwnProperty(property)) {
+            treeGUI[property] = object.binarytree[property];
+        }
+    }
+    treeGUI.redraw();
+}
+
+$('#download-button, #download-button-mobile').on('click', function () {
+    downloadObjectJson(treeGUI, 'binarytree');
+});
