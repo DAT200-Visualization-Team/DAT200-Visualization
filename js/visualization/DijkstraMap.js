@@ -9,12 +9,6 @@ var selectedEndNode = undefined;
 var width = $('#graphics').width(),
     height = $('#graphics').height();
 
-// Hele Norge
-//var projection = d3.geoMercator()
-//    .center([18.0, 65.5])
-//    .scale(1000)
-//    .translate([width / 2, height / 2]);
-
 var projection = d3.geoMercator()
     .center([5.698113, 58.936801])
     .scale(2000000)
@@ -70,7 +64,6 @@ d3.json("js/geojson/output_intersection_with_id.json", function(error, intersect
         .on("click", selectNode);
 });
 
-//TODO the rest of the data to the map
 d3.json("js/geojson/buildings.json", function(error, buildings) {
 
     console.log(buildings);
@@ -142,7 +135,6 @@ function start() {
 }
 
 function zoomed() {
-    //console.log(d3.event.transform.k);
     map.attr("transform", d3.event.transform);
     buildingLayer.attr("transform", d3.event.transform);
     intersectionLayer.attr("transform", d3.event.transform);
@@ -152,8 +144,6 @@ function zoomed() {
 
     buildingLayer.selectAll(".building")
         .style("stroke-width", 2/d3.event.transform.k);
-
-    //path.pointRadius(3/d3.event.transform.k);
 }
 
 function resetLinkColors() {

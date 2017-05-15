@@ -122,14 +122,6 @@ HashSet.prototype.rehash = function () {
     }
 };
 
-HashSet.prototype.findPosLinear = function (x) {
-
-}
-
-HashSet.prototype.findPosQuadratic = function (x) {
-
-}
-
 HashSet.prototype.findPos = function (x) {
     var offset = 1;
     var currentPos = (x == null) ? 0 : Math.abs(getHashCode(x) % this.array.length);

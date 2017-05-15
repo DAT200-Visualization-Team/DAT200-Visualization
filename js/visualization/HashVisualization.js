@@ -16,10 +16,6 @@ var blockWidth = keyWidth + keyMargin + arrElementWidth;
 var blockHeight = DEFAULT_TABLE_SIZE * (arrElementHeight + 5);
 var blockMargin = 30;
 
-//Animation
-var animationTime = 1 / 3;
-var tl = new TimelineMax();
-
 var codeDisplayManager = new CodeDisplayManager('javascript', 'hashSet');
 
 var drawingArea;
@@ -93,13 +89,18 @@ $(document).ready(function () {
     drawingArea.attr("transform", "translate(50,20) scale(0.70)");
 });
 
-function runAdd(x) {
+function runAdd(x, probing) {
+    if (probing == 'Quadratic')
+        set.probingType == 'quadratic';
+    else
+        set.probingType == 'linear';
+
     codeDisplayManager.loadFunctions('add', 'rehash');
     codeDisplayManager.changeFunction('add');
     set.add(x);
 }
 
-function runRemove(x) {
+function runRemove(x, probing) {
     codeDisplayManager.loadFunctions('remove', 'rehash', 'add');
     codeDisplayManager.changeFunction('remove');
     set.remove(x);

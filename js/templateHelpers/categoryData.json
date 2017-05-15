@@ -191,6 +191,12 @@
                   "type": "string",
                   "name": "Value",
                   "placeholder": "Value"
+                },
+                {
+                  "type": "string",
+                  "name": "Probing",
+                  "placeholder": "Probing",
+                  "options": [ "Linear", "Quadratic"]
                 }
               ]
             },
@@ -201,7 +207,13 @@
                 {
                   "type": "string",
                   "name": "Value",
-                  "placeholder":  "Value"
+                  "placeholder": "Value"
+                },
+                {
+                  "type": "string",
+                  "name": "Probing",
+                  "placeholder": "Probing",
+                  "options": [ "Linear", "Quadratic" ]
                 }
               ]
             }
