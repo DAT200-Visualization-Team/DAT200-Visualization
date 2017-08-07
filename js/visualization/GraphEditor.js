@@ -333,8 +333,11 @@ function restart() {
     // show node IDs
     g.append('svg:text')
         .attr('x', 0)
-        .attr('y', 4)
+        .attr('y', 4.5)
         .attr('class', 'id')
+        .style('font-size', '16px')
+        .style('stroke', 'white')
+        .style('stroke-width', '0.3px')
         .text(function (d) { return d.id; });
 
     // remove old nodes
