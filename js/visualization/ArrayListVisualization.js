@@ -126,7 +126,6 @@ function add(index, textContent) {
 function move(from, capacity, NewTextNeeded) {
     var element = $(".text" + from);
     var oldElement = $(".text" + (from - 1));
-    createTextElement(from, arrayList.capacity, 0, element.text(), 1);
 
     appendAnimation(3, [
         { e: element, p: { attr: { x: ((from - 1) * (width / capacity) + arrElementWidth / 2 + 5) } }, o: { duration: 1 } },
