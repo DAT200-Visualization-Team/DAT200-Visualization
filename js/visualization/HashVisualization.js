@@ -23,6 +23,7 @@ var drawingArea;
 var hashFunctionBlock;
 var bucket;
 var keys;
+var newestElement;
 
 var arrow;
 
@@ -37,12 +38,12 @@ $(document).ready(function () {
     .append('g');
 
     hashFunctionBlock = drawingArea.append("g");
-    bucket = drawingArea.append("g");
     keys = drawingArea.append("g");
+    bucket = drawingArea.append("g");
 
     hashFunctionBlock.attr("id", "hashFunctionBlock");
-    bucket.attr("id", "bucket");
     keys.attr("id", "keys");
+    bucket.attr("id", "bucket");
 
     hashFunctionBlock.append("rect")
         .attr("width", blockWidth)
@@ -137,44 +138,44 @@ function add(value) {
     prevOffset = 0;
     hideHash();
 
-    bucket.append("rect")
-        .attr("width", arrElementWidth)
-        .attr("height", arrElementHeight)
-        .attr("fill", "BlueViolet")
-        .attr("opacity", "0")
+    newestElement = bucket.append("svg:g")
+        .attr("transform", "translate(0," + height / 2 + ")")
         .attr("class", "newElement")
-        .attr("y", height / 2)
-        .attr("x", 0);
+        .attr("opacity", 0);
 
-    bucket.append("text")
+    newestElement.append("rect")
         .attr("width", arrElementWidth)
         .attr("height", arrElementHeight)
-        .attr("x", arrElementWidth / 2)
-        .attr("y", height / 2 + 2 * arrElementHeight / 3)
-        .text(value)
-        .attr("opacity", "0")
-        .attr("class", "newElement");
+        .attr("fill", "BlueViolet");
 
-    appendAnimation(null, [{ e: $("#bucket .newElement"), p: { attr: { opacity: "1" } }, o: { duration: 1 } }], null);
+    newestElement.append("text")
+        .style("text-anchor", "middle")
+        .attr("x", arrElementWidth / 2)
+        .attr("y", arrElementHeight / 2 + 5)
+        .text(value)
+        .style("font-size", "20px");
+
+    appendAnimation(null, [{ e: newestElement.node(), p: { attr: { opacity: "1" } }, o: { duration: 1 } }], null);
 }
 
 function moveToHashFunctionBlock() {
     appendAnimation(null, [
-        { e: $("#hash .newElement").filter("rect"), p: { x: width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin }, o: { duration: 1 } },
-        { e: $("#hash .newElement").filter("text"), p: { x: width + 10 - blockWidth - arrElementWidth / 2 - keyWidth - blockMargin }, o: { duration: 1, position: '-=1' } }
+        { e: newestElement.node(), p: { x: width + 10 - blockWidth - arrElementWidth - keyWidth - blockMargin }, o: { duration: 1 } },
+        { e: $("#arrow"), p: { attr: { opacity: 0, d: "" } }, o: { duration: 1, position: '-=1' } }
     ], null);
 }
 
 function replaceElement(index) {
+    
+    moveToHashFunctionBlock();
+
     appendAnimation(6, [
         { e: $("#bucket").filter(".element" + index), p: { attr: { opacity: 0 } }, o: { duration: 1 } },
-        { e: $("#hash .newElement").filter("rect"), p: { attr: { x: width - arrElementWidth, y: index * (arrElementHeight + 5) } }, o: { duration: 1, position: '-=1' } },
-        { e: $("#hash .newElement").filter("text"), p: { attr: { x: width - arrElementWidth / 2, y: 2 * arrElementHeight / 3 + index * (arrElementHeight + 5) } }, o: { duration: 1, position: '-=1' } },
-        { e: $("#arrow"), p: { attr: { opacity: 0, d: "" } }, o: { duration: 1, position: '-=1' } }
+        { e: newestElement.node(), p: { x: width - arrElementWidth, y: index * (arrElementHeight + 5) }, o: { duration: 1, position: '-=1' } },
     ], codeDisplayManager);
 
     $("#bucket").filter(".element" + index).attr("class", "removed");
-    $("#hash .newElement").attr("class", "element" + index);
+    $(newestElement).attr("class", "element" + index);
 }
 
 function highlightKey(index) {
@@ -186,13 +187,16 @@ function unhighlightKey() {
 }
 
 function removeElement(index) {
-    appendAnimation(4, [{ e: $("#bucket rect").filter(".element" + index), p: { attr: { stroke: "red", "stroke-width": "2" } }, o: { duration: 1 } }], codeDisplayManager);
+    appendAnimation(4, [
+        { e: $(".element" + index), p: { attr: { stroke: "red", "stroke-width": "2" } }, o: { duration: 1 } },
+        { e: $("#arrow"), p: { attr: { opacity: 0, d: "" } }, o: { duration: 1, position: '-=1' } }
+    ], codeDisplayManager);
 }
 
 var prevOffset = 0;
 function displayHash(hashValue, length, offset) {
     var hashString;
-    if(set.probingType != "quadratic") {
+    if (set.probingType != "quadratic") {
         if (offset == 0) {
             hashString = hashValue + " % " + length + " = " + Math.abs(hashValue % length);
         }
@@ -203,7 +207,7 @@ function displayHash(hashValue, length, offset) {
             hashString = hashValue + " % " + length + " = " + Math.abs(hashValue % length);
         }
         prevOffset += offset;
-        hashString = hashValue + " % " + length + " + " + offset + " * " + offset + " = " + (Math.abs(hashValue % length) + offset*offset);
+        hashString = hashValue + " % " + length + " + " + offset + " * " + offset + " = " + (Math.abs(hashValue % length) + offset * offset);
     }
 
     appendAnimation(null, [
@@ -236,42 +240,44 @@ function renewTable(length) {
 
 function createKeysAndBuckets(length, opacity) {
     for (var i = 0; i < length; i++) {
-        bucket.append("rect")
-            .attr("x", width - arrElementWidth)
-            .attr("y", i * (arrElementHeight + 5))
-            .attr("height", arrElementHeight)
-            .attr("width", arrElementWidth)
-            .attr("fill", "cornflowerBlue")
-            .attr("opacity", opacity)
-            .attr("class", "element" + i);
-
-        bucket.append("text")
-            .text("")
-            .attr("x", width - arrElementWidth / 2)
-            .attr("y", 2 * arrElementHeight / 3 + i * (arrElementHeight + 5))
-            .attr("width", arrElementWidth)
-            .attr("height", arrElementHeight)
-            .attr("opacity", opacity)
-            .attr("text-anchor", "middle")
-            .attr("class", "element" + i);
-
         //Key
-        keys.append("rect")
-            .attr("x", width - arrElementWidth - keyWidth - keyMargin)
-            .attr("y", i * (arrElementHeight + 5))
+        var keyPosX = width - arrElementWidth - keyWidth - keyMargin;
+        var keyPosY = i * (arrElementHeight + 5);
+
+        var keyGroup = keys.append("svg:g")
+            .attr("transform", "translate(" + keyPosX + "," + keyPosY + ")");
+
+        keyGroup.append("svg:rect")
             .attr("height", arrElementHeight)
             .attr("width", keyWidth)
             .attr("fill", "cornflowerBlue")
             .attr("opacity", opacity)
             .attr("class", "key" + i);
 
-        keys.append("text")
+        keyGroup.append("svg:text")
             .text(i)
-            .attr("x", width + keyWidth / 2 - arrElementWidth - keyWidth - keyMargin)
-            .attr("y", 2 * arrElementHeight / 3 + i * (arrElementHeight + 5))
-            .attr("width", keyWidth)
-            .attr("height", arrElementHeight)
+            .attr("x", keyWidth / 2)
+            .attr("y", arrElementHeight / 2 + 5)
+            .attr("opacity", opacity)
+            .attr("text-anchor", "middle");
+
+
+        //Bucket
+        var valueGroup = bucket.append("svg:g")
+            .attr("transform", "translate(" + (width - arrElementWidth) + "," + i * (arrElementHeight + 5) + ")")
+            .attr("class", "element" + i)
             .attr("opacity", opacity);
+
+        valueGroup.append("svg:rect")
+            .attr("width", arrElementWidth)
+            .attr("height", arrElementHeight)
+            .attr("fill", "cornflowerBlue");
+
+        valueGroup.append("svg:text")
+            .style("text-anchor", "middle")
+            .attr("x", arrElementWidth / 2)
+            .attr("y", arrElementHeight / 2 + 5)
+            .style("font-size", "20px");
     }
 }
 

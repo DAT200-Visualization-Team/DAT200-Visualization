@@ -58,6 +58,7 @@ HashSet.prototype.remove = function (x) {
     }
 
     highlightCode([11], 'remove');
+    unhighlightKey();
     return true;
 };
 
@@ -97,6 +98,7 @@ HashSet.prototype.add = function (x) {
     }
 
     highlightCode([13], 'add');
+    unhighlightKey();
     return true;
 };
 
