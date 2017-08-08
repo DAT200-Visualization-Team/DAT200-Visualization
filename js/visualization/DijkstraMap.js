@@ -200,7 +200,7 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
                 w.dist = v.dist + cvw;
                 w.prev = v;
                 pq.add(new Path(w, w.dist));
-                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#d8d10a" } });
+                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#EBCA10" } });
                 if (w.name == endName) {
                     return;
                 }
