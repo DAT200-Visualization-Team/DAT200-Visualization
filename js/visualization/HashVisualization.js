@@ -146,14 +146,15 @@ function add(value) {
     newestElement.append("rect")
         .attr("width", arrElementWidth)
         .attr("height", arrElementHeight)
-        .attr("fill", "BlueViolet");
+        .attr("fill", "#9c6dfc");
 
     newestElement.append("text")
         .style("text-anchor", "middle")
         .attr("x", arrElementWidth / 2)
-        .attr("y", arrElementHeight / 2 + 5)
+        .attr("y", arrElementHeight / 2 + 7)
         .text(value)
-        .style("font-size", "20px");
+        .style("font-size", "22px")
+        .style("font-weight", "bold");
 
     appendAnimation(null, [{ e: newestElement.node(), p: { attr: { opacity: "1" } }, o: { duration: 1 } }], null);
 }
@@ -257,9 +258,11 @@ function createKeysAndBuckets(length, opacity) {
         keyGroup.append("svg:text")
             .text(i)
             .attr("x", keyWidth / 2)
-            .attr("y", arrElementHeight / 2 + 5)
+            .attr("y", arrElementHeight / 2 + 7)
             .attr("opacity", opacity)
-            .attr("text-anchor", "middle");
+            .attr("text-anchor", "middle")
+            .style("font-size", "22px")
+            .style("font-weight", "bold");
 
 
         //Bucket
@@ -276,8 +279,9 @@ function createKeysAndBuckets(length, opacity) {
         valueGroup.append("svg:text")
             .style("text-anchor", "middle")
             .attr("x", arrElementWidth / 2)
-            .attr("y", arrElementHeight / 2 + 5)
-            .style("font-size", "20px");
+            .attr("y", arrElementHeight / 2 + 7)
+            .style("font-size", "22px")
+            .style("font-weight", "bold");
     }
 }
 
