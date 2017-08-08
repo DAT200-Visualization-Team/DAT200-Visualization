@@ -32,6 +32,8 @@ barChart.call(pan);
 var codeDisplayManager = new CodeDisplayManager('javascript', 'mergeSort');
 
 function createArray(data) {
+    barChart.selectAll("*").remove();
+    input = data;
     createRects(data.length, 0);
     createTexts(data);
 }
