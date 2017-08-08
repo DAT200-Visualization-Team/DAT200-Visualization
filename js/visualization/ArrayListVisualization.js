@@ -22,13 +22,15 @@ theSizeBlock.append("rect")
     .attr("width", 0)
     .attr("height", (arrElementHeight + 40 + 10))
     .attr("id", "theSizeBlock")
-    .attr("fill", "lime");
+    .attr("fill", "#526475");
 
 theSizeBlock.append("text")
     .attr("y", 25)
     .attr("x", 10)
     .attr("id", "theSizeBlockText")
     .style("opacity", "0")
+    .style("font-size", "18x")
+    .style("fill", "#039BE5")
     .text("theSize");
 
 var mainArray = drawingArea.append("g")
@@ -85,7 +87,7 @@ function createArray(length, oldlength, y, opacity) {
             .attr("transform", "translate(0," + y + ")")
             .attr("height", arrElementHeight)
             .attr("width", arrElementWidth)
-            .attr("fill", "red")
+            .attr("fill", "#F44336")
             .style("opacity", opacity)
             .attr("class", "rect" + i);
     }
