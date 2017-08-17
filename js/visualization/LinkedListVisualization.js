@@ -314,7 +314,7 @@ function removeNode(idx) {
     var leftArrow = new Arrow($("#linkedlist").children().eq(idx - 1).children().eq(1));
     var rightArrow = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
 
-    codeDisplayManager.loadFunctions("removeNode");
+    codeDisplayManager.loadFunctions("removeByIdx", "removeNode", "getNode");
     codeDisplayManager.changeFunction("removeNode");
 
     appendAnimation(0, [rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60)], codeDisplayManager);
