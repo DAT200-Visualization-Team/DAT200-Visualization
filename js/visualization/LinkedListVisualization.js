@@ -231,20 +231,22 @@ function addByIndex(idx, data) {
         throw new Error("Index is out of range");
     }
 
-    linkedList.add(idx + 1, data);
-
-    // Get and draw p
-    var p = createPointer('south',
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        50,
-        (offsetX + nodeWidth / 2 + ((nodeWidth + nodeSpace) * (idx + 1))),
-        80);
-
-
     // Draw newNode with both arrows
     var node = createNode((offsetX + ((idx + 1) * (nodeWidth + nodeSpace))),
         offsetY + nodeHeight, data, true, (idx + 1));
-    updateDrawingArea();
+    //updateDrawingArea();
+
+    codeDisplayManager.loadFunctions("add", "getNode");
+    codeDisplayManager.changeFunction("add");
+    appendCodeLines(0, codeDisplayManager);
+    //FIXME: first line in "addByIndex" does not get animated before the animation goes on to "getNode"
+    codeDisplayManager.changeFunction("getNode");
+
+    getNodeSearch(idx);
+    codeDisplayManager.changeFunction("add");
+
+    linkedList.add(idx + 1, data);
+
 
     var node = $("#linkedlist").children().eq(idx + 1);
     node.attr("opacity", "0");
@@ -265,11 +267,6 @@ function addByIndex(idx, data) {
     p = $("#linkedlist").children().last();
     p.attr("opacity", 0);
 
-    codeDisplayManager.loadFunctions("add");
-    codeDisplayManager.changeFunction("add");
-
-
-    appendAnimation(0, [{e: p, p: {opacity: 1}, o: {duration: animationTime}}], codeDisplayManager);
 
     var tmp = [
         npNext.animate(nodeSpace + nodeWidth, 0),
@@ -331,6 +328,56 @@ function removeNode(idx) {
     ], codeDisplayManager);
 
     appendCodeLines([2, 3, 4], codeDisplayManager);
+}
+
+function getNodeSearch(idx) {
+    appendCodeLines([0,1], codeDisplayManager);
+
+    if (idx < (linkedList.size() - 1) / 2) {
+        var p = createPointer('south',
+            offsetX + nodeWidth + nodeSpace + nodeWidth / 2,
+            50, offsetX + nodeWidth + nodeSpace + nodeWidth / 2, 80);
+        updateDrawingArea();
+        p = $("#linkedlist").children().last();
+        p.attr("opacity", 0);
+
+        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
+        appendAnimation(2, tmp, codeDisplayManager);
+
+        p = new Arrow($("#linkedlist").children().last());
+
+        appendCodeLines([3], codeDisplayManager);
+        for (var i = 0; i < idx ; i++) {
+            tmp = [p.translateStraightArrow((nodeWidth + nodeSpace), 0)];
+            appendAnimation(4, tmp, codeDisplayManager);
+            appendCodeLines([5, 3], codeDisplayManager);
+        }
+
+        appendCodeLines([6], codeDisplayManager);
+    }
+    else {
+        appendCodeLines([6], codeDisplayManager);
+
+        var p = createPointer('south',
+            offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2,
+            50, offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2, 80);
+        updateDrawingArea();
+        p = $("#linkedlist").children().last();
+        p.attr("opacity", 0);
+        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
+        appendAnimation(7, tmp, codeDisplayManager);
+
+        p = new Arrow($("#linkedlist").children().last());
+
+        appendCodeLines([8], codeDisplayManager);
+        for (var i = linkedList.size() - 2; i > idx ; i--) {
+            tmp = [p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)];
+            appendAnimation(9, tmp, codeDisplayManager);
+            appendCodeLines([10, 8], codeDisplayManager);
+        }
+        appendCodeLines([11], codeDisplayManager);
+    }
+    appendCodeLines([12], codeDisplayManager);
 }
 
 function getNode(idx) {
