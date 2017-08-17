@@ -384,54 +384,7 @@ function getNode(idx) {
     redraw();
     codeDisplayManager.loadFunctions("getNode");
     codeDisplayManager.changeFunction("getNode");
-
-    appendCodeLines([0,1], codeDisplayManager);
-
-    if (idx < (linkedList.size() - 1) / 2) {
-        var p = createPointer('south',
-            offsetX + nodeWidth + nodeSpace + nodeWidth / 2,
-            50, offsetX + nodeWidth + nodeSpace + nodeWidth / 2, 80);
-        updateDrawingArea();
-        p = $("#linkedlist").children().last();
-        p.attr("opacity", 0);
-
-        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
-        appendAnimation(2, tmp, codeDisplayManager);
-
-        p = new Arrow($("#linkedlist").children().last());
-
-        appendCodeLines([3], codeDisplayManager);
-        for (var i = 0; i < idx ; i++) {
-            tmp = [p.translateStraightArrow((nodeWidth + nodeSpace), 0)];
-            appendAnimation(4, tmp, codeDisplayManager);
-            appendCodeLines([5, 3], codeDisplayManager);
-        }
-
-        appendCodeLines([6], codeDisplayManager);
-    }
-    else {
-        appendCodeLines([6], codeDisplayManager);
-
-        var p = createPointer('south',
-            offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2,
-            50, offsetX + (nodeWidth + nodeSpace) * (linkedList.size() - 1) + nodeWidth / 2, 80);
-        updateDrawingArea();
-        p = $("#linkedlist").children().last();
-        p.attr("opacity", 0);
-        var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
-        appendAnimation(7, tmp, codeDisplayManager);
-
-        p = new Arrow($("#linkedlist").children().last());
-
-        appendCodeLines([8], codeDisplayManager);
-        for (var i = linkedList.size() - 2; i > idx ; i--) {
-            tmp = [p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)];
-            appendAnimation(9, tmp, codeDisplayManager);
-            appendCodeLines([10, 8], codeDisplayManager);
-        }
-        appendCodeLines([11], codeDisplayManager);
-    }
-    appendCodeLines([12], codeDisplayManager);
+    getNodeSearch(idx);
 }
 
 //STATUS: converted to GSAP

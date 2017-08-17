@@ -85,7 +85,6 @@ function appendAnimation(line, animations, codeDisplayManager) {
             AnimationPlayer.tl().to(info.e, info.o.duration, info.p, info.o.position ? info.o.position : "+=0");
         }      
     }
-    console.log(codeDisplayManager, line, lineHL);
     if(line != null) {
         AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
     }
