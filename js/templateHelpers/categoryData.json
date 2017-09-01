@@ -33,6 +33,22 @@
               ]
             },
             {
+              "name": "Add to index",
+              "function": "runAddByIndex",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                },
+                {
+                  "type": "string",
+                  "name": "value",
+                  "placeholder": "Value"
+                }
+              ]
+            },
+            {
               "name": "Remove",
               "function": "runRemove",
               "arguments": [
