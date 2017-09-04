@@ -199,7 +199,7 @@
       },
       "removeByIdx": {
         "header": "LinkedList.prototype.removeByIdx = function(idx) {",
-        "lines": [ "    return this.removeNode(this.getNode(idx));", "};" ]
+        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)","    return nData;", "};" ]
       },
       "removeFirst": {
         "header": "LinkedList.prototype.removeFirst = function() {",
