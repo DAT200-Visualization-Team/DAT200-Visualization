@@ -3,8 +3,8 @@
     {
       "id": "collections",
       "name": "Collections",
-      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Placeholder+Image",
-      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
+      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Collection",
+      "description": "A collection is a set of related data, stored using a defined structure such as lists. Each collection has its own methods for data retrieval and manipulation.",
       "subCategories": [
         {
           "id": "arraylist",
@@ -28,6 +28,22 @@
                 {
                   "type": "string",
                   "name": "Value",
+                  "placeholder": "Value"
+                }
+              ]
+            },
+            {
+              "name": "Add to index",
+              "function": "runAddByIndex",
+              "arguments": [
+                {
+                  "type": "int",
+                  "name": "Index",
+                  "placeholder": "Index"
+                },
+                {
+                  "type": "string",
+                  "name": "value",
                   "placeholder": "Value"
                 }
               ]
@@ -224,8 +240,8 @@
     {
       "id": "sorting",
       "name": "Sorting",
-      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Placeholder+Image",
-      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
+      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Sorting",
+      "description": "Sorting algorithms are used to put data in a specific order based on the value of the data. There are different ways of sorting which all have advantages and disadvantages in relation to each other.",
       "subCategories": [
         {
           "id": "insertionsort",
@@ -351,8 +367,8 @@
     {
       "id": "trees",
       "name": "Trees",
-      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Placeholder+Image",
-      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
+      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Trees",
+      "description": "Trees are a type of collection which stores data in a hierarchy similar to a tree. The root node is the base and the tree splits up in different branches as it grows.",
       "subCategories": [
         {
           "id": "binarytree",
@@ -416,8 +432,8 @@
     {
       "id": "graphs",
       "name": "Graphs",
-      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Placeholder+Image",
-      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
+      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Graphs",
+      "description": "Graphs are similar to trees, but are less restrictive. They are not hierarchical, meaning any node can connect to any other node.",
       "subCategories": [
         {
           "id": "dijkstra",
@@ -468,8 +484,8 @@
     {
       "id": "other",
       "name": "Other",
-      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Placeholder+Image",
-      "description": "Lorem ipsum dolor sit amet, et duo minim gloriatur, pri rebum dicam intellegam cu, dolore epicuri temporibus eu cum. Labitur omittam singulis sed ad. Usu quod mentitum an. At liber nusquam scaevola quo.",
+      "image": "https://dummyimage.com/400x300/6e5055/ffffff.png&text=Other",
+      "description": "This category contains algorithms that do not fit in the other categories, in addition to practical implementations of important algorithms.",
       "subCategories": [
         {
           "id": "towerofhanoi",

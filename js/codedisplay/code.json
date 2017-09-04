@@ -8,6 +8,10 @@
       "add": {
         "header": "ArrayList.prototype.add = function (x) {",
         "lines": [ "    // Ensure capacity", "    if (this.theItems.length == this.size()) {", "        var old = this.theItems;", "        this.theItems = new Array(this.theSize * 2 + 1);", "        for (var i = 0; i < this.size() ; i++)", "            this.theItems[i] = old[i];", "    }", "", "    this.theItems[this.theSize++] = x;", "    this.modCount++;", "", "    return true;", "};" ]
+      },
+      "addByIndex": {
+        "header": "ArrayList.prototype.addIndex = function (index, x) {",
+        "lines": [ "    if(index < 0 || index > this.theSize) return false; // Out of bounds", "    // Ensure capacity", "    if (this.theItems.length == this.size()) {", "        var old = this.theItems;", "        this.theItems = new Array(this.theSize * 2 + 1);", "        for (var i = 0; i < this.size() ; i++)", "            this.theItems[i] = old[i];", "    }", "", "    for(var j = this.theSize; j > index; j--) {", "        this.theItems[j] = this.theItems[j-1]", "    }", "    this.theItems[index] = x;", "    this.theSize++;", "    this.modCount++;", "", "    return true;", "};" ]
       }
     },
     "stack": {
@@ -195,7 +199,7 @@
       },
       "removeByIdx": {
         "header": "LinkedList.prototype.removeByIdx = function(idx) {",
-        "lines": [ "    return this.removeNode(this.getNode(idx));", "};" ]
+        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)","    return nData;", "};" ]
       },
       "removeFirst": {
         "header": "LinkedList.prototype.removeFirst = function() {",

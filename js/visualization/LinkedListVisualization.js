@@ -238,8 +238,7 @@ function addByIndex(idx, data) {
 
     codeDisplayManager.loadFunctions("add", "getNode");
     codeDisplayManager.changeFunction("add");
-    appendCodeLines(0, codeDisplayManager);
-    //FIXME: first line in "addByIndex" does not get animated before the animation goes on to "getNode"
+    appendCodeLines([0], codeDisplayManager);
     codeDisplayManager.changeFunction("getNode");
 
     getNodeSearch(idx);
@@ -302,6 +301,14 @@ function removeNode(idx) {
         throw new Error("Index is out of range");
     }
 
+    codeDisplayManager.loadFunctions("removeByIdx", "getNode", "removeNode");
+    codeDisplayManager.changeFunction("removeByIdx");
+    appendCodeLines([0], codeDisplayManager);
+    codeDisplayManager.changeFunction("getNode");
+    getNodeSearch(idx);
+    codeDisplayManager.changeFunction("removeByIdx");
+    appendCodeLines([1], codeDisplayManager);
+
     idx = idx + 1; //because you can't remove the head
     linkedList.removeByIdx(idx);
 
@@ -314,7 +321,6 @@ function removeNode(idx) {
     var leftArrow = new Arrow($("#linkedlist").children().eq(idx - 1).children().eq(1));
     var rightArrow = new Arrow($("#linkedlist").children().eq(idx + 1).children().eq(2));
 
-    codeDisplayManager.loadFunctions("removeByIdx", "removeNode", "getNode");
     codeDisplayManager.changeFunction("removeNode");
 
     appendAnimation(0, [rightArrow.animate(-(nodeWidth + nodeSpace), 0, 60)], codeDisplayManager);
@@ -328,6 +334,8 @@ function removeNode(idx) {
     ], codeDisplayManager);
 
     appendCodeLines([2, 3, 4], codeDisplayManager);
+    codeDisplayManager.changeFunction("removeByIdx");
+    appendCodeLines([2], codeDisplayManager);
 }
 
 function getNodeSearch(idx) {

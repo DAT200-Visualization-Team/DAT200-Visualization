@@ -6,7 +6,7 @@ var data = ["35", "33", "40"];
 var arrElementWidth = 50;
 var arrElementHeight = 50;
 
-var width = (arrElementWidth + 10) * data.length;
+var width = 0;//(arrElementWidth + 10) * data.length;
 var height = 350;
 
 var codeDisplayManager = new CodeDisplayManager('javascript', 'arrayList');
@@ -66,6 +66,13 @@ function runAdd(value) {
     arrayList.add(value);
 }
 
+function runAddByIndex(index, value) {
+    $('.removed').remove();
+    codeDisplayManager.loadFunctions('addByIndex');
+    codeDisplayManager.changeFunction('addByIndex');
+    arrayList.addByIndex(index, value);
+}
+
 function runRemove(index) {
     $('.removed').remove();
     codeDisplayManager.loadFunctions('removeAtPos');
@@ -97,7 +104,7 @@ function createArray(length, oldlength, y, opacity) {
     }
 
     if(opacity == 0)
-        appendAnimation(3, [{ e: $('#mainArray').find('rect'), p: { opacity: 1 }, o: { duration: 1 } }], codeDisplayManager);
+        appendAnimation(null, [{ e: $('#mainArray').find('rect'), p: { opacity: 1 }, o: { duration: 1 } }], codeDisplayManager);
     else
         appendAnimation(null, [{ e: $('#mainArray').find('rect'), p: { opacity: 1 }, o: { duration: 1 } }], null);
 }
@@ -114,7 +121,7 @@ function createTextElement(elementNr, length, startY, startValue, opacity) {
         .attr("class", "text" + elementNr);
 }
 
-function add(index, textContent) {
+function add(index, textContent, addByIndex) {
     console.log("adding " + textContent + ", to index: " + index);
     var textbox = $(".text" + index);
     if (textbox.length == 0) {
@@ -122,10 +129,21 @@ function add(index, textContent) {
         textbox = $(".text" + index);
     }
 
-    appendAnimation(8, [{ e: textbox, p: { text: { value: textContent }, opacity: 1 }, o: { duration: 1 } }], codeDisplayManager);
+    appendAnimation(addByIndex ? 12 : 8, [{ e: textbox, p: { text: { value: textContent }, opacity: 1 }, o: { duration: 1 } }], codeDisplayManager);
 }
 
-function move(from, capacity, NewTextNeeded) {
+function move(elementNr, capacity, size) {
+    //Move them one space to the right
+    if(elementNr < size) {
+        appendAnimation(10, [{ e: $(".text" + elementNr), p: { attr: { x:  (elementNr+1) * (width / capacity) + arrElementWidth / 2 + 5 } }, o: { duration: 1 } }], codeDisplayManager);
+    } else {
+        appendAnimation(null, [{ e: $(".text" + elementNr), p: { attr: { x:  (elementNr+1) * (width / capacity) + arrElementWidth / 2 + 5 } }, o: { duration: 0 } }], codeDisplayManager);
+    }
+
+    $(".text" + elementNr).attr('class', "text" + (elementNr + 1));
+}
+
+function remove(from, capacity) {
     var element = $(".text" + from);
     var oldElement = $(".text" + (from - 1));
 
@@ -143,19 +161,14 @@ function set(index, textContent) {
     appendAnimation(null, [{ e: textbox, p: { text: { value: textContent } }, o: { duration: 1 } }], null);
 }
 
-function extendCapacity(newCapacity, oldCapacity) {
+function extendCapacity(newCapacity, oldCapacity, addByIndex) {
     var oldArray = $("#mainArray rect");
-    highlightCode([2]);
+    addByIndex ? highlightCode([4]) : highlightCode([3]);
     createArray(newCapacity, oldCapacity, 100, 0);
 
- /*   for (var j = 0; j < oldCapacity; j++) {
-        $(".text" + j).attr('class', "oldText" + j);
-        createTextElement(j, oldCapacity, 0, $(".oldText" + j).text(), 1);
-    }*/
-
     for (var i = 0; i < oldCapacity; i++) {
-        appendAnimation(5, [{ e: $(".text" + i), p: { y: 100 }, o: { duration: 1 } }], codeDisplayManager);
-        highlightCode([4]);
+        addByIndex ? highlightCode([5]) : highlightCode([4]);
+        appendAnimation(addByIndex ? 6 : 5, [{ e: $(".text" + i), p: { y: 100 }, o: { duration: 1 } }], codeDisplayManager);
     }
 
     appendAnimation(null, [{ e: oldArray, p: { opacity: 0 }, o: { duration: 1 } }], null);

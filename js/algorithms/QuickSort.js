@@ -82,7 +82,7 @@ QuickSort.prototype.partition = function (low, high) {
     highlightCode([0,2,3], 'partition');
     var pivot = this.a[high - 1];
 
-    highlightPivot(low);
+    highlightPivot(high - 1);
     markPivot(low, 'left');
     markPivot(high, 'right');
 

@@ -74,16 +74,53 @@ ArrayList.prototype.add = function (x) {
     //Ensure capacity
     highlightCode([1]);
     if (this.capacity == this.theSize) {
-        extendCapacity(this.capacity*2+1, this.capacity);
+        highlightCode([2]);
+        extendCapacity(this.capacity*2+1, this.capacity, false);
         this.capacity = this.capacity * 2 + 1;
     }
 
-    add(this.theSize, x);
+    add(this.theSize, x, false);
     this.theItems[this.theSize++] = x;
     updateTheSize(this.theSize, this.capacity, null, '-=2');
     this.modCount++;
 
     highlightCode([9, 11]);
+    return true;
+};
+
+ArrayList.prototype.addByIndex = function (index, x) {
+    highlightCode([0]);
+    if(index < 0 || index > this.theSize) return false; // Out of bounds
+    // Ensure capacity
+    if (this.theItems.length == this.size()) {
+        var old = this.theItems;
+        this.theItems = new Array(this.theSize * 2 + 1);
+        for (var i = 0; i < this.size() ; i++)
+            this.theItems[i] = old[i];
+    }
+
+    //Ensure capacity
+    highlightCode([2]);
+    if (this.capacity == this.theSize) {
+        highlightCode([3]);
+        extendCapacity(this.capacity*2+1, this.capacity, true);
+        this.capacity = this.capacity * 2 + 1;
+    }
+
+    // Check if index is within array
+    for(var j = this.capacity; j >= index; j--) {
+        if(j < this.theSize) highlightCode([9]);
+        move(j, this.capacity, this.theSize);
+    }
+
+    add(index, x, true);
+    this.theItems[index] = x;
+    this.theSize++;
+    highlightCode([13]);
+    updateTheSize(this.theSize, this.capacity, null, '-=2');
+    this.modCount++;
+
+    highlightCode([14, 16]);
     return true;
 };
 
@@ -102,7 +139,7 @@ ArrayList.prototype.removeAtPos = function (index) {
     var removedItem = this.theItems[index];
 
     for (var i = index; i < this.theSize - 1; i++) {
-        move(i+1, this.capacity, i == this.theSize-1);
+        remove(i+1, this.capacity);
         this.theItems[i] = this.theItems[i + 1];
         highlightCode([2]);
     }
