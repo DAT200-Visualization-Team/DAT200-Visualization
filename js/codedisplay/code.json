@@ -15,6 +15,10 @@
       }
     },
     "stack": {
+      "variables": [
+        {"name": "arrayList", "type": "ArrayList" },
+        {"name": "element", "type": "string"}
+      ],
       "constructor": {
         "header": "function Stack() {",
         "lines": [

@@ -78,7 +78,6 @@ function appendAnimation(line, animations, codeDisplayManager) {
     for (var i = 0; i < animations.length; i++) {
         var info = animations[i];
         if (Array.isArray(info.p)) {
-            /*info.p[1].immediateRender = false;*/
             AnimationPlayer.tl().fromTo(info.e, info.o.duration, info.p[0], info.p[1], info.o.position ? info.o.position : "+=0");
         }
         else {
@@ -88,6 +87,12 @@ function appendAnimation(line, animations, codeDisplayManager) {
     if(line != null) {
         AnimationPlayer.tl().to(lineHL[1].e, 1, lineHL[1].p);
     }
+}
+
+function updateVariable(varName, value) {
+	var info = codeDisplayManager.updateVariable(varName, value);
+	if (info != null)
+		AnimationPlayer.tl().to($(info.e), 0.01, info.p, "+=0");
 }
 
 function togglePlayState() {
