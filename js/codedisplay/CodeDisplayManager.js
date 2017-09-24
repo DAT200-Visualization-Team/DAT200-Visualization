@@ -34,12 +34,29 @@ CodeDisplayManager.prototype.loadFunctions = function () {
 
     hljs.initHighlighting.called = false;
     hljs.initHighlighting();
+    this.addVariableTooltips();
 };
 
 CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
     var textStartIndex = line.search(/\S|$/);
     return line.slice(0, textStartIndex) + "<span class='highlighted-code' style='background-color: rgba(255,255,0,0);'>" + line.slice(textStartIndex) + "</span>\n"
 };
+
+CodeDisplayManager.prototype.addVariableTooltips = function () {
+    var words = ["arrayList", "element"]
+
+    var regexp = new RegExp('( ?' + words.join('?| ?') + '?)', 'g');
+
+    var text = $("#code-text").html();
+
+    text = text.replace(regexp, '<span class="tooltip-$& variable" title="This is a tooltip">$&</span>')
+
+    $("#code-text").html(text);
+
+    $(".variable").qtip({
+        style: { classes: "qtip-tipsy" }
+    })
+}
 
 CodeDisplayManager.prototype.changeFunction = function (functionName, line) {
     if (line == null)
