@@ -46,6 +46,9 @@ CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
 };
 
 CodeDisplayManager.prototype.addVariableTooltips = function () {
+	if (this.variables == null)
+		return
+
 	// Make a map containing variable name and corresponding value if it is not already done.
 	if (this.variableMap === undefined) {
 		this.variableMap = this.variables.reduce(function (map, obj) {
