@@ -263,6 +263,14 @@
       }
     },
     "arraySearch": {
+      "variables": [
+        {"name": "i", "type": "Int" },
+        {"name": "search", "type": "Int" },
+        {"name": "array", "type": "Array"},
+        {"name": "testIndex", "type": "Int" },
+        {"name": "max", "type": "Int" },
+        {"name": "min", "type": "Int" }
+      ],
       "linearSearch": {
         "header": "function linearSearch(array, search) {",
         "lines": [
