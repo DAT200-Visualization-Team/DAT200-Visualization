@@ -16,8 +16,9 @@ function findNodeInTreeEditor(binaryNode) {
 }
 
 function createMarker() {
+    var p = treeGUI.vis[0].p;
     d3.select("#treesvg").append('g').attr('class', 'markers')
-        .append('circle').attr('id', 'marker').attr('cx', 0).attr('cy', 0).attr('r', 14).attr('opacity', 0);
+        .append('circle').attr('id', 'marker').attr('cx', p.x).attr('cy', p.y).attr('r', 14).attr('opacity', 0);
 }
 
 function moveMarker(cx, cy) {
@@ -146,7 +147,7 @@ function visualizeInsert(lbl) {
 function visualizeSearch(lbl) {
     function highlightNodeEdge(n, dir) {
         var point = findNodeInTreeEditor(n).p;
-        $("#g_lines line").each(function () {
+        /*$("#g_lines line").each(function () {
             if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
 
                 var lineToHighLight;
@@ -155,12 +156,15 @@ function visualizeSearch(lbl) {
                 var tmp = {e: $(this), p: {stroke: "#FF0000"}, o: {duration: animationTime}};
                 appendAnimation(lineToHighLight, [tmp], codeDisplayManager);
             }
-        });
+        });*/
+        console.log(point.x, point.y);
+        appendAnimation(0, moveMarker(point.x, point.y), codeDisplayManager);
     }
 
     codeDisplayManager.loadFunctions("findNode");
     codeDisplayManager.changeFunction("findNode");
     var t = bst.root;
+    createMarker();
     appendCodeLines([0], codeDisplayManager);
     while (t !== null) {
         if (lbl - t.getElement() < 0) {
