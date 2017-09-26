@@ -58,12 +58,12 @@ CodeDisplayManager.prototype.addVariableTooltips = function () {
 	}
 
 	var words = this.variables.map(function (a) { return a.name; });
-	
-	var regexp = new RegExp('( ?' + words.join('?| ?') + '?)', 'g');
+	console.log('(?=[\\.\\(\\[\\{\\s\\+\\-\\*\\/])?(' + words.join('|') + ')(?=[\\.\\)\\]\\}\\s\\+\\-\\*\\/])');
+	var regexp = new RegExp('(?=[\\.\\(\\[\\{\\s\\+\\-\\*\\/])?(' + words.join('|') + ')(?=[\\.\\)\\[\\]\\}\\s\\+\\-\\*\\/$;])', 'g');
 
 	var text = $("#code-text").html();
 
-	text = text.replace(regexp, '<span class="tooltip-$& variable" title="Variable">$&</span>');
+	text = text.replace(regexp, '<span class="tooltip-$1 variable" title="Variable">$1</span>');
 
 	$("#code-text").html(text);
 

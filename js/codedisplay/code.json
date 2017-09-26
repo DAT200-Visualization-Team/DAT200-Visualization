@@ -562,6 +562,24 @@
       }
     },
     "insertionSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "int"
+        },
+        {
+          "name": "p",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        }
+      ],
       "insertionSort": {
         "header": "function insertionSort(a) {",
         "lines": [ "    for(var p = 1; p < a.length; p++) {", "        var tmp = a[p];", "        var j = p;", "", "        for(; j > 0 && tmp < a[j - 1]; j--) {", "            a[j] = a[j - 1];", "        }", "", "        a[j] = tmp;", "    }", "", "    return a;", "}" ]
