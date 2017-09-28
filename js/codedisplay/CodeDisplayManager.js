@@ -7,6 +7,8 @@ function CodeDisplayManager(language, algorithmOrDataStructure) {
 	this.variables;
 	this.variableMap;
 
+	hljs.configure({ "languages": ["javascript"] });
+
     var self = this;
 
     $.ajax({
@@ -34,10 +36,10 @@ CodeDisplayManager.prototype.loadFunctions = function () {
 
         $("#code-text").append("\n\n");
     }
-
+	
     hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-    this.addVariableTooltips();
+	hljs.initHighlighting();
+	this.addVariableTooltips();
 };
 
 CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
@@ -47,7 +49,7 @@ CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
 
 CodeDisplayManager.prototype.addVariableTooltips = function () {
 	if (this.variables == null)
-		return
+		return;
 
 	// Make a map containing variable name and corresponding value if it is not already done.
 	if (this.variableMap === undefined) {
@@ -58,8 +60,7 @@ CodeDisplayManager.prototype.addVariableTooltips = function () {
 	}
 
 	var words = this.variables.map(function (a) { return a.name; });
-	console.log('(?=[\\.\\(\\[\\{\\s\\+\\-\\*\\/])?(' + words.join('|') + ')(?=[\\.\\)\\]\\}\\s\\+\\-\\*\\/])');
-	var regexp = new RegExp('([\\.\\(\\[\\{\\s\\+\\-\\*\\/\>\,])(' + words.join('|') + ')(?=[\\.\\)\\[\\]\\}\\s\\+\\-\\*;\<\,])', 'g');
+	var regexp = new RegExp('([\\.\\(\\[\\{\\s\\+\\-\\*\\/\\>=\\,\\"])(' + words.join('|') + ')(?=[\\.\\)\\[\\]\\}\\s\\+\\-\\*;\\<\\,])', 'g');
 
 	var text = $("#code-text").html();
 

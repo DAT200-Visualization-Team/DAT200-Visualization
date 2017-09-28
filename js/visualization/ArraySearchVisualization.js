@@ -17,13 +17,13 @@ function visualizeLinearSearch(search) {
     clear();
     codeDisplayManager.loadFunctions("linearSearch");
     codeDisplayManager.changeFunction("linearSearch");
-    codeDisplayManager.setVariable("i", 0);
+    codeDisplayManager.setVariable("i", "0");
     codeDisplayManager.setVariable("array", "[" + arr.join() + "]");
     codeDisplayManager.setVariable("search", search);
 
     for (var i = 0; i < arr.length; i++) {
-        codeDisplayManager.updateVariable("i", i);
-        appendCodeLines([0], codeDisplayManager);
+		appendCodeLines([0], codeDisplayManager);
+		updateVariable("i", i.toString());
 
         var tmp = {
             e: $("#arraySearch").children().eq(i),
@@ -62,24 +62,25 @@ function visualizeBinarySearch(search) {
     clear();
     codeDisplayManager.loadFunctions("binarySearch");
     codeDisplayManager.changeFunction("binarySearch");
-    codeDisplayManager.setVariable("search", search);
+	codeDisplayManager.setVariable("search", search);
+	codeDisplayManager.setVariable("sortedArray", "[" + arr.join() + "]");
     createDivsForArrows(arr.length);
     binSearch(search, arr);
 
     function binSearch(search, sortedArray) {
-        var testIndex = Math.floor(sortedArray.length / 2);
-        codeDisplayManager.setVariable("testIndex", testIndex);
+		var testIndex = Math.floor(sortedArray.length / 2);
+		codeDisplayManager.setVariable("testIndex", testIndex.toString());
         var tmp = {e: $("#testIndex"), p: {opacity: 1}, o: {duration: animationTime}};
         appendAnimation(0, [tmp], codeDisplayManager);
 
-        var max = sortedArray.length - 1;
-        codeDisplayManager.setVariable("max", max);
+		var max = sortedArray.length - 1;
+		codeDisplayManager.setVariable("max", max.toString());
         var tmp = {e: $("#max"), p: {opacity: 1}, o: {duration: animationTime}};
         appendAnimation(1, [tmp], codeDisplayManager);
 
         var min = 0;
-        var tmp = {e: $("#min"), p: {opacity: 1}, o: {duration: animationTime}};
-        codeDisplayManager.setVariable("min", min);
+		var tmp = { e: $("#min"), p: { opacity: 1 }, o: { duration: animationTime } };
+		codeDisplayManager.setVariable("min", min.toString());
         appendAnimation(2, [tmp], codeDisplayManager);
 
         appendCodeLines([4], codeDisplayManager);
@@ -102,7 +103,8 @@ function visualizeBinarySearch(search) {
             appendCodeLines([10], codeDisplayManager);
             if (sortedArray[testIndex] > search) {
                 hasBeenInIfBefore = true;
-                max = testIndex;
+				max = testIndex;
+				updateVariable("max", max.toString());
                 var tmp = {e: $("#max"), p: {left: moveArrowToIdx("max", max)}, o: {duration: animationTime}};
                 appendAnimation(11, [tmp], codeDisplayManager);
             }
@@ -121,12 +123,14 @@ function visualizeBinarySearch(search) {
             appendCodeLines([14], codeDisplayManager);
             if(!hasBeenInIfBefore) {
                 hasBeenInIfBefore = true;
-                min = testIndex;
+				min = testIndex;
+				updateVariable("min", min.toString());
                 var tmp = {e: $("#min"), p: {left: moveArrowToIdx("min", min)}, o: {duration: animationTime}};
                 appendAnimation(15, [tmp], codeDisplayManager);
             }
 
-            testIndex = Math.floor((max + min) / 2);
+			testIndex = Math.floor((max + min) / 2);
+			updateVariable("testIndex", testIndex.toString());
             var tmp = {e: $("#testIndex"), p: {left: moveArrowToIdx("testIndex", testIndex)}, o: {duration: animationTime}};
             appendAnimation(17, [tmp], codeDisplayManager);
 

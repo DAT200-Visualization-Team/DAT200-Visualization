@@ -269,7 +269,8 @@
         {"name": "array", "type": "Array"},
         {"name": "testIndex", "type": "Int" },
         {"name": "max", "type": "Int" },
-        {"name": "min", "type": "Int" }
+        {"name": "min", "type": "Int"},
+        {"name": "sortedArray", "type": "Int"}
       ],
       "linearSearch": {
         "header": "function linearSearch(array, search) {",
