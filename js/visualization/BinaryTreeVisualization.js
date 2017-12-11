@@ -3,6 +3,27 @@ var bt;
 var treeGUI = new tree();
 var codeDisplayManager = new CodeDisplayManager('javascript', 'binaryTree/binaryNode');
 
+$(document).ready(function () {
+    $('#console-window').resizable({ handles: 'all', containment: 'document', minWidth: 200, minHeight: 200 });
+    $('#console-window').draggable({ containment: 'document', handle: '#controls' });
+});
+
+function toggleMatrixHiding() {
+    $('#console-window').toggle(200);
+}
+
+function updateConsoleBody(value, remove) {
+    if(remove !== undefined && remove === true) {
+        $('#content').empty();
+    }
+    else {
+        $('#content').append("<li>" + value + "</li>");
+        var animation = { e: $("#content li:last-child"), p: {opacity:1}, o: { duration: animationTime} };
+        return animation;
+    }
+
+}
+
 function init() {
     bt = new BinaryTree(treeGUI.vis[0].v);
     setChildren(bt.getRoot());
@@ -30,12 +51,15 @@ function moveMarker(cx, cy) {
 
 function visualizePreOrder() {
     init();
+    updateConsoleBody(null, true);
     codeDisplayManager.loadFunctions('printPreOrder');
     codeDisplayManager.changeFunction('printPreOrder');
     function preOrder(node) {
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
-                appendAnimation(0, moveMarker(y.p.x, y.p.y), codeDisplayManager);
+                var tmp = moveMarker(y.p.x, y.p.y);
+                tmp.push(updateConsoleBody(node.element));
+                appendAnimation(0, tmp, codeDisplayManager);
             }
         });
 
@@ -60,6 +84,7 @@ function visualizePreOrder() {
 
 function visualizeInOrder() {
     init();
+    updateConsoleBody(null, true);
     codeDisplayManager.loadFunctions('printInOrder');
     codeDisplayManager.changeFunction('printInOrder');
     function inOrder(node) {
@@ -72,7 +97,9 @@ function visualizeInOrder() {
 
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
-                appendAnimation(2, moveMarker(y.p.x, y.p.y), codeDisplayManager);
+                var tmp = moveMarker(y.p.x, y.p.y);
+                tmp.push(updateConsoleBody(node.element));
+                appendAnimation(2, tmp, codeDisplayManager);
             }
         });
 
@@ -91,6 +118,7 @@ function visualizeInOrder() {
 
 function visualizePostOrder() {
     init();
+    updateConsoleBody(null, true);
     codeDisplayManager.loadFunctions('printPostOrder');
     codeDisplayManager.changeFunction('printPostOrder');
     var res = [];
@@ -111,7 +139,9 @@ function visualizePostOrder() {
 
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
-                appendAnimation(4, moveMarker(y.p.x, y.p.y), codeDisplayManager);
+                var tmp = moveMarker(y.p.x, y.p.y);
+                tmp.push(updateConsoleBody(node.element));
+                appendAnimation(4, tmp, codeDisplayManager);
             }
         });
 
