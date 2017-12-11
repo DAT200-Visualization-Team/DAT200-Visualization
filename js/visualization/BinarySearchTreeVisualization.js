@@ -3,6 +3,7 @@ var bst;
 var treeGUI;
 var loadingSequence;
 var codeDisplayManager;
+var markerInitialPosition;
 
 function makeGUIUnEditable() {
     d3.select("#g_circles").selectAll('circle').on('click', null);
@@ -16,13 +17,14 @@ function findNodeInTreeEditor(binaryNode) {
 }
 
 function createMarker() {
-    var p = treeGUI.vis[0].p;
-    d3.select("#treesvg").append('g').attr('class', 'markers')
-        .append('circle').attr('id', 'marker').attr('cx', p.x).attr('cy', p.y).attr('r', 14).attr('opacity', 0);
+    markerInitialPosition = treeGUI.vis[0].p;
+    d3.select("#treesvg").append('g').attr('class', 'markers').append('circle').attr('id', 'marker')
+        .attr('cx', markerInitialPosition.x).attr('cy', markerInitialPosition.y).attr('r', 14)/*.attr('opacity', 0)*/;
 }
 
 function moveMarker(cx, cy) {
-    return [{ e: $("#marker"), p: { x: cx, y: cy, opacity: 1 }, o: { duration: animationTime} }];
+    return [{ e: $("#marker"), p: { x: cx - markerInitialPosition.x, y: cy - markerInitialPosition.y, opacity: 1 },
+        o: { duration: animationTime} }];
 }
 
 function init(rootLbl) {
@@ -37,7 +39,10 @@ function init(rootLbl) {
 
 function visualizeInsert(lbl) {
     function highlightNodeEdge(n, dir) {
-        var point = findNodeInTreeEditor(n).p;
+        var point = findNodeInTreeEditor(n);
+        console.log(point);
+        point = point.p;
+
         $("#g_lines line").each(function () {
             if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
 
@@ -145,57 +150,47 @@ function visualizeInsert(lbl) {
 }
 
 function visualizeSearch(lbl) {
-    function highlightNodeEdge(n, dir) {
+    function getVertixMarkAnimation(n) {
         var point = findNodeInTreeEditor(n).p;
-        /*$("#g_lines line").each(function () {
-            if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
-
-                var lineToHighLight;
-                if (dir == 'left') lineToHighLight = 2;
-                else lineToHighLight = 4;
-                var tmp = {e: $(this), p: {stroke: "#FF0000"}, o: {duration: animationTime}};
-                appendAnimation(lineToHighLight, [tmp], codeDisplayManager);
-            }
-        });*/
-        console.log(point.x, point.y);
-        appendAnimation(0, moveMarker(point.x, point.y), codeDisplayManager);
+        return moveMarker(point.x, point.y);
     }
 
     codeDisplayManager.loadFunctions("findNode");
     codeDisplayManager.changeFunction("findNode");
     var t = bst.root;
     createMarker();
-    appendCodeLines([0], codeDisplayManager);
     while (t !== null) {
+        var hasBeenInIf = false;
+        appendCodeLines([0], codeDisplayManager);
+        appendCodeLines([1], codeDisplayManager);
         if (lbl - t.getElement() < 0) {
-            appendCodeLines([1], codeDisplayManager);
             t = t.getLeft();
-            if (t !== null) highlightNodeEdge(t, 'left');
-
+            if (t !== null) {
+                appendAnimation(2, getVertixMarkAnimation(t), codeDisplayManager);
+            }
+            appendCodeLines([3, 5, 7], codeDisplayManager)
+            hasBeenInIf = true;
         }
-        else if (lbl - t.getElement() > 0) {
-            appendCodeLines([1], codeDisplayManager);
+        else if (lbl - t.getElement() > 0 && !hasBeenInIf) {
+            appendCodeLines([3], codeDisplayManager);
             t = t.getRight();
-            if (t !== null) highlightNodeEdge(t, 'right');
-
+            if (t !== null) {
+                appendAnimation(4, getVertixMarkAnimation(t), codeDisplayManager);
+            }
+            appendCodeLines([5, 7], codeDisplayManager)
+            hasBeenInIf = true;
         }
-        else {
-            appendCodeLines([5], codeDisplayManager);
-            appendCodeLines([6], codeDisplayManager);
+        else if(!hasBeenInIf) {
+            appendCodeLines([3, 5, 6], codeDisplayManager);
             // TODO: show node
-
             return t; // Match
-            appendCodeLines([7, 0], codeDisplayManager);
         }
-
     }
 
-    // TODO: show fail
     appendCodeLines([9], codeDisplayManager);
-    return null; // Not Found
-
-
+    // TODO: show fail
     makeGUIUnEditable();
+    return null; // Not Found
 }
 
 function visualizeRemove(lbl) {
@@ -244,9 +239,11 @@ function visualizeRemove(lbl) {
 }
 
 init(50);
+/*
 setTimeout(function(){
     visualizeInsert(90);
     setTimeout(function() {
         visualizeInsert(30);
     }, 3000)
 }, 3000);
+*/
