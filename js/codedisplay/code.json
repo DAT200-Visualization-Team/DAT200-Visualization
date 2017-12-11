@@ -1,6 +1,48 @@
 {
   "javascript": {
     "arrayList": {
+      "variables": [
+        {
+          "name": "theItems",
+          "type": "ArrayList"
+        },
+        {
+          "name": "theSize",
+          "type": "int"
+        },
+        {
+          "name": "old",
+          "type": "string"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "modCount",
+          "type": "int"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "removedItem",
+          "type": "int"
+        }
+      ],
       "removeAtPos": {
         "header": "ArrayList.prototype.removeAtPos = function (index) {",
         "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i < this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
