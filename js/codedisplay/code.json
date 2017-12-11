@@ -241,6 +241,60 @@
       }
     },
     "linkedlist": {
+      "variables": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "string"
+        },
+        {
+          "name": "p",
+          "type": "string"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "newNode",
+          "type": "Node"
+        },
+        {
+          "name": "theSize",
+          "type": "int"
+        },
+        {
+          "name": "modCount",
+          "type": "int"
+        },
+        {
+          "name": "head",
+          "type": "Node"
+        },
+        {
+          "name": "tail",
+          "type": "Node"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "n",
+          "type": "Node"
+        },
+        {
+          "name": "nData",
+          "type": "string"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        }
+      ],
       "constructor": {
         "header": "function LinkedList() {",
         "lines": [ "    this.head = new Node(null, null, null);", "    this.tail = new Node(null, this.head, null);", "    this.head.next = this.tail;", "    this.theSize = 0;", "    this.modCount = 0;", "}" ]
@@ -275,7 +329,7 @@
       },
       "removeByIdx": {
         "header": "LinkedList.prototype.removeByIdx = function(idx) {",
-        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)","    return nData;", "};" ]
+        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)", "    return nData;", "};" ]
       },
       "removeFirst": {
         "header": "LinkedList.prototype.removeFirst = function() {",
@@ -299,7 +353,7 @@
       },
       "findPos": {
         "header": "LinkedList.prototype.findPos = function(x) {",
-        "lines": [ "    for(var p = this.head.next; p !== this.tail; p = p.next) {", "        if (x === null) {", "            if(p.data === null) {", "                return p;", "            }", "        }", "        else if(x === p.data) { //must really use x.equals(p.data)", "            return p;", "        }", "    }", "    return -1;", "};" ]
+        "lines": [ "    for(var p = this.head.next; p !== this.tail; p = p.next) {", "        if (x === null) {", "            if(p.data === null) {", "                return p;", "            }", "        }", "        else if(x === p.data) {", "            return p;", "        }", "    }", "    return -1;", "};" ]
       }
     },
     "fibonacci": {
