@@ -29,6 +29,7 @@ function enqueue(value) {
     codeDisplayManager.changeFunction("enqueue");
     codeDisplayManager.setVariable("currentSize", queue.currentSize);
     codeDisplayManager.setVariable("theArray", "[" + queue.theArray.join(", ") + "]");
+    codeDisplayManager.setVariable("length", queue.theArray.length);
     codeDisplayManager.setVariable("back", queue.back);
     codeDisplayManager.setVariable("x", value);
 
@@ -46,6 +47,7 @@ function enqueue(value) {
 
     appendAnimation(5, [{ e: newElement, p: [{ x: '-500px' }, { display: 'inline-block', opacity: 1, x: 0, ease: Power4.easeOut }], o: { duration: 2 } }], codeDisplayManager);
     updateVariable("theArray", "[" + queue.theArray.join(", ") + "]");
+    updateVariable("length", queue.theArray.length);
     appendCodeLines([6], codeDisplayManager);
     updateVariable("currentSize", queue.currentSize);
 }

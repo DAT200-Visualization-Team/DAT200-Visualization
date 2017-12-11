@@ -91,6 +91,10 @@
         {
           "name": "front",
           "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "int"
         }
       ],
       "constructor": {
