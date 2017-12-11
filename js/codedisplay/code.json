@@ -67,6 +67,32 @@
       }
     },
     "queue": {
+      "variables": [
+        {
+          "name": "theArray",
+          "type": "ArrayList"
+        },
+        {
+          "name": "currentSize",
+          "type": "int"
+        },
+        {
+          "name": "back",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        },
+        {
+          "name": "returnVal",
+          "type": "string"
+        },
+        {
+          "name": "front",
+          "type": "int"
+        }
+      ],
       "constructor": {
         "header": "function Queue() {",
         "lines": [
