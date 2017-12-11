@@ -7,6 +7,8 @@ function CodeDisplayManager(language, algorithmOrDataStructure) {
 	this.variables;
 	this.variableMap;
 
+	hljs.configure({ "languages": ["javascript"] });
+
     var self = this;
 
     $.ajax({
@@ -34,10 +36,10 @@ CodeDisplayManager.prototype.loadFunctions = function () {
 
         $("#code-text").append("\n\n");
     }
-
+	
     hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
-    this.addVariableTooltips();
+	hljs.initHighlighting();
+	this.addVariableTooltips();
 };
 
 CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
@@ -47,23 +49,22 @@ CodeDisplayManager.prototype.makeHighlightSpan = function (line) {
 
 CodeDisplayManager.prototype.addVariableTooltips = function () {
 	if (this.variables == null)
-		return
+		return;
 
 	// Make a map containing variable name and corresponding value if it is not already done.
 	if (this.variableMap === undefined) {
 		this.variableMap = this.variables.reduce(function (map, obj) {
-			map[obj.name] = "Var";
+			map[obj.name] = "undefined";
 			return map;
 		}, {});
 	}
 
 	var words = this.variables.map(function (a) { return a.name; });
-	console.log('(?=[\\.\\(\\[\\{\\s\\+\\-\\*\\/])?(' + words.join('|') + ')(?=[\\.\\)\\]\\}\\s\\+\\-\\*\\/])');
-	var regexp = new RegExp('(?=[\\.\\(\\[\\{\\s\\+\\-\\*\\/])?(' + words.join('|') + ')(?=[\\.\\)\\[\\]\\}\\s\\+\\-\\*\\/$;])', 'g');
+	var regexp = new RegExp('([\\.\\(\\[\\{\\s\\+\\-\\*\\/\\>=\\,\\"])(' + words.join('|') + ')(?=[\\.\\)\\[\\]\\}\\s\\+\\-\\*;\\<\\,])', 'g');
 
 	var text = $("#code-text").html();
 
-	text = text.replace(regexp, '<span class="tooltip-$1 variable" title="Variable">$1</span>');
+	text = text.replace(regexp, '$1<span class="tooltip-$2 variable" title="undefined">$2</span>');
 
 	$("#code-text").html(text);
 
@@ -78,12 +79,14 @@ CodeDisplayManager.prototype.updateVariable = function (varName, value) {
 		this.variableMap[varName] = value;
 		return {
 			e: ".tooltip-" + varName, p: {
-				onComplete: function () {
-					$(".tooltip-" + varName).qtip('option', 'content.text', value);
+				onComplete: function (val) {
+					$(".tooltip-" + varName).qtip('option', 'content.text', val);
 				},
-				onReverseComplete: function () {
-					$(".tooltip-" + varName).qtip('option', 'content.text', oldValue);
-				}
+				onCompleteParams: [value],
+				onReverseComplete: function (val) {
+					$(".tooltip-" + varName).qtip('option', 'content.text', val);
+				},
+				onReverseCompleteParams: [oldValue]
 			}
 		};
 	}
