@@ -815,13 +815,51 @@
       }
     },
     "quickSort": {
+      "variables": [
+        {
+          "name": "low",
+          "type": "int"
+        },
+        {
+          "name": "high",
+          "type": "int"
+        },
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "p",
+          "type": "int"
+        },
+        {
+          "name": "pivot",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "int"
+        },
+        {
+          "name": "middle",
+          "type": "int"
+        }
+      ],
       "quickSortMedianOfThree": {
         "header": "QuickSort.prototype.quickSortMedianOfThree = function (low, high) {",
-        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = useInsertionSort(this.a, low, high + 1);", "        }", "        else {", "            var middle = Math.floor(parseInt(low + high) / 2);", "            if (this.a[middle] < this.a[low]) {", "                this.a = swapReferences(this.a, low, middle);", "            }", "            if (this.a[high] < this.a[low]) {", "                this.a = swapReferences(this.a, low, high);", "            }", "            if (this.a[high] < this.a[middle]) {", "                this.a = swapReferences(this.a, middle, high);", "            }", "            this.a = swapReferences(this.a, middle, high - 1);", "", "            var p = this.partition3(low, high);", "            this.quickSortMedian3(low, p);", "            this.quickSortMedian3(p + 1, high);", "        }", "    }", "};" ]
+        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = insertionSort(this.a, low, high + 1);", "        }", "        else {", "            var middle = Math.floor(parseInt(low + high) / 2);", "            if (this.a[middle] < this.a[low]) {", "                this.a = swapReferences(this.a, low, middle);", "            }", "            if (this.a[high] < this.a[low]) {", "                this.a = swapReferences(this.a, low, high);", "            }", "            if (this.a[high] < this.a[middle]) {", "                this.a = swapReferences(this.a, middle, high);", "            }", "            this.a = swapReferences(this.a, middle, high - 1);", "", "            var p = this.partition(low, high);", "            this.quickSortMedianOfThree(low, p);", "            this.quickSortMedianOfThree(p + 1, high);", "        }", "    }", "};" ]
       },
       "quickSortLeftPivot": {
         "header": "QuickSort.prototype.quickSortLeftPivot = function (low, high) {",
-        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = useInsertionSort(this.a, low, high + 1);", "        }", "        else {", "            var p = this.partition1(low, high);", "            this.quickSortLeftPivot(low, p);", "            this.quickSortLeftPivot(p + 1, high);", "        }", "    }", "};" ]
+        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = insertionSort(this.a, low, high + 1);", "        }", "        else {", "            var p = this.partition(low, high);", "            this.quickSortLeftPivot(low, p);", "            this.quickSortLeftPivot(p + 1, high);", "        }", "    }", "};" ]
       },
       "insertionSort": {
         "header": "function insertionSort(a, low, high) {",
