@@ -782,9 +782,36 @@
       }
     },
     "bubbleSort": {
+      "variables": [
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "array",
+          "type": "Array"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "newN",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        }
+      ],
+
       "bubbleSort": {
         "header": "function bubbleSort(array) {",
-        "lines": [ "    var n = array.length;", "    while(n > 0) {", "        newN = 0;", "        for (var i = 1; i < n; i++) {", "            if (array[i - 1] > array[i]) {", "                var tmp = array[i];", "                array[i] = array[i - 1];", "                array[i - 1] = tmp;", "                newN = i;", "            }", "        }", "        n = newN;", "    }", "", "    return array;", "}" ]
+        "lines": [ "    var n = array.length;", "    while(n > 0) {", "        var newN = 0;", "        for (var i = 1; i < n; i++) {", "            if (array[i - 1] > array[i]) {", "                var tmp = array[i];", "                array[i] = array[i - 1];", "                array[i - 1] = tmp;", "                newN = i;", "            }", "        }", "        n = newN;", "    }", "", "    return array;", "}" ]
       }
     },
     "quickSort": {
