@@ -9,31 +9,36 @@ var selectedEndNode = undefined;
 var width = $('#graphics').width(),
     height = $('#graphics').height();
 
-var projection = d3.geoMercator()
-    .center([5.698113, 58.936801])
-    .scale(2000000)
-    .translate([width / 2, height / 2]);
+var map;
 
-var path = d3.geoPath()
-    .projection(projection)
-    .pointRadius(2);
+function initMap() {
+    map = new google.maps.Map(document.getElementById('googleMap'), {
+        center: {lat: 58.9527835, lng:5.6761719},
+        zoom: 15,
+        disableDefaultUI: true
+    });
 
-var svg = d3.select(".map").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    map.data.setStyle({
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: 'red',
+            // TODO make stroke change based on scale
+            //strokeWeight: 1,
+            fillOpacity: 1,
+            fillColor: 'white',
+            scale: 4
+        }
+    });
 
-var buildingLayer = svg.append("g");
-var map = svg.append("g");
-var intersectionLayer = svg.append("g");
+    map.data.loadGeoJson('js/geojson/output_intersection_with_id_google.json');
+    
+    map.data.addListener('click', function (event) {
+       console.log("clicked on: " + event.feature.getProperty('id'));
+       selectNode(event)
+    });
+}
 
-
-var zoom = d3.zoom()
-    .scaleExtent([1, 8])
-    .on("zoom", zoomed);
-
-svg.call(zoom);
-
-d3.json("js/geojson/output_roads.json", function(error, norway) {
+/*d3.json("js/geojson/output_roads.json", function(error, norway) {
 
     road_json = norway;
 
@@ -84,45 +89,37 @@ d3.json("js/geojson/buildings.json", function(error, buildings) {
                 return "area";
             }
         });
-});
+});*/
 
 function selectNode(d) {
-    var selectedNode = d.intersection_id;
-    console.log(selectedStartNode);
-    console.log(selectedEndNode);
+    var selectedNode = d.feature.getProperty('id');
     if(selectedStartNode == undefined && selectedNode != selectedEndNode) {
-        markNode(selectedNode, 'start');
+        selectedStartNode = selectedNode;
+        colorNode(d, 'blue');
     } else if(selectedEndNode == undefined && selectedNode != selectedStartNode) {
-        markNode(selectedNode, 'end');
+        selectedEndNode = selectedNode;
+        colorNode(d, 'blue');
     } else if(selectedStartNode == selectedNode) {
-        unmarkNode('start')
-    } else if(selectedEndNode == selectedNode) {
-        unmarkNode('end')
-    }
-}
-
-function markNode(nodeNr, nodeType) {
-    console.log("mark " + nodeNr);
-    if(nodeType == 'start') {
-        selectedStartNode = nodeNr;
-    } else {
-        selectedEndNode = nodeNr;
-    }
-    intersectionLayer.selectAll(".intersection").filter(":nth-child(" + (nodeNr+1) + ")")
-        .style('stroke', 'red');
-}
-
-function unmarkNode(node) {
-    console.log("unmark " + node);
-    if(node == 'start') {
-        intersectionLayer.selectAll(".intersection").filter(":nth-child(" + (selectedStartNode+1) + ")")
-            .style('stroke', 'blue');
         selectedStartNode = undefined;
-    } else {
-        intersectionLayer.selectAll(".intersection").filter(":nth-child(" + (selectedEndNode+1) + ")")
-            .style('stroke', 'blue');
+        colorNode(d, 'red');
+    } else if(selectedEndNode == selectedNode) {
         selectedEndNode = undefined;
+        colorNode(d, 'red');
     }
+}
+
+function colorNode(event, color) {
+    map.data.overrideStyle(event.feature, {
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: color,
+            // TODO make stroke change based on scale
+            //strokeWeight: 1,
+            fillOpacity: 1,
+            fillColor: 'white',
+            scale: 4
+        }
+    });
 }
 
 function start() {
@@ -131,19 +128,6 @@ function start() {
     } else {
         alert("Two points need to be selected.");
     }
-
-}
-
-function zoomed() {
-    map.attr("transform", d3.event.transform);
-    buildingLayer.attr("transform", d3.event.transform);
-    intersectionLayer.attr("transform", d3.event.transform);
-
-    map.selectAll(".roads")
-        .style("stroke-width", 3/d3.event.transform.k);
-
-    buildingLayer.selectAll(".building")
-        .style("stroke-width", 2/d3.event.transform.k);
 }
 
 function resetLinkColors() {
@@ -222,7 +206,6 @@ function buildGraph() {
         graph.addEdge(links[i].__data__.end_node, links[i].__data__.start_node, links[i].getTotalLength());
         graph.addEdge(links[i].__data__.start_node, links[i].__data__.end_node, links[i].getTotalLength());
     }
-    console.log("hei");
 }
 
 function performPathFinding(algorithm, start, end) {
