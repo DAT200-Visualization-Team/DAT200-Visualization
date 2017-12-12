@@ -32,7 +32,7 @@ function runNaiveFib(n) {
 function iterativeFib(n) {
     //TODO: make it so that the visualization handles n == 1 or 2
     if(n < 3) return;
-
+    codeDisplayManager.setVariable("n", n.toString());
     appendCodeLines([0], codeDisplayManager);
     if (n <= 0) {
         appendCodeLines([1], codeDisplayManager);
@@ -52,25 +52,31 @@ function iterativeFib(n) {
 
     var nMinusTwo = 1;
     appendAnimation(5, fadeInAndMark("nMinusTwo", 0), codeDisplayManager);
+    updateVariable("nMinusTwo", nMinusTwo.toString());
 
     var nMinusOne = 1;
     appendAnimation(6, fadeInAndMark("nMinusOne", 1), codeDisplayManager);
+    updateVariable("nMinusOne", nMinusOne.toString());
 
 
     appendCodeLines([7], codeDisplayManager);
     var result = 0;
+    updateVariable("result", result.toString());
 
     for (var i = 3; i <= n; i++) {
         appendCodeLines([9], codeDisplayManager);
-
+        updateVariable("i", i.toString());
         result = nMinusOne + nMinusTwo;
         appendAnimation(10, forLoopAnimation(result, 0), codeDisplayManager);
+        updateVariable("result", result.toString());
 
         nMinusTwo = nMinusOne;
         appendAnimation(11, forLoopAnimation(result, 1), codeDisplayManager);
+        updateVariable("nMinusTwo", nMinusTwo.toString());
 
         nMinusOne = result;
         appendAnimation(12, forLoopAnimation(result, 2), codeDisplayManager);
+        updateVariable("nMinusOne", nMinusOne);
 
 
         appendCodeLines([13], codeDisplayManager);
@@ -82,6 +88,7 @@ function iterativeFib(n) {
 }
 
 function naiveFib(n) {
+    updateVariable("n", n.toString());
     appendCodeLines([0], codeDisplayManager);
     if (n < 1) {
         appendCodeLines([1], codeDisplayManager);
