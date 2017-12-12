@@ -228,6 +228,24 @@
       }
     },
     "hanoi": {
+      "variables": [
+        {
+          "name": "disks",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "string"
+        },
+        {
+          "name": "to",
+          "type": "string"
+        },
+        {
+          "name": "temp",
+          "type": "string"
+        }
+      ],
       "hanoi1": {
         "header": "function hanoi(disks, from, to, temp) {",
         "lines": [
