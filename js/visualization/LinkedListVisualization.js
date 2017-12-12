@@ -321,14 +321,18 @@ function removeNode(idx) {
 
     codeDisplayManager.loadFunctions("removeByIdx", "getNode", "removeNode");
     codeDisplayManager.changeFunction("removeByIdx");
+    codeDisplayManager.setVariable("theSize", (linkedList.theSize - 2).toString());
+    codeDisplayManager.setVariable("modCount", (linkedList.modCount - 2).toString());
     appendCodeLines([0], codeDisplayManager);
     codeDisplayManager.changeFunction("getNode");
     getNodeSearch(idx);
+    updateVariable("n", linkedList.getNode(idx + 1).varString());
     codeDisplayManager.changeFunction("removeByIdx");
     appendCodeLines([1], codeDisplayManager);
 
     idx = idx + 1; //because you can't remove the head
-    linkedList.removeByIdx(idx);
+    var nData = linkedList.removeByIdx(idx);
+    updateVariable("data", nData.toString());
 
     var elementsToBeMoved;
     for (var i = idx + 1; i < linkedList.size() + 1; i++) {
@@ -351,7 +355,12 @@ function removeNode(idx) {
          { e: elementsToBeMoved, p: { x: -(nodeWidth + nodeSpace), ease: Power0.easeNone }, o: { duration: animationTime, position: '-=' + animationTime } }
     ], codeDisplayManager);
 
-    appendCodeLines([2, 3, 4], codeDisplayManager);
+    appendCodeLines([2], codeDisplayManager);
+    updateVariable("theSize", (linkedList.theSize - 2).toString());
+    appendCodeLines([3], codeDisplayManager);
+    updateVariable("modCount", (linkedList.modCount - 2).toString());
+    appendCodeLines([4], codeDisplayManager);
+    updateVariable("nData", nData.toString());
     codeDisplayManager.changeFunction("removeByIdx");
     appendCodeLines([2], codeDisplayManager);
 }
@@ -434,6 +443,9 @@ function findPos(data) {
     redraw();
     codeDisplayManager.loadFunctions("findPos");
     codeDisplayManager.changeFunction("findPos");
+    codeDisplayManager.setVariable("x", data.toString());
+    codeDisplayManager.setVariable("head", linkedList.getNode(0).varString());
+    codeDisplayManager.setVariable("tail", linkedList.getNode(linkedList.theSize - 1).varString());
 
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
@@ -448,6 +460,9 @@ function findPos(data) {
 
     var isFound = false;
     for (var i = 1; i < linkedList.size() - 2; i++) {
+        var pNode = linkedList.getNode(i);
+        updateVariable("p", pNode.varString());
+        updateVariable("data", pNode.data.toString());
         appendCodeLines([1, 6], codeDisplayManager);
         if ($("#linkedlist").children().eq(i).children().first().text() == data) {
             appendCodeLines([7], codeDisplayManager);
