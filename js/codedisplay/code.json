@@ -721,8 +721,59 @@
       }
     },
     "mergeSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "left",
+          "type": "int"
+        },
+        {
+          "name": "right",
+          "type": "int"
+        },
+        {
+          "name": "center",
+          "type": "int"
+        },
+        {
+          "name": "leftPos",
+          "type": "int"
+        },
+        {
+          "name": "leftEnd",
+          "type": "int"
+        },
+        {
+          "name": "rightPos",
+          "type": "int"
+        },
+        {
+          "name": "rightEnd",
+          "type": "int"
+        },
+        {
+          "name": "tmpArray",
+          "type": "Array"
+        },
+        {
+          "name": "tmpPos",
+          "type": "int"
+        },
+        {
+          "name": "numElements",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        }
+      ],
+
       "mergeSort": {
-        "header": "MergeSort.prototype.mergeSort = function(a, left, right) {",
+        "header": "MergeSort.prototype.mergeSort = function(left, right) {",
         "lines": [ "    if(left < right) {", "        var center = parseInt((left + right) / 2);", "        this.mergeSort(this.a, left, center);", "        this.mergeSort(this.a, center + 1, right);", "        this.merge(this.a, left, center + 1, right);", "    }", "};" ]
       },
       "merge": {
