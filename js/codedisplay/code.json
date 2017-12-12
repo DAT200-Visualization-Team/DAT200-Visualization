@@ -833,9 +833,36 @@
       }
     },
     "shellSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "gap",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        }
+      ],
+
       "shellSort": {
         "header": "function shellSort(a) {",
-        "lines": [ "", "    for(var gap = parseInt(a.length / 2); gap > 0;", "        gap = gap === 2 ? 1 : parseInt(gap / 2.2)) {", "", "        for(var i = gap; i < a.length; i++) {", "            var tmp = a[i];", "", "            for(var j = i; j >= gap && tmp < a[j - gap]; j-= gap) {", "                a[j] = a[j - gap];", "            }", "", "            a[j] = tmp;", "        }", "    }", "", "    return a;", "}" ]
+        "lines": ["    for(var gap = parseInt(a.length / 2); gap > 0;", "        gap = gap === 2 ? 1 : parseInt(gap / 2.2)) {", "", "        for(var i = gap; i < a.length; i++) {", "            var tmp = a[i];", "", "            for(var j = i; j >= gap && tmp < a[j - gap]; j-= gap) {", "                a[j] = a[j - gap];", "            }", "", "            a[j] = tmp;", "        }", "    }", "", "    return a;", "}" ]
       }
     },
     "countingSort": {
