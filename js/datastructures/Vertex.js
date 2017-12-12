@@ -16,3 +16,9 @@ Vertex.prototype.reset = function() {
     this.pos = null;
     this.scratch = 0;
 };
+
+Vertex.prototype.varString = function () {
+	var prev = this.prev === null ? "null" : this.prev.name;
+	return "Vertex: <br> &emsp; name: " + this.name + "<br> &emsp; adj: Linked List of neighbours <br> &emsp; dist: " + this.dist
+		+ "<br> &emsp; prev: " + prev + "<br> &emsp; scratch: " + this.scratch;
+};

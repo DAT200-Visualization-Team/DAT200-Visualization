@@ -25,19 +25,22 @@ function initStack(array) {
 function pushElement(value) {
     cleanUpPoppedElement();
     codeDisplayManager.loadFunctions("push");
-    codeDisplayManager.changeFunction("push");
-
+	codeDisplayManager.changeFunction("push");
+	codeDisplayManager.setVariable("element", value);
+	codeDisplayManager.setVariable("arrayList", stack.arrayList.varString("arrayList"));
+	stack.push(value);
     var element = $('<div class="stack-entry red lighten-3 z-depth-3" style="opacity: 0; y: -500px;"><h4 class="stack-value center-align truncate noselect">'
         + value + '</h4></div>').prependTo('#stack');
 
-    appendAnimation(0, [{ e: element, p: [{ y: '-500px' }, { opacity: 1, y: '0', ease: Bounce.easeOut }], o: { duration: 3 } }], codeDisplayManager);
-    stack.push(value);
+	appendAnimation(0, [{ e: element, p: [{ y: '-500px' }, { opacity: 1, y: '0', ease: Bounce.easeOut }], o: { duration: 3 } }], codeDisplayManager);
+	updateVariable("arrayList", stack.arrayList.varString("arrayList"));
 }
 
 function popElement() {
     cleanUpPoppedElement();
     codeDisplayManager.loadFunctions("pop");
-    codeDisplayManager.changeFunction("pop");
+	codeDisplayManager.changeFunction("pop");
+	codeDisplayManager.setVariable("arrayList", stack.arrayList.varString("arrayList"));
 
     var element = $('#stack').children().first();
 
@@ -50,7 +53,8 @@ function popElement() {
         stack.pop();
 
         appendAnimation(2, [{ e: element, p: { x: xValue, y: yValue, ease: Power2.easeOut }, o: { duration: 1 } }, 
-            { e: element, p: { x: directionMovement, opacity: 0, ease: Power2.easeIn }, o: { duration: 1 } }], codeDisplayManager);
+			{ e: element, p: { x: directionMovement, opacity: 0, ease: Power2.easeIn }, o: { duration: 1 } }], codeDisplayManager);
+		updateVariable("arrayList", stack.arrayList.varString("arrayList"));
 
         lastElementPopped = element;
     }
@@ -70,7 +74,7 @@ function generateRandomNumberInRange(min, max) {
 }
 
 function pickRandomNumber() {
-    var index = Math.floor(Math.random() * arguments.length)
+	var index = Math.floor(Math.random() * arguments.length);
     return arguments[index];
 }
 

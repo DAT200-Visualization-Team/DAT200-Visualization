@@ -78,7 +78,7 @@ function createTexts(data) {
         .attr("text-anchor", "middle")
         .attr("width", arrElementWidth)
         .attr("transform", "translate(0,0)")
-        .attr("class", function (d, i) { return "element" + i });
+		.attr("class", function (d, i) { return "element" + i; });
 }
 
 function panning() {
@@ -126,7 +126,7 @@ function split(from, to, direction, line) {
         movingElement.attr("class", ""); //Remove old classes
         movingElement.addClass("element" + i + " " + "level" + elementPositions[i]);
 
-        animations.push({ e: $("#barChart .level" + ((textPositions[i][1]-30)/100)), p: { opacity: "1" }, o: { duration: 1, position: '-=1' } });
+        animations.push({ e: $("#barChart .level" + (textPositions[i][1]-30)/100), p: { opacity: "1" }, o: { duration: 1, position: '-=1' } });
     }
     animations[0].o.position = '+=0';
     appendAnimation(line, animations, codeDisplayManager);

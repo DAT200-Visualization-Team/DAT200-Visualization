@@ -5,7 +5,7 @@ function Hanoi(disks, from, to, temp) {
     this.commands = [];
     this.calculate(disks, from, to, temp);
     resetGUI();
-    sendCommands(this.commands, disks, from);
+    sendCommands(this.commands, disks, from, to, temp);
 }
 
 
@@ -17,7 +17,7 @@ Hanoi.prototype.calculate = function(disks, from, to, temp) {
     }
     this.commands.push(2);
     this.calculate(disks - 1, from, temp, to);
-    this.commands.push([disks, from, to]);
+    this.commands.push([disks, from, to, temp]);
     this.commands.push(4);
     this.calculate(disks - 1, temp, to, from);
 };

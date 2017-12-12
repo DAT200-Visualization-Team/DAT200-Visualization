@@ -50,7 +50,7 @@ ArrayList.prototype.contains = function (x) {
 };
 
 ArrayList.prototype.findPos = function (x) {
-    for (var i = 0; i < this.size() ; i++) {
+    for (var i = 0; i < this.size(); i++) {
         if (x === null) {
             if (this.theItems[i] === null)
                 return i;
@@ -67,14 +67,20 @@ ArrayList.prototype.add = function (x) {
     if (this.theItems.length == this.size()) {
         var old = this.theItems;
         this.theItems = new Array(this.theSize * 2 + 1);
-        for (var i = 0; i < this.size() ; i++)
+        for (var i = 0; i < this.size(); i++)
             this.theItems[i] = old[i];
     }
 
-    //Ensure capacity
+    codeDisplayManager.setVariable("x", x);
+    codeDisplayManager.setVariable("theItems", "[" + this.theItems.join(", ") + "]");
+    codeDisplayManager.setVariable("length", this.theItems.length);
+    codeDisplayManager.setVariable("theSize", this.theSize);
+    codeDisplayManager.setVariable("theSize", this.modCount);
+
     highlightCode([1]);
     if (this.capacity == this.theSize) {
         highlightCode([2]);
+        updateVariable("old", "[" + arrayList.theItems.join(", ") + "]")
         extendCapacity(this.capacity*2+1, this.capacity, false);
         this.capacity = this.capacity * 2 + 1;
     }
@@ -82,9 +88,13 @@ ArrayList.prototype.add = function (x) {
     add(this.theSize, x, false);
     this.theItems[this.theSize++] = x;
     updateTheSize(this.theSize, this.capacity, null, '-=2');
+    updateVariable("theSize", this.theSize.toString());
+    updateVariable("theItems", "[" + this.theItems.join(", ") + "]")
     this.modCount++;
 
-    highlightCode([9, 11]);
+    highlightCode([9]);
+    updateVariable("modCount", this.modCount.toString());
+    highlightCode([11]);
     return true;
 };
 
@@ -95,32 +105,47 @@ ArrayList.prototype.addByIndex = function (index, x) {
     if (this.theItems.length == this.size()) {
         var old = this.theItems;
         this.theItems = new Array(this.theSize * 2 + 1);
-        for (var i = 0; i < this.size() ; i++)
+        for (var i = 0; i < this.size(); i++)
             this.theItems[i] = old[i];
     }
+    
+    codeDisplayManager.setVariable("x", x);
+    codeDisplayManager.setVariable("theItems", "[" + this.theItems.join(", ") + "]");
+    codeDisplayManager.setVariable("length", this.theItems.length);
+    codeDisplayManager.setVariable("theSize", this.theSize);
+    codeDisplayManager.setVariable("theSize", this.modCount);
+    codeDisplayManager.setVariable("index", index.toString());
 
-    //Ensure capacity
     highlightCode([2]);
     if (this.capacity == this.theSize) {
         highlightCode([3]);
+        updateVariable("old", "[" + this.theItems.join(", ") + "]")
         extendCapacity(this.capacity*2+1, this.capacity, true);
         this.capacity = this.capacity * 2 + 1;
     }
 
     // Check if index is within array
     for(var j = this.capacity; j >= index; j--) {
-        if(j < this.theSize) highlightCode([9]);
+        if (j < this.theSize) highlightCode([9]);
+        updateVariable("j", j.toString());
         move(j, this.capacity, this.theSize);
+        this.theItems[j] = this.theItems[j - 1];
+        updateVariable("theItems", "[" + this.theItems.join(", ") + "]")
     }
 
     add(index, x, true);
     this.theItems[index] = x;
+    updateVariable("theItems", "[" + this.theItems.join(", ") + "]")
     this.theSize++;
     highlightCode([13]);
     updateTheSize(this.theSize, this.capacity, null, '-=2');
+    updateVariable("theSize", this.theSize.toString());
     this.modCount++;
 
-    highlightCode([14, 16]);
+    highlightCode([14]);
+    updateVariable("modCount", this.modCount.toString());
+
+    highlightCode([16]);
     return true;
 };
 
@@ -135,12 +160,22 @@ ArrayList.prototype.remove = function (x) {
 };
 
 ArrayList.prototype.removeAtPos = function (index) {
-    highlightCode([0, 2]);
-    var removedItem = this.theItems[index];
+    codeDisplayManager.setVariable("index", index.toString());
+    codeDisplayManager.setVariable("theSize", this.theSize);
+    codeDisplayManager.setVariable("modCount", this.modCount);
+    codeDisplayManager.setVariable("theItems", "[" + this.theItems.join(", ") + "]");
 
+    var removedItem = this.theItems[index];
+    highlightCode([0]);
+    updateVariable("removedItem", removedItem);
+
+    highlightCode([2]);
+    
     for (var i = index; i < this.theSize - 1; i++) {
-        remove(i+1, this.capacity);
+        updateVariable("i", i.toString());
+        remove(i + 1, this.capacity);
         this.theItems[i] = this.theItems[i + 1];
+        updateVariable("theItems", "[" + this.theItems.join(", ") + "]");
         highlightCode([2]);
     }
 
@@ -148,7 +183,10 @@ ArrayList.prototype.removeAtPos = function (index) {
     this.modCount++;
 
     updateTheSize(this.theSize, this.capacity, 6);
-    highlightCode([7, 9]);
+    updateVariable("theSize", this.theSize.toString());
+    highlightCode([7]);
+    updateVariable("modCount", this.modCount.toString());
+    highlightCode([9]);
 
     return removedItem;
 };
@@ -192,5 +230,10 @@ ArrayList.prototype.iterator = function (startIndex) {
             prevCompleted = nextCompleted = false;
             expectedModCount++;
         }
-    };
+	};
+};
+
+ArrayList.prototype.varString = function (varName) {
+	items = this.theItems.join(", ");
+	return varName + ":<br/> &emsp; theItems: " + items + "<br/> &emsp; theSize: " + this.theSize + "<br/> &emsp; modCount: " + this.modCount + "<br/> &emsp; capacity: " + this.capacity;
 };
