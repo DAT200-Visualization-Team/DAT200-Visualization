@@ -122,7 +122,6 @@ function createTextElement(elementNr, length, startY, startValue, opacity) {
 }
 
 function add(index, textContent, addByIndex) {
-    console.log("adding " + textContent + ", to index: " + index);
     var textbox = $(".text" + index);
     if (textbox.length == 0) {
         createTextElement(index, arrayList.capacity, 0, "", 0);
@@ -163,12 +162,18 @@ function set(index, textContent) {
 
 function extendCapacity(newCapacity, oldCapacity, addByIndex) {
     var oldArray = $("#mainArray rect");
+    var old = arrayList.theItems;
     addByIndex ? highlightCode([4]) : highlightCode([3]);
+    arrayList.theItems = new Array(newCapacity);
+    updateVariable("theItems", "[" + arrayList.theItems.join(", ") + "]")
     createArray(newCapacity, oldCapacity, 100, 0);
 
     for (var i = 0; i < oldCapacity; i++) {
         addByIndex ? highlightCode([5]) : highlightCode([4]);
+        updateVariable("i", i.toString());
         appendAnimation(addByIndex ? 6 : 5, [{ e: $(".text" + i), p: { y: 100 }, o: { duration: 1 } }], codeDisplayManager);
+        arrayList.theItems[i] = old[i];
+        updateVariable("theItems", "[" + arrayList.theItems.join(", ") + "]");
     }
 
     appendAnimation(null, [{ e: oldArray, p: { opacity: 0 }, o: { duration: 1 } }], null);

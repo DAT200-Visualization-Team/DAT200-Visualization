@@ -148,14 +148,23 @@ function resetGUI() {
     pegC = [];
 }
 
-function sendCommands(commands, disks, from) {
+function sendCommands(commands, disks, from, to, temp) {
     //TODO: animate the disks falling down on platform at initialize
     //appendAnimation(null, initialize(disks, from), null);
     initialize(disks, from);
     codeDisplayManager.loadFunctions("hanoi1");
     codeDisplayManager.changeFunction("hanoi1");
+    codeDisplayManager.setVariable("disks", disks.toString());
+    codeDisplayManager.setVariable("from", from.toString());
+    codeDisplayManager.setVariable("to", to.toString());
+    codeDisplayManager.setVariable("temp", temp.toString());
+
     for (var i = 0; i < commands.length; i++) {
-        if(commands[i] instanceof Array) {
+        if (commands[i] instanceof Array) {
+            updateVariable("disks", commands[i][0].toString());
+            updateVariable("from", commands[i][1].toString());
+            updateVariable("to", commands[i][2].toString());
+            updateVariable("temp", commands[i][3].toString());
             var movedisk = moveDisk(commands[i][0], commands[i][1], commands[i][2]);
             appendAnimation(3, [movedisk[0], movedisk[1], movedisk[2]], codeDisplayManager);
         } else {

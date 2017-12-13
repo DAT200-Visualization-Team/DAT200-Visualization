@@ -7,6 +7,9 @@ var nodeSpace = 90;
 var animationTime = 1;
 var codeDisplayManager;
 
+$(document).ready(function () {
+    fastInitialize([]);
+});
 
 // (non-animation) initializer, adds some nodes
 function fastInitialize(n) {
@@ -193,9 +196,6 @@ function initialize() {
     codeDisplayManager.loadFunctions("constructor");
     codeDisplayManager.changeFunction("constructor");
 
-    linkedList.addLast('H');
-    linkedList.addLast('T');
-
     createNode(offsetX, offsetY, 'H', 'Head', -1, true, true);
     createNode(offsetX + nodeSpace + nodeWidth, offsetY, 'T', 'Tail', -1, true, true);
     updateDrawingArea();
@@ -208,17 +208,27 @@ function initialize() {
     var hArrow = new Arrow(head.children().eq(1));
     var tArrow = new Arrow(tail.children().eq(2));
 
-    appendAnimation(0, [{ e: head, p: {opacity: 1}, o: { duration: animationTime }}], codeDisplayManager);
+    linkedList.addLast('H');
+    appendAnimation(0, [{ e: head, p: { opacity: 1 }, o: { duration: animationTime } }], codeDisplayManager);
+    console.log(linkedList.getNode(0));
+    updateVariable("head", linkedList.getNode(0).varString());
 
     var tmp = [
         { e: tail, p: {opacity: 1}, o: { duration: animationTime } },
         tArrow.animate(-45, 0)
     ];
+
+    linkedList.addLast('T');
     appendAnimation(1, tmp, codeDisplayManager);
+    updateVariable("tail", linkedList.getNode(1).varString());
 
     appendAnimation(2, [hArrow.animate(45, 0)], codeDisplayManager);
+    updateVariable("head", linkedList.getNode(0).varString());
 
-    appendCodeLines([3, 4], codeDisplayManager);
+    appendCodeLines([3], codeDisplayManager);
+    updateVariable("theSize", (linkedList.theSize - 2).toString());
+    appendCodeLines([4], codeDisplayManager);
+    updateVariable("modCount", (linkedList.modCount - 2).toString());
 }
 
 function addByIndex(idx, data) {
@@ -238,14 +248,15 @@ function addByIndex(idx, data) {
 
     codeDisplayManager.loadFunctions("add", "getNode");
     codeDisplayManager.changeFunction("add");
+    codeDisplayManager.setVariable("data", data.toString());
     appendCodeLines([0], codeDisplayManager);
     codeDisplayManager.changeFunction("getNode");
 
     getNodeSearch(idx);
     codeDisplayManager.changeFunction("add");
-
-    linkedList.add(idx + 1, data);
-
+    
+    var p = linkedList.getNode(idx + 1)
+    var newNode = new Node(data, p.prev, p);
 
     var node = $("#linkedlist").children().eq(idx + 1);
     node.attr("opacity", "0");
@@ -276,6 +287,7 @@ function addByIndex(idx, data) {
         {e: node, p: {opacity: 1}, o: {duration: animationTime, ease: Power0.easeNone, position: "-=" + animationTime}}
     ];
     appendAnimation(1, tmp, codeDisplayManager);
+    updateVariable("newNode", newNode.varString());
 
     appendAnimation(2, [npNext.animate(-(nodeSpace + nodeWidth), (45 + 15))], codeDisplayManager);
 
@@ -288,8 +300,14 @@ function addByIndex(idx, data) {
         nnPrev.animate(0, -60, null, true)
     ];
     appendAnimation(3, tmp, codeDisplayManager);
+    newNode.prev.next = newNode;
+    updateVariable("newNode", newNode.varString());
 
-    appendCodeLines([4, 5], codeDisplayManager);
+    linkedList.add(idx + 1, data);
+    appendCodeLines([4], codeDisplayManager);
+    updateVariable("theSize", (linkedList.theSize - 2).toString());
+    appendCodeLines([5], codeDisplayManager);
+    updateVariable("modCount", (linkedList.modCount - 2).toString());
 }
 
 function removeNode(idx) {
@@ -303,14 +321,18 @@ function removeNode(idx) {
 
     codeDisplayManager.loadFunctions("removeByIdx", "getNode", "removeNode");
     codeDisplayManager.changeFunction("removeByIdx");
+    codeDisplayManager.setVariable("theSize", (linkedList.theSize - 2).toString());
+    codeDisplayManager.setVariable("modCount", (linkedList.modCount - 2).toString());
     appendCodeLines([0], codeDisplayManager);
     codeDisplayManager.changeFunction("getNode");
     getNodeSearch(idx);
+    updateVariable("n", linkedList.getNode(idx + 1).varString());
     codeDisplayManager.changeFunction("removeByIdx");
     appendCodeLines([1], codeDisplayManager);
 
     idx = idx + 1; //because you can't remove the head
-    linkedList.removeByIdx(idx);
+    var nData = linkedList.removeByIdx(idx);
+    updateVariable("data", nData.toString());
 
     var elementsToBeMoved;
     for (var i = idx + 1; i < linkedList.size() + 1; i++) {
@@ -333,12 +355,21 @@ function removeNode(idx) {
          { e: elementsToBeMoved, p: { x: -(nodeWidth + nodeSpace), ease: Power0.easeNone }, o: { duration: animationTime, position: '-=' + animationTime } }
     ], codeDisplayManager);
 
-    appendCodeLines([2, 3, 4], codeDisplayManager);
+    appendCodeLines([2], codeDisplayManager);
+    updateVariable("theSize", (linkedList.theSize - 2).toString());
+    appendCodeLines([3], codeDisplayManager);
+    updateVariable("modCount", (linkedList.modCount - 2).toString());
+    appendCodeLines([4], codeDisplayManager);
+    updateVariable("nData", nData.toString());
     codeDisplayManager.changeFunction("removeByIdx");
     appendCodeLines([2], codeDisplayManager);
 }
 
 function getNodeSearch(idx) {
+    codeDisplayManager.setVariable("idx", idx.toString());
+    codeDisplayManager.setVariable("head", linkedList.getNode(0).varString());
+    codeDisplayManager.setVariable("tail", linkedList.getNode(linkedList.theSize - 1).varString());
+
     appendCodeLines([0,1], codeDisplayManager);
 
     if (idx < (linkedList.size() - 1) / 2) {
@@ -348,17 +379,23 @@ function getNodeSearch(idx) {
         updateDrawingArea();
         p = $("#linkedlist").children().last();
         p.attr("opacity", 0);
+        pNode = linkedList.getNode(1)
 
         var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
         appendAnimation(2, tmp, codeDisplayManager);
+        updateVariable("p", pNode.varString());
 
         p = new Arrow($("#linkedlist").children().last());
 
         appendCodeLines([3], codeDisplayManager);
         for (var i = 0; i < idx ; i++) {
+            updateVariable("i", i.toString());
             tmp = [p.translateStraightArrow((nodeWidth + nodeSpace), 0)];
             appendAnimation(4, tmp, codeDisplayManager);
-            appendCodeLines([5, 3], codeDisplayManager);
+            pNode = linkedList.getNode(i + 1);
+            updateVariable("p", pNode.varString());
+            appendCodeLines([5], codeDisplayManager);
+            appendCodeLines([3], codeDisplayManager);
         }
 
         appendCodeLines([6], codeDisplayManager);
@@ -372,15 +409,21 @@ function getNodeSearch(idx) {
         updateDrawingArea();
         p = $("#linkedlist").children().last();
         p.attr("opacity", 0);
+        pNode = linkedList.getNode(linkedList.theSize - 2);
+
         var tmp = [{e: p, p: {opacity: 1}, o: { duration: animationTime }}];
         appendAnimation(7, tmp, codeDisplayManager);
+        updateVariable("p", pNode.varString());
 
         p = new Arrow($("#linkedlist").children().last());
 
         appendCodeLines([8], codeDisplayManager);
         for (var i = linkedList.size() - 2; i > idx ; i--) {
+            updateVariable("i", i.toString());
             tmp = [p.translateStraightArrow(-(nodeWidth + nodeSpace), 0)];
             appendAnimation(9, tmp, codeDisplayManager);
+            pNode = linkedList.getNode(i - 1);
+            updateVariable("p", pNode.varString());
             appendCodeLines([10, 8], codeDisplayManager);
         }
         appendCodeLines([11], codeDisplayManager);
@@ -400,6 +443,9 @@ function findPos(data) {
     redraw();
     codeDisplayManager.loadFunctions("findPos");
     codeDisplayManager.changeFunction("findPos");
+    codeDisplayManager.setVariable("x", data.toString());
+    codeDisplayManager.setVariable("head", linkedList.getNode(0).varString());
+    codeDisplayManager.setVariable("tail", linkedList.getNode(linkedList.theSize - 1).varString());
 
     var p = createPointer('south',
         offsetX + nodeSpace + nodeWidth + nodeWidth / 2, 50,
@@ -414,6 +460,9 @@ function findPos(data) {
 
     var isFound = false;
     for (var i = 1; i < linkedList.size() - 2; i++) {
+        var pNode = linkedList.getNode(i);
+        updateVariable("p", pNode.varString());
+        updateVariable("data", pNode.data.toString());
         appendCodeLines([1, 6], codeDisplayManager);
         if ($("#linkedlist").children().eq(i).children().first().text() == data) {
             appendCodeLines([7], codeDisplayManager);

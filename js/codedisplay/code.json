@@ -1,6 +1,48 @@
 {
   "javascript": {
     "arrayList": {
+      "variables": [
+        {
+          "name": "theItems",
+          "type": "ArrayList"
+        },
+        {
+          "name": "theSize",
+          "type": "int"
+        },
+        {
+          "name": "old",
+          "type": "string"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "modCount",
+          "type": "int"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "removedItem",
+          "type": "int"
+        }
+      ],
       "removeAtPos": {
         "header": "ArrayList.prototype.removeAtPos = function (index) {",
         "lines": [ "    var removedItem = this.theItems[index];", "", "    for (var i = index; i < this.theSize - 1; i++) {", "        this.theItems[i] = this.theItems[i + 1];", "    }", "", "    this.theSize--;", "    this.modCount++;", "", "    return removedItem;", "};" ]
@@ -15,6 +57,10 @@
       }
     },
     "stack": {
+      "variables": [
+        {"name": "arrayList", "type": "ArrayList" },
+        {"name": "element", "type": "string"}
+      ],
       "constructor": {
         "header": "function Stack() {",
         "lines": [
@@ -63,6 +109,36 @@
       }
     },
     "queue": {
+      "variables": [
+        {
+          "name": "theArray",
+          "type": "ArrayList"
+        },
+        {
+          "name": "currentSize",
+          "type": "int"
+        },
+        {
+          "name": "back",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        },
+        {
+          "name": "returnVal",
+          "type": "string"
+        },
+        {
+          "name": "front",
+          "type": "int"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        }
+      ],
       "constructor": {
         "header": "function Queue() {",
         "lines": [
@@ -152,6 +228,24 @@
       }
     },
     "hanoi": {
+      "variables": [
+        {
+          "name": "disks",
+          "type": "int"
+        },
+        {
+          "name": "from",
+          "type": "string"
+        },
+        {
+          "name": "to",
+          "type": "string"
+        },
+        {
+          "name": "temp",
+          "type": "string"
+        }
+      ],
       "hanoi1": {
         "header": "function hanoi(disks, from, to, temp) {",
         "lines": [
@@ -165,6 +259,60 @@
       }
     },
     "linkedlist": {
+      "variables": [
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "string"
+        },
+        {
+          "name": "p",
+          "type": "string"
+        },
+        {
+          "name": "idx",
+          "type": "int"
+        },
+        {
+          "name": "newNode",
+          "type": "Node"
+        },
+        {
+          "name": "theSize",
+          "type": "int"
+        },
+        {
+          "name": "modCount",
+          "type": "int"
+        },
+        {
+          "name": "head",
+          "type": "Node"
+        },
+        {
+          "name": "tail",
+          "type": "Node"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "n",
+          "type": "Node"
+        },
+        {
+          "name": "nData",
+          "type": "string"
+        },
+        {
+          "name": "x",
+          "type": "string"
+        }
+      ],
       "constructor": {
         "header": "function LinkedList() {",
         "lines": [ "    this.head = new Node(null, null, null);", "    this.tail = new Node(null, this.head, null);", "    this.head.next = this.tail;", "    this.theSize = 0;", "    this.modCount = 0;", "}" ]
@@ -199,7 +347,7 @@
       },
       "removeByIdx": {
         "header": "LinkedList.prototype.removeByIdx = function(idx) {",
-        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)","    return nData;", "};" ]
+        "lines": [ "    var n = this.getNode(idx);", "    var nData = this.removeNode(n)", "    return nData;", "};" ]
       },
       "removeFirst": {
         "header": "LinkedList.prototype.removeFirst = function() {",
@@ -223,10 +371,33 @@
       },
       "findPos": {
         "header": "LinkedList.prototype.findPos = function(x) {",
-        "lines": [ "    for(var p = this.head.next; p !== this.tail; p = p.next) {", "        if (x === null) {", "            if(p.data === null) {", "                return p;", "            }", "        }", "        else if(x === p.data) { //must really use x.equals(p.data)", "            return p;", "        }", "    }", "    return -1;", "};" ]
+        "lines": [ "    for(var p = this.head.next; p !== this.tail; p = p.next) {", "        if (x === null) {", "            if(p.data === null) {", "                return p;", "            }", "        }", "        else if(x === p.data) {", "            return p;", "        }", "    }", "    return -1;", "};" ]
       }
     },
     "fibonacci": {
+      "variables": [
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "nMinusOne",
+          "type": "int"
+        },
+        {
+          "name": "nMinusTwo",
+          "type": "int"
+        },
+        {
+          "name": "result",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        }
+      ],
+
       "naiveFib": {
         "header": "function naiveFib(n) {",
         "lines": [ "    if (n < 1)", "        throw new { name: \"IllegalArgumentException\", message: \"The Fibonacci numbers start at 1.\" };", "    if (n === 1)", "        return 1;", "    if (n === 2)", "        return 1;", "     ", "    return naiveFib(n - 1) + naiveFib(n - 2);", "}" ]
@@ -249,6 +420,41 @@
       }
     },
     "graph": {
+      "variables": [
+        {
+          "name": "startName",
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "type": "Vertex"
+        },
+        {
+          "name": "nodesSeen",
+          "type": "int"
+        },
+        {
+          "name": "vrec",
+          "type": "Path"
+        },
+        {
+          "name": "v",
+          "type": "Vertex"
+        },
+        {
+          "name": "e",
+          "type": "Path"
+        },
+        {
+          "name": "w",
+          "type": "Vertex"
+        },
+        {
+          "name": "cvw",
+          "type": "int"
+        }
+      ],
+
       "dijkstra": {
         "header": "Graph.prototype.dijkstra = function (startName) {",
         "lines": [ "    var pq = new BinaryHeap();", "     ", "    var start = this.vertexMap[startName];", "    if (start === undefined || start === null) {", "        throw { name: \"NoSuchElementException\", message: \"Start vertex not found\" };", "    }", "    this.clearAll();", "    pq.add(new Path(start, 0));", "    start.dist = 0;", "     ", "    var nodesSeen = 0;", "    while (!pq.isEmpty() && nodesSeen < Object.keys(this.vertexMap).length) {", "        var vrec = pq.remove();", "        var v = vrec.dest;", "        if (v.scratch !== 0) { // already processed v", "            continue;", "        }", "        v.scratch = 1;", "        nodesSeen++;", "         ", "        for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {", "            var e = itr.next();", "            var w = e.dest;", "            var cvw = e.cost;", "             ", "            if (cvw < 0) {", "                throw { name: \"GraphException\", message: \"Graph has negative edges\" };", "            }", "             ", "            if (w.dist > v.dist + cvw) {", "                w.dist = v.dist + cvw;", "                w.prev = v;", "                pq.add(new Path(w, w.dist));", "            }", "        }", "    }", "};" ]
@@ -259,6 +465,15 @@
       }
     },
     "arraySearch": {
+      "variables": [
+        {"name": "i", "type": "Int" },
+        {"name": "search", "type": "Int" },
+        {"name": "array", "type": "Array"},
+        {"name": "testIndex", "type": "Int" },
+        {"name": "max", "type": "Int" },
+        {"name": "min", "type": "Int"},
+        {"name": "sortedArray", "type": "Int"}
+      ],
       "linearSearch": {
         "header": "function linearSearch(array, search) {",
         "lines": [
@@ -558,14 +773,83 @@
       }
     },
     "insertionSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "int"
+        },
+        {
+          "name": "p",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        }
+      ],
       "insertionSort": {
         "header": "function insertionSort(a) {",
         "lines": [ "    for(var p = 1; p < a.length; p++) {", "        var tmp = a[p];", "        var j = p;", "", "        for(; j > 0 && tmp < a[j - 1]; j--) {", "            a[j] = a[j - 1];", "        }", "", "        a[j] = tmp;", "    }", "", "    return a;", "}" ]
       }
     },
     "mergeSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "left",
+          "type": "int"
+        },
+        {
+          "name": "right",
+          "type": "int"
+        },
+        {
+          "name": "center",
+          "type": "int"
+        },
+        {
+          "name": "leftPos",
+          "type": "int"
+        },
+        {
+          "name": "leftEnd",
+          "type": "int"
+        },
+        {
+          "name": "rightPos",
+          "type": "int"
+        },
+        {
+          "name": "rightEnd",
+          "type": "int"
+        },
+        {
+          "name": "tmpArray",
+          "type": "Array"
+        },
+        {
+          "name": "tmpPos",
+          "type": "int"
+        },
+        {
+          "name": "numElements",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        }
+      ],
+
       "mergeSort": {
-        "header": "MergeSort.prototype.mergeSort = function(a, left, right) {",
+        "header": "MergeSort.prototype.mergeSort = function(left, right) {",
         "lines": [ "    if(left < right) {", "        var center = parseInt((left + right) / 2);", "        this.mergeSort(this.a, left, center);", "        this.mergeSort(this.a, center + 1, right);", "        this.merge(this.a, left, center + 1, right);", "    }", "};" ]
       },
       "merge": {
@@ -574,19 +858,84 @@
       }
     },
     "bubbleSort": {
+      "variables": [
+        {
+          "name": "n",
+          "type": "int"
+        },
+        {
+          "name": "array",
+          "type": "Array"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "newN",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        }
+      ],
+
       "bubbleSort": {
         "header": "function bubbleSort(array) {",
-        "lines": [ "    var n = array.length;", "    while(n > 0) {", "        newN = 0;", "        for (var i = 1; i < n; i++) {", "            if (array[i - 1] > array[i]) {", "                var tmp = array[i];", "                array[i] = array[i - 1];", "                array[i - 1] = tmp;", "                newN = i;", "            }", "        }", "        n = newN;", "    }", "", "    return array;", "}" ]
+        "lines": [ "    var n = array.length;", "    while(n > 0) {", "        var newN = 0;", "        for (var i = 1; i < n; i++) {", "            if (array[i - 1] > array[i]) {", "                var tmp = array[i];", "                array[i] = array[i - 1];", "                array[i - 1] = tmp;", "                newN = i;", "            }", "        }", "        n = newN;", "    }", "", "    return array;", "}" ]
       }
     },
     "quickSort": {
+      "variables": [
+        {
+          "name": "low",
+          "type": "int"
+        },
+        {
+          "name": "high",
+          "type": "int"
+        },
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "p",
+          "type": "int"
+        },
+        {
+          "name": "pivot",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "int"
+        },
+        {
+          "name": "middle",
+          "type": "int"
+        }
+      ],
       "quickSortMedianOfThree": {
         "header": "QuickSort.prototype.quickSortMedianOfThree = function (low, high) {",
-        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = useInsertionSort(this.a, low, high + 1);", "        }", "        else {", "            var middle = Math.floor(parseInt(low + high) / 2);", "            if (this.a[middle] < this.a[low]) {", "                this.a = swapReferences(this.a, low, middle);", "            }", "            if (this.a[high] < this.a[low]) {", "                this.a = swapReferences(this.a, low, high);", "            }", "            if (this.a[high] < this.a[middle]) {", "                this.a = swapReferences(this.a, middle, high);", "            }", "            this.a = swapReferences(this.a, middle, high - 1);", "", "            var p = this.partition3(low, high);", "            this.quickSortMedian3(low, p);", "            this.quickSortMedian3(p + 1, high);", "        }", "    }", "};" ]
+        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = insertionSort(this.a, low, high + 1);", "        }", "        else {", "            var middle = Math.floor(parseInt(low + high) / 2);", "            if (this.a[middle] < this.a[low]) {", "                this.a = swapReferences(this.a, low, middle);", "            }", "            if (this.a[high] < this.a[low]) {", "                this.a = swapReferences(this.a, low, high);", "            }", "            if (this.a[high] < this.a[middle]) {", "                this.a = swapReferences(this.a, middle, high);", "            }", "            this.a = swapReferences(this.a, middle, high - 1);", "", "            var p = this.partition(low, high);", "            this.quickSortMedianOfThree(low, p);", "            this.quickSortMedianOfThree(p + 1, high);", "        }", "    }", "};" ]
       },
       "quickSortLeftPivot": {
         "header": "QuickSort.prototype.quickSortLeftPivot = function (low, high) {",
-        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = useInsertionSort(this.a, low, high + 1);", "        }", "        else {", "            var p = this.partition1(low, high);", "            this.quickSortLeftPivot(low, p);", "            this.quickSortLeftPivot(p + 1, high);", "        }", "    }", "};" ]
+        "lines": [ "    if (low < high) {", "        if (high - low < 4) {", "            this.a = insertionSort(this.a, low, high + 1);", "        }", "        else {", "            var p = this.partition(low, high);", "            this.quickSortLeftPivot(low, p);", "            this.quickSortLeftPivot(p + 1, high);", "        }", "    }", "};" ]
       },
       "insertionSort": {
         "header": "function insertionSort(a, low, high) {",
@@ -598,12 +947,74 @@
       }
     },
     "shellSort": {
+      "variables": [
+        {
+          "name": "a",
+          "type": "Array"
+        },
+        {
+          "name": "length",
+          "type": "int"
+        },
+        {
+          "name": "gap",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        },
+        {
+          "name": "tmp",
+          "type": "string"
+        }
+      ],
+
       "shellSort": {
         "header": "function shellSort(a) {",
-        "lines": [ "", "    for(var gap = parseInt(a.length / 2); gap > 0;", "        gap = gap === 2 ? 1 : parseInt(gap / 2.2)) {", "", "        for(var i = gap; i < a.length; i++) {", "            var tmp = a[i];", "", "            for(var j = i; j >= gap && tmp < a[j - gap]; j-= gap) {", "                a[j] = a[j - gap];", "            }", "", "            a[j] = tmp;", "        }", "    }", "", "    return a;", "}" ]
+        "lines": ["    for(var gap = parseInt(a.length / 2); gap > 0;", "        gap = gap === 2 ? 1 : parseInt(gap / 2.2)) {", "", "        for(var i = gap; i < a.length; i++) {", "            var tmp = a[i];", "", "            for(var j = i; j >= gap && tmp < a[j - gap]; j-= gap) {", "                a[j] = a[j - gap];", "            }", "", "            a[j] = tmp;", "        }", "    }", "", "    return a;", "}" ]
       }
     },
     "countingSort": {
+      "variables": [
+        {
+          "name": "array",
+          "type": "Array"
+        },
+        {
+          "name": "maxValue",
+          "type": "int"
+        },
+        {
+          "name": "valueCount",
+          "type": "Array"
+        },
+        {
+          "name": "value",
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "type": "int"
+        },
+        {
+          "name": "result",
+          "type": "Array"
+        },
+        {
+          "name": "index",
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "type": "int"
+        }
+      ],
+
       "countingSort": {
         "header": "function countingSort(array, maxValue) {",
         "lines": [ "    if (array.constructor !== Array || array.length == 0)", "        return [];", "", "    var valueCount = Array.apply(null, Array(maxValue)).map(Number.prototype.valueOf, 0);", "    var value;", "", "    for (var i = 0; i < array.length; i++) {", "        value = array[i];", "        valueCount[value] += 1;", "    }", "", "    var result = new Array(array.list);", "    var index = 0;", "    for (var i = 0; i < valueCount.length; i++) {", "        for (var j = 0; j < valueCount[i]; j++) {", "            result[index] = i;", "            index++;", "        }", "    }", "", "    return result;", "}" ]

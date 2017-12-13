@@ -27,6 +27,11 @@ function enqueue(value) {
     cleanUpDequeuedElement();
     codeDisplayManager.loadFunctions("enqueue");
     codeDisplayManager.changeFunction("enqueue");
+    codeDisplayManager.setVariable("currentSize", queue.currentSize);
+    codeDisplayManager.setVariable("theArray", "[" + queue.theArray.join(", ") + "]");
+    codeDisplayManager.setVariable("length", queue.theArray.length);
+    codeDisplayManager.setVariable("back", queue.back);
+    codeDisplayManager.setVariable("x", value);
 
     appendCodeLines([0], codeDisplayManager);
     if (queue.currentSize === queue.theArray.length)
@@ -35,27 +40,39 @@ function enqueue(value) {
     queue.enqueue(value);
 
     appendCodeLines([4], codeDisplayManager);
+    updateVariable("back", queue.back);
 
     var newElement = $('<div class="queue-entry element red lighten-3 z-depth-3 valign-wrapper" style="opacity: 0; display: none;"><h4 class="queue-value center-align truncate noselect valign">'
         + value + '</h4></div>').prependTo(('#queue'));
 
-    appendAnimation(5, [{ e: newElement, p: [{x: '-500px'}, { display: 'inline-block', opacity: 1, x: 0, ease: Power4.easeOut }], o: { duration: 2 } }], codeDisplayManager);
+    appendAnimation(5, [{ e: newElement, p: [{ x: '-500px' }, { display: 'inline-block', opacity: 1, x: 0, ease: Power4.easeOut }], o: { duration: 2 } }], codeDisplayManager);
+    updateVariable("theArray", "[" + queue.theArray.join(", ") + "]");
+    updateVariable("length", queue.theArray.length);
     appendCodeLines([6], codeDisplayManager);
+    updateVariable("currentSize", queue.currentSize);
 }
 
 function dequeue() {
     cleanUpDequeuedElement();
     codeDisplayManager.loadFunctions("dequeue");
     codeDisplayManager.changeFunction("dequeue");
+    codeDisplayManager.setVariable("currentSize", queue.currentSize);
+    codeDisplayManager.setVariable("theArray", "[" + queue.theArray.join(", ") + "]");
+    codeDisplayManager.setVariable("front", queue.front.toString());
+    codeDisplayManager.setVariable("returnVal", "undefined");
 
     try {
         appendCodeLines([0], codeDisplayManager);
-        queue.dequeue();
-        appendCodeLines([4,5], codeDisplayManager);
+        returnVal = queue.dequeue();
+        appendCodeLines([4], codeDisplayManager);
+        updateVariable("currentSize", queue.currentSize);
+        appendCodeLines([5], codeDisplayManager);
+        updateVariable("returnVal", returnVal);
 
         var element = $('#queue').children().last();
 
         appendAnimation(6, [{ e: element, p: { x: '+=1000px', autoAlpha: 0, ease: Power3.easeIn }, o: { duration: 3 } }], codeDisplayManager);
+        updateVariable("front", queue.front.toString());
 
         appendCodeLines([7], codeDisplayManager);
 
