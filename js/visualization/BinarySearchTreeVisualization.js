@@ -42,110 +42,78 @@ function init(rootLbl) {
 }
 
 function visualizeInsert(lbl) {
-    function highlightNodeEdge(n, dir) {
-        var point = findNodeInTreeEditor(n);
-        console.log(point);
-        point = point.p;
-
-        $("#g_lines line").each(function () {
-            if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
-
-                var lineToHighLight;
-                if (dir == 'left') lineToHighLight = 3;
-                else lineToHighLight = 5;
-                var tmp = {e: $(this), p: {stroke: "#FFFF00"}, o: {duration: animationTime}};
-                appendAnimation(lineToHighLight, [tmp], codeDisplayManager);
-            }
-        });
+    function getVertixMarkAnimation(n) {
+        var point = findNodeInTreeEditor(n).p;
+        return moveMarker(point.x, point.y);
     }
 
     function insert(x, t) {
-        var hasNotBeenInIf = true;
-        var highlightedEdges = [];
-
-        /*if (parent != bst.root) {
-            var point = findNodeInTreeEditor(parent).p;
-            $("#g_lines line").each(function () {
-                if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
-
-                    var lineToHighLight;
-                    if (direction == 'left') lineToHighLight = 3;
-                    else lineToHighLight = 5;
-                    var tmp = {e: $(this), p: {stroke: "#FFFF00"}, o: {duration: animationTime}};
-                    appendAnimation(lineToHighLight, [tmp], codeDisplayManager);
-                }
-            });
-        }*/
-
+        var hasBeenInIf = false;
+        if (t !== null) {
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
+        }
+        else {
+            var p = treeGUI.getFutureLeafPositionHelper(findNodeInTreeEditor(parent).v, direction);
+            var tmp = moveMarker(p.x, p.y);
+            appendAnimation(null, tmp, codeDisplayManager);
+        }
         appendCodeLines([0], codeDisplayManager);
-        if (t === null && hasNotBeenInIf) {
-            hasNotBeenInIf = false;
+
+        if (t === null && !hasBeenInIf) {
+            hasBeenInIf = true;
             t = new BinaryNode(x);
-            if (parent != bst.root) {
-                var tmp = {e: "#g_lines line", p: {attr: {stroke: "#808080"}}, o: {duration: animationTime}};
-                tmp.p.onComplete = function() {
-                    var parentInGUI = findNodeInTreeEditor(parent);
-                    treeGUI.addLeaf(parentInGUI.v, direction, lbl);
-                };
-                tmp.p.onReverseComplete = function() {
-                    var parentInGUI = findNodeInTreeEditor(parent);
-                    var dir = 0;
-                    (direction == 'left') ? dir = 0 : dir = 1;
-                    for(var i = 0; i < parentInGUI.c.length; i++) {
-                        if(parentInGUI.c[i].d == direction) {
-                            treeGUI.removeLeaf(parentInGUI.c[i].v);
-                        }
+
+            // Following line of animation does nothing in particular.
+            // It is a dummy animation in order to access and utilize onComplete and onReverseComplete
+            var tmp = [{e: $("#marker"), p: {attr:{stroke: "red"}}, o:{duration: animationTime}}];
+
+            tmp[0].p.onComplete = function() {
+                var parentInGUI = findNodeInTreeEditor(parent);
+                treeGUI.addLeaf(parentInGUI.v, direction, lbl);
+                //$("#marker").animate()
+            };
+            tmp[0].p.onReverseComplete = function() {
+                var parentInGUI = findNodeInTreeEditor(parent);
+                for(var i = 0; i < parentInGUI.c.length; i++) {
+                    if(parentInGUI.c[i].d === direction) {
+                        treeGUI.removeLeaf(parentInGUI.c[i].v);
                     }
-                    t = null;
-                };
-                appendAnimation(1, [tmp], codeDisplayManager);
-            }
-            else {
-                var tmp = {e: "#g_lines line", p: {attr: {stroke: "#808080"}}, o: {duration: animationTime}};
-                tmp.p.onComplete = function() {
-                    var parentInGUI = findNodeInTreeEditor(parent);
-                    treeGUI.addLeaf(parentInGUI.v, direction, lbl);
-                };
-                tmp.p.onReverseComplete = function() {
-                    var parentInGUI = findNodeInTreeEditor(parent);
-                    var dir = 0;
-                    (direction == 'left') ? dir = 0 : dir = 1;
-                    for(var i = 0; i < parentInGUI.c.length; i++) {
-                        if(parentInGUI.c[i].d == direction) {
-                            treeGUI.removeLeaf(parentInGUI.c[i].v);
-                        }
-                    }
-                    t = null;
-                };
-                appendAnimation(1, [tmp], codeDisplayManager);
-            }
+                }
+                t = null;
+            };
+
+            appendAnimation(1, tmp, codeDisplayManager);
+            appendCodeLines([2, 4, 6], codeDisplayManager);
         }
 
-        else if (x - t.getElement() < 0 && hasNotBeenInIf) {
-            hasNotBeenInIf = false;
-            parent = t, direction = 'left';
-            if (parent == bst.root) appendCodeLines([3], codeDisplayManager);
-            highlightNodeEdge(parent, 'left')
+        else if (x - t.getElement() < 0 && !hasBeenInIf) {
+            hasBeenInIf = true, direction = "left", parent = t;
+            appendCodeLines([2, 3], codeDisplayManager);
             t.setLeft(insert(x, t.getLeft()));
+            appendCodeLines([4, 6], codeDisplayManager);
         }
 
-        else if (x - t.getElement() > 0 && hasNotBeenInIf) {
-            hasNotBeenInIf = false;
-            parent = t, direction = 'right';
-            if (parent == bst.root) appendCodeLines([5], codeDisplayManager);
-            highlightNodeEdge(parent, 'right')
+        else if (x - t.getElement() > 0 && !hasBeenInIf) {
+            hasBeenInIf = true, direction = "right", parent = t;
+            appendCodeLines([2, 4, 5], codeDisplayManager);
             t.setRight(insert(x, t.getRight()));
+            appendCodeLines([6], codeDisplayManager);
         }
 
-        else if(hasNotBeenInIf) {
-            hasNotBeenInIf = false;
-            //TODO: visualize error
+        else if(!hasBeenInIf) {
+            hasBeenInIf = true;
             //throw { name: "DuplicateItemException", message: "Duplicate items are not allowed" };
+            var animation = [{ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#ff0000", opacity: 0.5}, o: { duration: animationTime/2} }];
+            animation.push({ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#fcfcfc", opacity: 1}, o: { duration: animationTime/2} });
+            appendAnimation(7, animation, codeDisplayManager);
+            return t;
         }
         appendCodeLines([8], codeDisplayManager);
         return t;
     }
+
     removeMarker();
+    createMarker();
     codeDisplayManager.loadFunctions("insertNode");
     codeDisplayManager.changeFunction("insertNode");
     var parent = bst.root, direction = null;

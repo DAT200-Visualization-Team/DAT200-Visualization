@@ -98,6 +98,57 @@ function tree(rootLbl) {
         redraw();
     };
 
+    tree.getFutureLeafPositionHelper = function (_, d) {
+        tree.id++;
+        var l = 'x';
+        var insertable = true;
+
+        function addLeaf(n) {
+            n.forEach(function (t) {
+                if (t.v == _) {
+                    if (t.c.length >= 2) insertable = false;
+                    t.c.forEach(function (c) {
+                        if (c.d == d) insertable = false;
+                    });
+
+                    if (insertable) {
+                        t.c.push({v: tree.id, d: d, p: {}});
+                        tree.vis.push({
+                            v: tree.id,
+                            l: l, d: d, p: {},
+                            f: {v: t.v, d: t.d, p: {x: t.p.x, y: t.p.y}},
+                            c: []
+                        });
+                        return;
+                    }
+                }
+            });
+        }
+
+        addLeaf(tree.vis);
+        reposition(tree.vis);
+        //redraw();
+        var n;
+        tree.vis.forEach(function (t) {
+            console.log(t);
+            if (t.v == _) {
+                n = t;
+            }
+        });
+
+        var position;
+
+        for(var i = 0; i < n.c.length; i++) {
+            if(n.c[i].d === d) {
+                position = n.c[i].p;
+                treeGUI.removeLeaf(n.c[i].v);
+            }
+        }
+
+        return position;
+
+    };
+
     tree.redraw = function () {
         redraw();
     }
