@@ -177,12 +177,14 @@ function visualizeRemove(lbl) {
             hasBeenInIf = true, parent = t, direction = 'left';
             appendCodeLines([3], codeDisplayManager);
             t.setLeft(remove(x, t.getLeft()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([4, 6, 9], codeDisplayManager);
         }
         else if (x - t.getElement() > 0) {
             hasBeenInIf = true, parent = t, direction = 'right';
             appendCodeLines([4, 5], codeDisplayManager);
             t.setRight(remove(x, t.getRight()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([6, 9], codeDisplayManager);
 
         }
@@ -194,16 +196,68 @@ function visualizeRemove(lbl) {
             appendCodeLines([9], codeDisplayManager);
         }
         else {
-            appendCodeLines([10, 11], codeDisplayManager);
+            appendCodeLines([10], codeDisplayManager);
             hasBeenInIf = true;
+            var previousT = t;
             if (t.getLeft() !== null) {
-                parent = t, direction = 'left';
+                //parent = t, direction = 'left';
                 t = t.getLeft();
             }
             else {
-                parent = t, direction = 'right';
+                //parent = t, direction = 'right';
                 t = t.getRight();
             }
+
+            // Following line of animation does nothing in particular.
+            // It is a dummy animation in order to access and utilize onComplete and onReverseComplete
+            var tmp = [{e: $("#marker"), p: {stroke: "red"}, o: {duration: animationTime}}];
+
+            // Different animations for when t is null vs not null is needed.
+            if (t === null) {
+                var t_direction;
+                tmp[0].p.onComplete = function () {
+                    for (var i = 0; i < treeGUI.vis.length; i++) {
+                        if (treeGUI.vis[i].v === findNodeInTreeEditor(previousT).v) {
+                            t_direction = treeGUI.vis[i].d;
+                            treeGUI.removeLeaf(treeGUI.vis[i].v);
+                        }
+                    }
+                };
+                tmp[0].p.onReverseComplete = function () {
+                    var parentInGUI = findNodeInTreeEditor(parent);
+                    treeGUI.addLeaf(parentInGUI.v, t_direction, previousT.element);
+                };
+
+            }
+            else {
+                var t_direction;
+                tmp[0].p.onComplete = function () {
+                    // Replace the value of the node (which is to be "removed") with its child's value.
+                    // Then delete the child node.
+                    for (var i = 0; i < treeGUI.vis.length; i++) {
+                        if (treeGUI.vis[i].v === findNodeInTreeEditor(previousT).v) {
+                            var t_treeGUI = findNodeInTreeEditor(t);
+                            t_direction = t_treeGUI.d;
+                            treeGUI.vis[i].l = t_treeGUI.l;
+                            treeGUI.removeLeaf(t_treeGUI.v);
+                        }
+                    }
+                };
+                tmp[0].p.onReverseComplete = function () {
+                    // Replace the value of the node with its original value that was deleted.
+                    // Then add a new node.
+                    for (var i = 0; i < treeGUI.vis.length; i++) {
+                        if (treeGUI.vis[i].v === findNodeInTreeEditor(t).v) {
+                            var t_treeGUI = findNodeInTreeEditor(t);
+                            var lbl = treeGUI.vis[i].l;
+                            treeGUI.vis[i].l = previousT.element;
+                            treeGUI.addLeaf(t_treeGUI.v, t_direction, lbl);
+                            break;
+                        }
+                    }
+                };
+            }
+            appendAnimation(11, tmp, codeDisplayManager);
         }
         appendCodeLines([12], codeDisplayManager);
         return t;
