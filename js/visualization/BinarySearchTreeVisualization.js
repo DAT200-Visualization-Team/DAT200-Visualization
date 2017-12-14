@@ -90,6 +90,7 @@ function visualizeInsert(lbl) {
             hasBeenInIf = true, direction = "left", parent = t;
             appendCodeLines([2, 3], codeDisplayManager);
             t.setLeft(insert(x, t.getLeft()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([4, 6], codeDisplayManager);
         }
 
@@ -97,6 +98,7 @@ function visualizeInsert(lbl) {
             hasBeenInIf = true, direction = "right", parent = t;
             appendCodeLines([2, 4, 5], codeDisplayManager);
             t.setRight(insert(x, t.getRight()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([6], codeDisplayManager);
         }
 
