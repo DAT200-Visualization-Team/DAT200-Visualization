@@ -73,6 +73,13 @@ BinaryNode.prototype.printInOrder = function () {
         this.right.printInOrder();
 };
 
+BinaryNode.prototype.varString = function () {
+    var element = this.element == null ? "null" : this.element.toString();
+    var left = this.left == null ? "null" : this.left.element.toString();
+    var right = this.right == null ? "null" : this.right.element.toString();
+    return "Node: <br> &emsp; element: " + element + "<br> &emsp; left: " + left + "<br> &emsp; left: " + right;
+}
+
 function binaryTreeSize(t) {
     if (t == null)
         return 0;
