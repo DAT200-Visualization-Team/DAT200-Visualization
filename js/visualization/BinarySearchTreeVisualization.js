@@ -31,6 +31,11 @@ function moveMarker(cx, cy) {
 
 function removeMarker() {$("#marker").remove()}
 
+function getVertixMarkAnimation(n) {
+    var point = findNodeInTreeEditor(n).p;
+    return moveMarker(point.x, point.y);
+}
+
 function init(rootLbl) {
     if (rootLbl == null) return;
     codeDisplayManager = new CodeDisplayManager("javascript", "binarySearchTree");
@@ -42,11 +47,6 @@ function init(rootLbl) {
 }
 
 function visualizeInsert(lbl) {
-    function getVertixMarkAnimation(n) {
-        var point = findNodeInTreeEditor(n).p;
-        return moveMarker(point.x, point.y);
-    }
-
     function insert(x, t) {
         var hasBeenInIf = false;
         if (t !== null) {
@@ -122,10 +122,6 @@ function visualizeInsert(lbl) {
 }
 
 function visualizeSearch(lbl) {
-    function getVertixMarkAnimation(n) {
-        var point = findNodeInTreeEditor(n).p;
-        return moveMarker(point.x, point.y);
-    }
     removeMarker();
     codeDisplayManager.loadFunctions("findNode");
     codeDisplayManager.changeFunction("findNode");
@@ -169,30 +165,37 @@ function visualizeSearch(lbl) {
 
 function visualizeRemove(lbl) {
     function remove(x, t) {
-        if (parent != bst.root) {
-            var point = findNodeInTreeEditor(parent).p;
-            $("#g_lines line").each(function () {
-                if (point.x == $(this).attr("x2") && point.y == $(this).attr("y2")) {
-                    loadingSequence.push({e: $(this), p: {stroke: "#ffff00"}, o: {duration: animationTime}});
-                }
-            });
+        hasBeenInIf = false;
+        if (t === null) {
+            //TODO: give error
+        } else {
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
         }
 
-        if (t === null) {
-        }//TODO: give error
+        appendCodeLines([2], codeDisplayManager);
         if (x - t.getElement() < 0) {
-            parent = t, direction = 'left';
+            hasBeenInIf = true, parent = t, direction = 'left';
+            appendCodeLines([3], codeDisplayManager);
             t.setLeft(remove(x, t.getLeft()));
+            appendCodeLines([4, 6, 9], codeDisplayManager);
         }
         else if (x - t.getElement() > 0) {
-            parent = t, direction = 'right';
+            hasBeenInIf = true, parent = t, direction = 'right';
+            appendCodeLines([4, 5], codeDisplayManager);
             t.setRight(remove(x, t.getRight()));
+            appendCodeLines([6, 9], codeDisplayManager);
+
         }
         else if (t.getLeft() !== null && t.getRight() !== null) { // Two children
+            hasBeenInIf = true;
+            appendCodeLines([6, 7, 8], codeDisplayManager);
             t.setElement(bst.findMinNode(t.getRight()).getElement()); // Bytter verdiene på elementene
             t.setRight(bst.removeMinNode(t.getRight())); // Fjerner noden den har bytta med, og setter
+            appendCodeLines([9], codeDisplayManager);
         }
         else {
+            appendCodeLines([10, 11], codeDisplayManager);
+            hasBeenInIf = true;
             if (t.getLeft() !== null) {
                 parent = t, direction = 'left';
                 t = t.getLeft();
@@ -202,12 +205,14 @@ function visualizeRemove(lbl) {
                 t = t.getRight();
             }
         }
+        appendCodeLines([12], codeDisplayManager);
         return t;
     }
     removeMarker();
+    createMarker();
     codeDisplayManager.loadFunctions("removeNode");
     codeDisplayManager.changeFunction("removeNode");
-    var parent = bst.root, direction = null;
+    var parent = bst.root, direction = null, hasBeenInIf = false;
     remove(lbl, bst.root);
     makeGUIUnEditable();
 }
