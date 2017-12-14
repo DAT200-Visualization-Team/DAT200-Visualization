@@ -167,6 +167,7 @@ function visualizeRemove(lbl) {
     function remove(x, t) {
         hasBeenInIf = false;
         if (t === null) {
+            hasBeenInIf = true;
             appendCodeLines([0], codeDisplayManager);
             var animation = [{ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#ff0000", opacity: 0.5}, o: { duration: animationTime/2} }];
             animation.push({ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#fcfcfc", opacity: 1}, o: { duration: animationTime/2} });
