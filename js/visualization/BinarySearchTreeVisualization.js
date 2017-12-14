@@ -90,6 +90,7 @@ function visualizeInsert(lbl) {
             hasBeenInIf = true, direction = "left", parent = t;
             appendCodeLines([2, 3], codeDisplayManager);
             t.setLeft(insert(x, t.getLeft()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([4, 6], codeDisplayManager);
         }
 
@@ -97,6 +98,7 @@ function visualizeInsert(lbl) {
             hasBeenInIf = true, direction = "right", parent = t;
             appendCodeLines([2, 4, 5], codeDisplayManager);
             t.setRight(insert(x, t.getRight()));
+            appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
             appendCodeLines([6], codeDisplayManager);
         }
 
@@ -167,7 +169,13 @@ function visualizeRemove(lbl) {
     function remove(x, t) {
         hasBeenInIf = false;
         if (t === null) {
-            //TODO: give error
+            hasBeenInIf = true;
+            appendCodeLines([0], codeDisplayManager);
+            var animation = [{ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#ff0000", opacity: 0.5}, o: { duration: animationTime/2} }];
+            animation.push({ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#fcfcfc", opacity: 1}, o: { duration: animationTime/2} });
+            appendAnimation(1, animation, codeDisplayManager);
+            makeGUIUnEditable();
+            return null;
         } else {
             appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
         }

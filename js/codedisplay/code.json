@@ -521,6 +521,20 @@
       }
     },
     "binaryTree/binaryNode": {
+      "variables": [
+        {
+          "name": "left",
+          "type": "Node"
+        },
+        {
+          "name": "right",
+          "type": "Node"
+        },
+        {
+          "name": "element",
+          "type": "string"
+        }
+      ],
       "constructor": {
         "header": "function BinaryTree(rootItem) {",
         "lines": [

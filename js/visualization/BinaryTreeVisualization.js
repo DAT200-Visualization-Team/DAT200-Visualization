@@ -55,6 +55,7 @@ function visualizePreOrder() {
     codeDisplayManager.loadFunctions('printPreOrder');
     codeDisplayManager.changeFunction('printPreOrder');
     function preOrder(node) {
+        updateVars(node);
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
                 var tmp = moveMarker(y.p.x, y.p.y);
@@ -68,12 +69,14 @@ function visualizePreOrder() {
             appendCodeLines([2], codeDisplayManager);
             preOrder(node.left);
         }
+        updateVars(node);
 
         appendCodeLines([3], codeDisplayManager);
         if (node.right != null) {
             appendCodeLines([4], codeDisplayManager);
             preOrder(node.right);
         }
+        updateVars(node);
 
         appendCodeLines([5], codeDisplayManager);
     }
@@ -88,12 +91,13 @@ function visualizeInOrder() {
     codeDisplayManager.loadFunctions('printInOrder');
     codeDisplayManager.changeFunction('printInOrder');
     function inOrder(node) {
-
+        updateVars(node);
         appendCodeLines([0], codeDisplayManager);
         if (node.left != null) {
             appendCodeLines([1], codeDisplayManager);
             inOrder(node.left);
         }
+        updateVars(node);
 
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
@@ -102,12 +106,14 @@ function visualizeInOrder() {
                 appendAnimation(2, tmp, codeDisplayManager);
             }
         });
+        updateVars(node);
 
         appendCodeLines([3], codeDisplayManager);
         if (node.right != null) {
             appendCodeLines([4], codeDisplayManager);
             inOrder(node.right);
         }
+        updateVars(node);
 
         appendCodeLines([5], codeDisplayManager);
     }
@@ -124,18 +130,20 @@ function visualizePostOrder() {
     var res = [];
     var loadingSequence = [];
     function postOrder(node) {
-
+        updateVars(node);
         appendCodeLines([0], codeDisplayManager);
         if (node.left != null) {
             appendCodeLines([1], codeDisplayManager);
             postOrder(node.left);
         }
+        updateVars(node);
 
         appendCodeLines([2], codeDisplayManager);
         if (node.right != null) {
             appendCodeLines([3], codeDisplayManager);
             postOrder(node.right);
         }
+        updateVars(node);
 
         treeGUI.vis.forEach(function(y) {
             if (y.v === node.element) {
@@ -144,6 +152,7 @@ function visualizePostOrder() {
                 appendAnimation(4, tmp, codeDisplayManager);
             }
         });
+        updateVars(node);
 
         appendCodeLines([5], codeDisplayManager);
     }
@@ -161,6 +170,14 @@ function processUploadedObject(object) {
     treeGUI.redraw();
 }
 
+function updateVars(node) {
+    var element = node == null ? "null" : node.element.toString();
+    var left = node.left == null ? "null" : node.left.element.toString();
+    var right = node.right == null ? "null" : node.right.element.toString();
+    updateVariable("element", element);
+    updateVariable("left", left);
+    updateVariable("right", right);
+}
 $('#download-button, #download-button-mobile').on('click', function () {
     downloadObjectJson(treeGUI, 'binarytree');
 });
