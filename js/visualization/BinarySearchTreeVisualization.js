@@ -167,7 +167,12 @@ function visualizeRemove(lbl) {
     function remove(x, t) {
         hasBeenInIf = false;
         if (t === null) {
-            //TODO: give error
+            appendCodeLines([0,1], codeDisplayManager);
+            var animation = [{ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#ff0000", opacity: 0.5}, o: { duration: animationTime/2} }];
+            animation.push({ e: $("#graphics, .treeEditor svg"), p: {"background-color": "#fcfcfc", opacity: 1}, o: { duration: animationTime/2} });
+            appendAnimation(9, animation, codeDisplayManager);
+            makeGUIUnEditable();
+            return null;
         } else {
             appendAnimation(null, getVertixMarkAnimation(t), codeDisplayManager);
         }
