@@ -1,41 +1,111 @@
 var roads_data;
-var road_json;
-var intersection_json;
+//var road_json;
+//var intersection_json;
 var graph;
 var roads;
+var intersections;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
 
-var width = $('#graphics').width(),
-    height = $('#graphics').height();
+var startOpacity = 0;
+
+var width = $('#graphics').width();
+var height = $('#graphics').height();
 
 var map;
+var distances;
+$.getJSON('js/geojson/output_roads_distance.json', function(json) {
+    distances = json;
+});
+
+var proxyRoadStyle;
+var newAnimation;
+
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('googleMap'), {
         center: {lat: 58.9527835, lng:5.6761719},
         zoom: 15,
-        disableDefaultUI: true
+        disableDefaultUI: true,
+        styles: [
+            {
+                featureType: "administrative",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            },{
+                featureType: "road",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+        ]
     });
 
-    map.data.setStyle({
-        icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            strokeColor: 'red',
-            // TODO make stroke change based on scale
-            //strokeWeight: 1,
-            fillOpacity: 1,
-            fillColor: 'white',
-            scale: 4
+    intersections = createMarkers(map);
+    roads = createRoads(map);
+}
+
+function createMarkers(map) {
+    var markers = [];
+    $.getJSON('js/geojson/output_intersection_with_id_google.json', function(intersection_json) {
+        for (var i = 0; i < intersection_json['features'].length; i++) {
+            var data = intersection_json['features'][i];
+            var latLng = new google.maps.LatLng(data['geometry']['coordinates'][1], data['geometry']['coordinates'][0]);
+
+            // Creating a marker and putting it on the map
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                property: {
+                    'id': data['properties']['id']
+                },
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    strokeColor: 'blue',
+                    // TODO make stroke change based on scale
+                    //strokeWeight: 1,
+                    fillOpacity: 1,
+                    fillColor: 'white',
+                    scale: 4,
+                    clickable: true
+                }
+            });
+            marker.addListener('click', function () {
+             console.log("clicked on: " + this.property.id);
+             selectNode(this)
+             });
+            markers.push(marker);
+        }
+    });
+    return markers;
+}
+
+function createRoads(map) {
+    var lines = [];
+    $.getJSON('js/geojson/output_roads_google.json', function(road_json) {
+        for (var i = 0; i < road_json['features'].length; i++) {
+            var data = road_json['features'][i];
+
+            var latLng = [];
+            for (var j = 0; j < data['geometry']['coordinates'].length; j++) {
+                latLng.push(new google.maps.LatLng(data['geometry']['coordinates'][j][1], data['geometry']['coordinates'][j][0]));
+            }
+
+            // Creating a marker and putting it on the map
+            var line = new google.maps.Polyline({
+                path: latLng,
+                map: map,
+                strokeOpacity: startOpacity,
+                strokeColor: 'black'
+            });
+            lines.push(line)
         }
     });
 
-    map.data.loadGeoJson('js/geojson/output_intersection_with_id_google.json');
-    
-    map.data.addListener('click', function (event) {
-       console.log("clicked on: " + event.feature.getProperty('id'));
-       selectNode(event)
-    });
+    return lines;
 }
 
 /*d3.json("js/geojson/output_roads.json", function(error, norway) {
@@ -92,25 +162,24 @@ d3.json("js/geojson/buildings.json", function(error, buildings) {
 });*/
 
 function selectNode(d) {
-    var selectedNode = d.feature.getProperty('id');
+    var selectedNode = d.property.id;
     if(selectedStartNode == undefined && selectedNode != selectedEndNode) {
         selectedStartNode = selectedNode;
-        colorNode(d, 'blue');
+        colorNode(d, 'red');
     } else if(selectedEndNode == undefined && selectedNode != selectedStartNode) {
         selectedEndNode = selectedNode;
-        colorNode(d, 'blue');
+        colorNode(d, 'red');
     } else if(selectedStartNode == selectedNode) {
         selectedStartNode = undefined;
-        colorNode(d, 'red');
+        colorNode(d, 'blue');
     } else if(selectedEndNode == selectedNode) {
         selectedEndNode = undefined;
-        colorNode(d, 'red');
+        colorNode(d, 'blue');
     }
 }
 
-function colorNode(event, color) {
-    map.data.overrideStyle(event.feature, {
-        icon: {
+function colorNode(marker, color) {
+    intersections[marker.property.id].setIcon({
             path: google.maps.SymbolPath.CIRCLE,
             strokeColor: color,
             // TODO make stroke change based on scale
@@ -118,7 +187,6 @@ function colorNode(event, color) {
             fillOpacity: 1,
             fillColor: 'white',
             scale: 4
-        }
     });
 }
 
@@ -131,12 +199,12 @@ function start() {
 }
 
 function resetLinkColors() {
-    d3.selectAll('.roads')
-        .style('stroke', '#000000');
-}
-
-function getLink(linkNr) {
-    return map.selectAll(".roads").filter(":nth-child(" + (linkNr+1) + ")")._groups[0][0];
+    for (var i = 0; i < roads.length; i++) {
+        roads[i].setOptions({
+            strokeOpacity: startOpacity,
+            strokeColor: 'black'
+        });
+    }
 }
 
 Graph.prototype.dijkstrav2 = function (startName, endName) {
@@ -173,8 +241,8 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
             var w = e.dest;
             var cvw = e.cost;
 
-            if (w != v.prev)
-                commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#255eba"} });
+            //if (w != v.prev)
+            //    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#EBCA10"} });
 
             if (cvw < 0) {
                 throw {name: "GraphException", message: "Graph has negative edges"};
@@ -199,6 +267,16 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
 
 function buildGraph() {
     graph = new Graph();
+    var keys = Object.keys(distances);
+    for (var i = 0; i < keys.length; i++) {
+        var nodes = keys[i].split('_');
+        graph.addEdge(nodes[0].slice(1), nodes[1].slice(1), distances[keys[i]]['distance']);
+        graph.addEdge(nodes[1].slice(1), nodes[0].slice(1), distances[keys[i]]['distance']);
+    }
+}
+
+/*function buildGraph() {
+    graph = new Graph();
     var links = roads_data;//roads.features;
     console.log(links);
     for (var i = 0; i < links.length; i++) {
@@ -206,10 +284,21 @@ function buildGraph() {
         graph.addEdge(links[i].__data__.end_node, links[i].__data__.start_node, links[i].getTotalLength());
         graph.addEdge(links[i].__data__.start_node, links[i].__data__.end_node, links[i].getTotalLength());
     }
+}*/
+
+function initProxy() {
+    proxyRoadStyle = [];
+    for (var i = 0; i < roads.length; i++) {
+        proxyRoadStyle.push({
+            strokeOpacity: 0.2,
+            strokeColor: "black"
+        });
+    }
 }
 
 function performPathFinding(algorithm, start, end) {
     loadingSequence = [];
+    initProxy();
     resetLinkColors();
     buildGraph();
 
@@ -221,31 +310,28 @@ function performPathFinding(algorithm, start, end) {
     graph.getPath(end);
 }
 
-function addPathColorFrame(path, color) {
-    appendAnimation(null, [{ e: path, p: { stroke: color }, o: { duration: 1 } }], null);
+function colorRoad(roadID) {
+    if (panToOption) panToRoad(roadID);
+    roads[roadID].setOptions({
+        strokeOpacity: proxyRoadStyle[roadID].strokeOpacity,
+        strokeColor: proxyRoadStyle[roadID].strokeColor
+    });
+}
+
+function panToRoad(roadID) {
+    var latlng = new google.maps.LatLng(roads[roadID].getPath().getAt(0).lat(), roads[roadID].getPath().getAt(0).lng());
+    map.setCenter(latlng)
+}
+
+function addPathColorFrame(roadID, color, opacity) {
+    appendAnimation(null, [{ e: proxyRoadStyle[roadID], p: { strokeColor: color, strokeOpacity: opacity, onUpdate: function() { colorRoad(roadID); } }, o: { duration: 1 } }], null);
     //TODO add intersection highlighting
 }
 
-function getLinkElement2(a, b) {
-    if(a == undefined || b == undefined) return null;
-    var intersectionAEdges = intersection_json.features[a].properties;
-
-    for(var link in intersectionAEdges) {
-        if (intersectionAEdges.hasOwnProperty(link)) {
-            var currentEdge = road_json.features[intersectionAEdges[link]];
-            if(currentEdge.start_node == b || currentEdge.end_node == b) {
-                return getLink(intersectionAEdges[link]);
-            }
-        }
-    }
-    return null;
-}
-
 function getLinkElement(a, b) {
-    var link = $("#" + a + "_" + b);
-    if(link.length == 0) link = $("#" + b + "_" + a);
-    console.log(link);
-    return link;
+    var link = distances['f' + a + '_t' + b];
+    if (link == undefined) link = distances['f' + b + '_t' + a];
+    return link['road_id'];
 }
 
 function executeCommands(commands) {
@@ -253,10 +339,11 @@ function executeCommands(commands) {
         var data = commands[i].data;
         switch (commands[i].name) {
             case 'colorLine':
-                console.log(data);
+                //console.log(data);
                 var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
-                if(path != null)
-                    addPathColorFrame(path, data.color);
+                //if(path != null)
+                addPathColorFrame(path, data.color, 1);
+                // TODO color nodes!!!
                 break;
         }
     }
