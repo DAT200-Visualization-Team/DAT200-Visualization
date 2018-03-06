@@ -6,6 +6,7 @@ var roads;
 var intersections;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
+var panToOption = false; // TODO Should be set by a checkbox on GUI and should really be panning instead of snapping
 
 var startOpacity = 0;
 
