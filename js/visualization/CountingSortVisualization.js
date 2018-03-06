@@ -163,8 +163,6 @@ function sort() {
 function countUpdate(index) {
     countArray[index]++;
 
-    highlightCode([7]);
-
     var rect = $("#countingArray rect").filter(".rect" + index);
     var text = $("#countingArray text").filter(".text" + index);
 
@@ -185,7 +183,6 @@ function countUpdate(index) {
             o: { duration: animationTime }
         },
     ], codeDisplayManager);
-    highlightCode([6]);
 }
 
 function sortedUpdate(index, value) {
@@ -203,8 +200,6 @@ function sortedUpdate(index, value) {
         p: { text: sortedArray[index].toString(), ease: Power2.easeIn },
         o: { duration: animationTime }
     }], codeDisplayManager);
-
-    highlightCode([16, 14]);
 }
 
 function showArrow() {

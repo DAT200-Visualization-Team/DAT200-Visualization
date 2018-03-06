@@ -50,7 +50,7 @@ ArrayList.prototype.contains = function (x) {
 };
 
 ArrayList.prototype.findPos = function (x) {
-    for (var i = 0; i < this.size() ; i++) {
+    for (var i = 0; i < this.size(); i++) {
         if (x === null) {
             if (this.theItems[i] === null)
                 return i;
@@ -67,7 +67,7 @@ ArrayList.prototype.add = function (x) {
     if (this.theItems.length == this.size()) {
         var old = this.theItems;
         this.theItems = new Array(this.theSize * 2 + 1);
-        for (var i = 0; i < this.size() ; i++)
+        for (var i = 0; i < this.size(); i++)
             this.theItems[i] = old[i];
     }
 
@@ -140,4 +140,9 @@ ArrayList.prototype.iterator = function (startIndex) {
             expectedModCount++;
         }
     };
+};
+
+ArrayList.prototype.varString = function (varName) {
+	items = "[" + this.theItems.join(", ") + "]";
+	return varName + ":<br/> &emsp; theItems: " + items + "<br/> &emsp; theSize: " + this.theSize + "<br/> &emsp; modCount: " + this.modCount + "<br/> &emsp; capacity: " + this.capacity;
 };
