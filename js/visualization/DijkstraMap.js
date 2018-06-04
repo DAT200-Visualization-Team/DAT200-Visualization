@@ -1,12 +1,11 @@
 var roads_data;
-//var road_json;
-//var intersection_json;
 var graph;
 var roads;
 var intersections;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
 var panToOption = false; // TODO Should be set by a checkbox on GUI and should really be panning instead of snapping
+var currentNode;
 
 var startOpacity = 0;
 
@@ -21,7 +20,6 @@ $.getJSON('js/geojson/output_roads_distance.json', function(json) {
 
 var proxyRoadStyle;
 var newAnimation;
-
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('googleMap'), {
@@ -102,89 +100,34 @@ function createRoads(map) {
                 strokeOpacity: startOpacity,
                 strokeColor: 'black'
             });
-            lines.push(line)
+	        lines.push(line);
         }
     });
 
     return lines;
 }
 
-/*d3.json("js/geojson/output_roads.json", function(error, norway) {
-
-    road_json = norway;
-
-    roads = map.selectAll(".roads")
-        .data(norway.features)
-        .enter()
-        .append("path")
-        .attr("class", "roads")
-        .attr("d", path)
-        .attr("stroke", "blue")
-        .attr("stroke-width", 3)
-        .attr("fill", "none")
-        .attr("id", function(d) { return d.start_node + "_" + d.end_node; });
-
-    roads_data = roads._groups[0];
-});
-
-d3.json("js/geojson/output_intersection_with_id.json", function(error, intersections) {
-
-    intersection_json = intersections;
-
-    var intersectionsArr = intersectionLayer.selectAll(".intersection")
-        .data(intersections.features)
-        .enter()
-        .append("path")
-        .attr("d", path)
-        .attr("class", "intersection")
-        .on("click", selectNode);
-});
-
-d3.json("js/geojson/buildings.json", function(error, buildings) {
-
-    console.log(buildings);
-    var building_json = buildings;
-
-    buildingLayer.selectAll(".building, .area, .grass")
-        .data(buildings.features)
-        .enter()
-        .append("path")
-        .attr("d", path)
-        .attr("class", function(data) {
-            if(data.properties.fclass != undefined) {
-                return "building";
-            } else if(data.properties.landuse == "grass" || data.properties.landuse == "forest")
-            {
-                return "grass";
-            } else {
-                return "area";
-            }
-        });
-});*/
-
 function selectNode(d) {
     var selectedNode = d.property.id;
     if(selectedStartNode == undefined && selectedNode != selectedEndNode) {
         selectedStartNode = selectedNode;
-        colorNode(d, 'red');
+		colorNode(selectedNode, 'red');
     } else if(selectedEndNode == undefined && selectedNode != selectedStartNode) {
         selectedEndNode = selectedNode;
-        colorNode(d, 'red');
+		colorNode(selectedNode, 'red');
     } else if(selectedStartNode == selectedNode) {
         selectedStartNode = undefined;
-        colorNode(d, 'blue');
+		colorNode(selectedNode, 'blue');
     } else if(selectedEndNode == selectedNode) {
         selectedEndNode = undefined;
-        colorNode(d, 'blue');
+		colorNode(selectedNode, 'blue');
     }
 }
 
-function colorNode(marker, color) {
-    intersections[marker.property.id].setIcon({
+function colorNode(markerId, color) {
+    intersections[markerId].setIcon({
             path: google.maps.SymbolPath.CIRCLE,
             strokeColor: color,
-            // TODO make stroke change based on scale
-            //strokeWeight: 1,
             fillOpacity: 1,
             fillColor: 'white',
             scale: 4
@@ -240,10 +183,9 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
             var e = itr.next();
             var w = e.dest;
-            var cvw = e.cost;
+			var cvw = e.cost;
 
-            //if (w != v.prev)
-            //    commands.push({ name: "colorLine", data: { vertices: [v, w], color: "#EBCA10"} });
+			commands.push({ name: "highlightNode", data: { vertex: w} });
 
             if (cvw < 0) {
                 throw {name: "GraphException", message: "Graph has negative edges"};
@@ -270,22 +212,11 @@ function buildGraph() {
     graph = new Graph();
     var keys = Object.keys(distances);
     for (var i = 0; i < keys.length; i++) {
-        var nodes = keys[i].split('_');
-        graph.addEdge(nodes[0].slice(1), nodes[1].slice(1), distances[keys[i]]['distance']);
-        graph.addEdge(nodes[1].slice(1), nodes[0].slice(1), distances[keys[i]]['distance']);
+		var nodes = keys[i].split("_");
+        graph.addEdge(nodes[0].slice(1), nodes[1].slice(1), distances[keys[i]]["distance"]);
+        graph.addEdge(nodes[1].slice(1), nodes[0].slice(1), distances[keys[i]]["distance"]);
     }
 }
-
-/*function buildGraph() {
-    graph = new Graph();
-    var links = roads_data;//roads.features;
-    console.log(links);
-    for (var i = 0; i < links.length; i++) {
-        if(links[i].__data__.end_node == undefined || links[i].__data__.start_node == undefined) continue;
-        graph.addEdge(links[i].__data__.end_node, links[i].__data__.start_node, links[i].getTotalLength());
-        graph.addEdge(links[i].__data__.start_node, links[i].__data__.end_node, links[i].getTotalLength());
-    }
-}*/
 
 function initProxy() {
     proxyRoadStyle = [];
@@ -326,7 +257,6 @@ function panToRoad(roadID) {
 
 function addPathColorFrame(roadID, color, opacity) {
     appendAnimation(null, [{ e: proxyRoadStyle[roadID], p: { strokeColor: color, strokeOpacity: opacity, onUpdate: function() { colorRoad(roadID); } }, o: { duration: 1 } }], null);
-    //TODO add intersection highlighting
 }
 
 function getLinkElement(a, b) {
@@ -335,17 +265,35 @@ function getLinkElement(a, b) {
     return link['road_id'];
 }
 
+function colorCurrentNode(startColor, endColor) {
+	appendAnimation(null, [{
+		e: $('svg'), p: {
+			onComplete: function () {
+				colorNode(currentNode, endColor);
+			}, onReverseComplete: function () { colorNode(currentNode, startColor); }
+		}, o: { duration: 0 }
+	}], null);
+}
+
 function executeCommands(commands) {
     for (var i = 0; i < commands.length; i++) {
         var data = commands[i].data;
         switch (commands[i].name) {
-            case 'colorLine':
-                //console.log(data);
-                var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
-                //if(path != null)
+			case 'colorLine':
+				var path = getLinkElement(data.vertices[0].name, data.vertices[1].name);
                 addPathColorFrame(path, data.color, 1);
-                // TODO color nodes!!!
-                break;
+				break;
+			case 'highlightNode':
+				var id = data.vertex.name;
+				console.log(id);
+				if (id != currentNode && id != selectedStartNode && id != selectedEndNode) {
+					if (currentNode != null) {
+						colorCurrentNode("green", "blue");
+					}
+					currentNode = id;
+					console.log("Change current node");
+					colorCurrentNode("white", "green");
+				}
         }
     }
 }
