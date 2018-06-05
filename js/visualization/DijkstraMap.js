@@ -178,14 +178,14 @@ Graph.prototype.dijkstrav2 = function (startName, endName) {
         }
 
         v.scratch = 1;
-        nodesSeen++;
+		nodesSeen++;
+
+		commands.push({ name: "highlightNode", data: { vertex: v } });
 
         for (var itr = v.adj.iterator(0) ; itr.hasNext() ;) {
             var e = itr.next();
             var w = e.dest;
 			var cvw = e.cost;
-
-			commands.push({ name: "highlightNode", data: { vertex: w} });
 
             if (cvw < 0) {
                 throw {name: "GraphException", message: "Graph has negative edges"};
@@ -252,7 +252,7 @@ function colorRoad(roadID) {
 
 function panToRoad(roadID) {
     var latlng = new google.maps.LatLng(roads[roadID].getPath().getAt(0).lat(), roads[roadID].getPath().getAt(0).lng());
-    map.setCenter(latlng)
+	map.setCenter(latlng);
 }
 
 function addPathColorFrame(roadID, color, opacity) {
@@ -267,10 +267,11 @@ function getLinkElement(a, b) {
 
 function colorCurrentNode(startColor, endColor) {
 	appendAnimation(null, [{
-		e: $('svg'), p: {
-			onComplete: function () {
-				colorNode(currentNode, endColor);
-			}, onReverseComplete: function () { colorNode(currentNode, startColor); }
+		e: $("svg"), p: {
+			onComplete: function (current, color) {
+				colorNode(current, color);
+			}, onReverseComplete: function (current, color) { colorNode(current, color); },
+			onCompleteParams: [currentNode, endColor], onReverseCompleteParams:  [currentNode, startColor]
 		}, o: { duration: 0 }
 	}], null);
 }
@@ -285,7 +286,6 @@ function executeCommands(commands) {
 				break;
 			case 'highlightNode':
 				var id = data.vertex.name;
-				console.log(id);
 				if (id != currentNode && id != selectedStartNode && id != selectedEndNode) {
 					if (currentNode != null) {
 						colorCurrentNode("green", "blue");
