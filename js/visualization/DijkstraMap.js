@@ -9,8 +9,8 @@ var currentNode;
 
 var startOpacity = 0;
 
-var width = $('#graphics').width();
-var height = $('#graphics').height();
+var width = $("#graphics").width();
+var height = $("#graphics").height();
 
 var map;
 var distances;
@@ -20,6 +20,11 @@ $.getJSON('js/geojson/output_roads_distance.json', function(json) {
 
 var proxyRoadStyle;
 var newAnimation;
+
+function togglePanning() {
+	panToOption = !panToOption;
+	$("#pan-icon").html(panToOption ? "gps_fixed" : "gps_not_fixed");
+}
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('googleMap'), {

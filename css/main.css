@@ -96,6 +96,12 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+.bottom-right {
+    position: fixed;
+    right: 5px;
+    bottom: 45px;
+}
+
 .element{
     display: inline-block;
     height: 50px;
