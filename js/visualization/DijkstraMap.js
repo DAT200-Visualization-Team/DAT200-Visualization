@@ -4,7 +4,7 @@ var roads;
 var intersections;
 var selectedStartNode = undefined;
 var selectedEndNode = undefined;
-var panToOption = false; // TODO Should be set by a checkbox on GUI and should really be panning instead of snapping
+var panToOption = false;
 var currentNode;
 
 var startOpacity = 0;
@@ -69,8 +69,6 @@ function createMarkers(map) {
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
                     strokeColor: 'blue',
-                    // TODO make stroke change based on scale
-                    //strokeWeight: 1,
                     fillOpacity: 1,
                     fillColor: 'white',
                     scale: 4,
@@ -79,8 +77,8 @@ function createMarkers(map) {
             });
             marker.addListener('click', function () {
              console.log("clicked on: " + this.property.id);
-             selectNode(this)
-             });
+	            selectNode(this);
+            });
             markers.push(marker);
         }
     });
@@ -89,9 +87,9 @@ function createMarkers(map) {
 
 function createRoads(map) {
     var lines = [];
-    $.getJSON('js/geojson/output_roads_google.json', function(road_json) {
-        for (var i = 0; i < road_json['features'].length; i++) {
-            var data = road_json['features'][i];
+    $.getJSON('js/geojson/output_roads_google.json', function(roadJson) {
+        for (var i = 0; i < roadJson['features'].length; i++) {
+			var data = roadJson['features'][i];
 
             var latLng = [];
             for (var j = 0; j < data['geometry']['coordinates'].length; j++) {
