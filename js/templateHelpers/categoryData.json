@@ -212,7 +212,13 @@
                   "type": "string",
                   "name": "Probing",
                   "placeholder": "Probing",
-                  "options": [ "Linear", "Quadratic"]
+                  "options": [ "Linear", "Quadratic" ]
+                },
+                {
+                  "type": "string",
+                  "name": "Hash Function",
+                  "placeholder": "HashFunc",
+                  "options": [ "Simple", "Object Hash" ]
                 }
               ]
             },
@@ -224,12 +230,6 @@
                   "type": "string",
                   "name": "Value",
                   "placeholder": "Value"
-                },
-                {
-                  "type": "string",
-                  "name": "Probing",
-                  "placeholder": "Probing",
-                  "options": [ "Linear", "Quadratic" ]
                 }
               ]
             }

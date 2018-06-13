@@ -90,20 +90,18 @@ $(document).ready(function () {
     drawingArea.attr("transform", "translate(50,20) scale(0.70)");
 });
 
-function runAdd(x, probing) {
-    if (probing == 'Quadratic')
-        set.probingType == 'quadratic';
-    else
-        set.probingType == 'linear';
+function runAdd(x, probing, hashFunc) {
+	set.probingType = probing == "Quadratic" ? "quadratic" : "linear";
+	set.hashFunc = hashFunc == "Simple" ? getSimpleHashCode : getHashCode;
 
     codeDisplayManager.loadFunctions('add', 'rehash');
     codeDisplayManager.changeFunction('add');
     set.add(x);
 }
 
-function runRemove(x, probing) {
+function runRemove(x) {
     codeDisplayManager.loadFunctions('remove', 'rehash', 'add');
-    codeDisplayManager.changeFunction('remove');
+	codeDisplayManager.changeFunction('remove');
     set.remove(x);
 }
 

@@ -1,3 +1,17 @@
+function getSimpleHashCode(object) {
+	var num = parseInt(object);
+
+	if (isNaN(num)) {
+		var stringNum = "";
+		for (var i = 0; i < object.length; i++) {
+			stringNum += object.charCodeAt(i);
+		}
+		num = parseInt(stringNum);
+	}
+
+	return num;
+}
+
 // Found at http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/ 10.01.2017 10:51
 function getHashCode(object) {
     var string = object.toString();
@@ -9,7 +23,7 @@ function getHashCode(object) {
     for (var i = 0; i < string.length; i++) {
         char = string.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash // Convert to 32 bit integer
+	    hash = hash & hash; // Convert to 32 bit integer
     }
 
     return hash;

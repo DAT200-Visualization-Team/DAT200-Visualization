@@ -5,15 +5,16 @@ function HashSet(other) {
     this.currentSize = 0;
     this.occupied = 0;
     this.modCount = 0;
-    this.array;
+	this.array;
+	this.hashFunc = getSimpleHashCode;
 
     this.allocateArray(DEFAULT_TABLE_SIZE);
     this.clear();
 
     if (other) {
         if (other.constructor === Array)
-            for (var i = 0; i < other.length; i++)
-                this.add(other[i])
+	        for (var i = 0; i < other.length; i++)
+		        this.add(other[i]);
     }
 }
 
@@ -126,9 +127,9 @@ HashSet.prototype.rehash = function () {
 
 HashSet.prototype.findPos = function (x) {
     var offset = 1;
-    var currentPos = (x == null) ? 0 : Math.abs(getHashCode(x) % this.array.length);
+    var currentPos = (x == null) ? 0 : Math.abs(this.hashFunc(x) % this.array.length);
 
-    displayHash(getHashCode(x), this.array.length, 0);
+    displayHash(this.hashFunc(x), this.array.length, 0);
     updateArrow(currentPos);
 
     var interation = 1;
@@ -141,7 +142,7 @@ HashSet.prototype.findPos = function (x) {
             break;
 
         currentPos += offset; // Compute ith probe
-        displayHash(getHashCode(x), this.array.length, offset);
+        displayHash(this.hashFunc(x), this.array.length, offset);
 
         interation += 1;
         if(this.probingType == "quadratic") {
