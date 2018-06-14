@@ -55,7 +55,7 @@ function createRects(length, y) {
     }
 }
 
-function createRect(x, y, opacity) {
+function createRect(x, y, opacity, index) {
     barChart.insert("rect", ":first-child")
         .attr("x", x)
         .attr("y", y)
@@ -63,7 +63,7 @@ function createRect(x, y, opacity) {
         .attr("width", arrElementWidth)
         .attr("fill", "#F44336")
         .style("opacity", opacity)
-        .attr("class", "level" + y/100)
+        .attr("class", "rectElem" + index + " level" + y/100)
         .attr("transform", "translate(0,0)");
 }
 
@@ -119,26 +119,28 @@ function split(from, to, direction, line) {
         if(rectPositions[elementPositions[i]] == undefined) rectPositions[elementPositions[i]] = [];
         rectPositions[elementPositions[i]][i] = [textPositions[i][0], textPositions[i][1]];
 
-        createRect(textPositions[i][0] - arrElementWidth / 2, textPositions[i][1] - 30, 0);
+        createRect(textPositions[i][0] - arrElementWidth / 2, textPositions[i][1] - 30, 0, i);
         var movingElement = $("#barChart .element" + i);
-        animations.push({ e: movingElement, p: { attr: {x: textPositions[i][0], y: textPositions[i][1]} }, o: { duration: 1, position: '-=1' } });
+        animations.push({ e: movingElement, p: { attr: {x: textPositions[i][0], y: textPositions[i][1]} }, o: { duration: 1, position: "-=1" } });
 
         movingElement.attr("class", ""); //Remove old classes
         movingElement.addClass("element" + i + " " + "level" + elementPositions[i]);
 
-        animations.push({ e: $("#barChart .level" + (textPositions[i][1]-30)/100), p: { opacity: "1" }, o: { duration: 1, position: '-=1' } });
+        animations.push({ e: $("#barChart " + ".rectElem" + i + ".level" + (textPositions[i][1]-30)/100), p: { opacity: "1" }, o: { duration: 1, position: "-=1" } });
     }
-    animations[0].o.position = '+=0';
+    animations[0].o.position = "+=0";
     appendAnimation(line, animations, codeDisplayManager);
 }
 
 function merge(dest, from) {
     elementPositions[from] -= 1;
     var level = elementPositions[from];
-    var position = rectPositions[level][dest];
+	var position = rectPositions[level][dest];
 
     var movingElement = $(".element" + from + ".level" + (level+1));
-    appendAnimation(null, [{ e: movingElement, p: { attr: {x:position[0], y: position[1] } }, o: { duration: 1 } }], null);
+	appendAnimation(null, [{ e: movingElement, p: { attr: { x: position[0], y: position[1] } }, o: { duration: 1 } }], null);
+	console.log($(".rectElem" + from + ".level" + (level + 1)));
+	appendAnimation(null, [{ e: $(".rectElem" + from + ".level" + (level + 1)), p: { opacity: "0" }, o: {position: "-=1"}}]);
 
     movingElement.attr("class", ""); //Remove old classes
     movingElement.addClass("element" + dest + " " + "level" + level);
