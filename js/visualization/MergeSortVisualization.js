@@ -61,7 +61,9 @@ function createRect(x, y, opacity, index) {
         .attr("y", y)
         .attr("height", arrElementHeight)
         .attr("width", arrElementWidth)
-        .attr("fill", "#F44336")
+		.attr("fill", "#ef9a9a")
+		.attr("stroke", "black")
+		.attr("stroke-width", "1")
         .style("opacity", opacity)
         .attr("class", "rectElem" + index + " level" + y/100)
         .attr("transform", "translate(0,0)");
