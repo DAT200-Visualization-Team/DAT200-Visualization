@@ -22,7 +22,7 @@ theSizeBlock.append("rect")
     .attr("width", 0)
     .attr("height", (arrElementHeight + 40 + 10))
     .attr("id", "theSizeBlock")
-    .attr("fill", "#526475");
+	.attr("fill", "#526475");
 
 theSizeBlock.append("text")
     .attr("y", 25)
@@ -94,7 +94,9 @@ function createArray(length, oldlength, y, opacity) {
             .attr("transform", "translate(0," + y + ")")
             .attr("height", arrElementHeight)
             .attr("width", arrElementWidth)
-            .attr("fill", "#F44336")
+			.attr("fill", "#ef9a9a")
+	        .attr("stroke", "black")
+	        .attr("stroke-width", "1")
             .style("opacity", opacity)
             .attr("class", "rect" + i);
     }
