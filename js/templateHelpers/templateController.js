@@ -1,4 +1,8 @@
-// Function for injecting templates from separate files, 
+$(document).ready(function () {
+	$('.modal').modal();
+});
+
+// Function for injecting templates from separate files,
 // taken from http://stackoverflow.com/questions/8366733/external-template-in-underscore koorchik's answer, 24.01.2017
 function render(tmplName, tmplData) {
     if (!render.tmplCache) {
@@ -30,11 +34,14 @@ $.ajax({
     url: "./js/templateHelpers/categoryData.json",
     dataType: "json",
     async: false,
-    success: function (data) {
+	success: function (data) {
+		var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+		data.info = getInfo(data, currentFile.split('.')[0]);
+		console.log(data.info);
         var renderedHeaderHtml = render("headerTemplate", data);
         $("body").prepend(renderedHeaderHtml);
 
-        var currentFile = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+        
         if (currentFile == "index.html") {
             renderedIndexContent = render("frontPageContentTemplate", data);
             $("body").append(renderedIndexContent);
@@ -51,6 +58,19 @@ $.ajax({
         }
     }
 });
+
+function getInfo(data, current) {
+	var categories = data.categories;
+	for (var i = 0; i < categories.length; i++) {
+		var subCategories = categories[i].subCategories;
+		for (var j = 0; j < subCategories.length; j++) {
+			if (subCategories[j].id == current) {
+				console.log(subCategories[j].info);
+				return subCategories[j].info || undefined;
+			}
+		}
+	}
+}
 
 function filterDataToSubCategory(data, current) {
     var categories = data.categories;

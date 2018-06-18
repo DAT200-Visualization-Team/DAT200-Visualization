@@ -373,6 +373,7 @@
         {
           "id": "binarytree",
           "name": "Binary Tree",
+          "info":  "A new left-child node is created by clicking on a node. In order to create a right-child node, Alt+Click on a node. Leaf nodes can be deleted by Shift-Clicking.", 
           "commands": [
             {
               "name": "Pre Order",
@@ -438,6 +439,7 @@
         {
           "id": "dijkstra",
           "name": "Dijkstra",
+          "info": "Click anywhere to create a new node. Clicking and dragging from one node to another will create an edge between them. Clicking on an existing node or edge highlights it. Once highlighted it may be deleted by pressing 'backspace' or 'delete'. Pressing the 'D' key while an edge is highlighted will change its direction. The edge weights may be adjusted by clicking on them, typing the new value and pressing 'enter'. CTRL+Click dragging on a node moves the node around the graph.",
           "commands": [
             {
               "name": "Shortest Path",
@@ -460,6 +462,7 @@
         {
           "id": "bellmanford",
           "name": "Bellman-Ford",
+          "info": "Click anywhere to create a new node. Clicking and dragging from one node to another will create an edge between them. Clicking on an existing node or edge highlights it. Once highlighted it may be deleted by pressing 'backspace' or 'delete'. Pressing the 'D' key while an edge is highlighted will change its direction. The edge weights may be adjusted by clicking on them, typing the new value and pressing 'enter'. CTRL+Click dragging on a node moves the node around the graph.",
           "commands": [
             {
               "name": "Shortest Path",
@@ -548,6 +551,7 @@
         {
           "id": "dijkstramap",
           "name": "Practical Dijkstra",
+          "info": "Two nodes on the map must be selected on the map before finding the path. The button in the lower right corner toggles whether or not the view automatically pans to the current node the algorithm is considering.", 
           "commands": [
             {
               "name": "Find Path",

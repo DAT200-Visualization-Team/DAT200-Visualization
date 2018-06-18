@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    $('#settings-modal').modal();
     $(".button-collapse").sideNav();
     loadFontSizeCookieValue();
     $('select').material_select();
